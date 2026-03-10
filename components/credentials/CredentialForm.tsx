@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { ConfigField } from '../../types';
 import { fetchN8nCredentialSchema, testN8nCredential } from '../../services/n8nService';
-import { Loader2, Save, Key, AlertCircle, Info, CircleHelp, X, Zap, Check, AlertTriangle } from '../ui/Icons';
+import { Loader2, Save, Key, AlertCircle, CircleHelp, X, Zap, Check, AlertTriangle } from '../ui/Icons';
 import { TextField } from '../inputs/TextField';
 import { SelectField } from '../inputs/SelectField';
 import { SwitchField } from '../inputs/SwitchField';
@@ -245,7 +245,7 @@ export const CredentialForm: React.FC<CredentialFormProps> = ({
       
       if (testStatus === 'testing') {
           return (
-              <button disabled className={`${baseClass} bg-gray-900 text-white cursor-wait`}>
+              <button disabled className={`${baseClass} bg-muted text-foreground border border-border cursor-wait`}>
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
                   <span>Testando</span>
               </button>
@@ -253,7 +253,7 @@ export const CredentialForm: React.FC<CredentialFormProps> = ({
       }
       if (testStatus === 'success') {
           return (
-              <button disabled className={`${baseClass} bg-emerald-600 text-white animate-scale-in`}>
+              <button disabled className={`${baseClass} bg-foreground text-background border border-foreground/40 animate-scale-in`}>
                   <Check className="w-3.5 h-3.5" />
                   <span>Conectado</span>
               </button>
@@ -261,7 +261,7 @@ export const CredentialForm: React.FC<CredentialFormProps> = ({
       }
       if (testStatus === 'error') {
           return (
-              <button disabled className={`${baseClass} bg-red-600 text-white animate-[shake_0.4s_ease-in-out]`}>
+              <button disabled className={`${baseClass} bg-red-700 text-red-50 border border-red-600 animate-[shake_0.4s_ease-in-out]`}>
                   <AlertTriangle className="w-3.5 h-3.5" />
                   <span>Falhou</span>
               </button>
@@ -271,7 +271,7 @@ export const CredentialForm: React.FC<CredentialFormProps> = ({
           <button 
             type="button" 
             onClick={handleTestConnection} 
-            className={`${baseClass} bg-white border border-gray-200 text-gray-600 hover:border-gray-400 hover:text-black`}
+            className={`${baseClass} bg-card border border-border text-muted-foreground hover:bg-muted hover:text-foreground`}
           >
               <Zap className="w-3.5 h-3.5 text-amber-500" />
               <span>Testar Conexão</span>
@@ -281,8 +281,8 @@ export const CredentialForm: React.FC<CredentialFormProps> = ({
 
   if (loading) return (
     <div className="flex flex-col items-center justify-center py-12 min-h-[300px]">
-      <Loader2 className="w-8 h-8 animate-spin text-gray-300 mb-2" />
-      <span className="text-xs text-gray-400">Preparando formulário...</span>
+      <Loader2 className="w-8 h-8 animate-spin text-muted-foreground mb-2" />
+      <span className="text-xs text-muted-foreground">Preparando formulário...</span>
     </div>
   );
 
@@ -291,25 +291,25 @@ export const CredentialForm: React.FC<CredentialFormProps> = ({
       <style>{`
         @keyframes shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-3px); } 40% { transform: translateX(3px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
       `}</style>
-      <div className="flex flex-col h-full bg-white rounded-lg overflow-hidden relative z-10">
-        <div className="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center shrink-0">
+      <div className="flex flex-col h-full bg-card rounded-lg overflow-hidden relative z-10 border border-border">
+        <div className="px-6 py-4 border-b border-border bg-muted flex justify-between items-center shrink-0">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-white border border-gray-200 rounded-md"><Key className="w-5 h-5 text-gray-700" /></div>
+            <div className="p-2 bg-card border border-border rounded-md"><Key className="w-5 h-5 text-muted-foreground" /></div>
             <div>
-              <h3 className="text-sm font-bold text-gray-900">Configurar Credencial</h3>
-              <p className="text-[10px] text-gray-400 mt-0.5 font-mono uppercase tracking-widest">{credentialType}</p>
+              <h3 className="text-sm font-bold text-foreground">Configurar Credencial</h3>
+              <p className="text-[10px] text-muted-foreground mt-0.5 font-mono uppercase tracking-widest">{credentialType}</p>
             </div>
           </div>
         </div>
 
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           <form id="credential-form" onSubmit={(e) => { e.preventDefault(); onSave(deepSortKeys(payload)); }} className="space-y-6">
-            {error && <div className="bg-red-50 text-red-600 p-3 rounded-md text-xs flex items-center gap-2"><AlertCircle className="w-4 h-4" /> {error}</div>}
+            {error && <div className="bg-red-950/40 border border-red-900/50 text-red-300 p-3 rounded-md text-xs flex items-center gap-2"><AlertCircle className="w-4 h-4" /> {error}</div>}
             <div className="space-y-5">
               {fields.map((field) => {
                 const key = getFieldKey(field);
                 if (!shouldShowField(field, values, getValue)) return null;
-                if (field.type === 'notice') return <div key={key} className="bg-blue-50 border border-blue-100 rounded-md p-4 text-xs text-blue-800 leading-relaxed animate-fade-in" dangerouslySetInnerHTML={{ __html: field.label }} />;
+                if (field.type === 'notice') return <div key={key} className="bg-muted border border-border rounded-md p-4 text-xs text-muted-foreground leading-relaxed animate-fade-in" dangerouslySetInnerHTML={{ __html: field.label }} />;
                 
                 const isSecret = field.secret || field.n8nTypeOptions?.password;
                 const fieldProps = { ...field, value: values[key], type: isSecret ? ('password' as const) : field.type };
@@ -317,10 +317,10 @@ export const CredentialForm: React.FC<CredentialFormProps> = ({
                 return (
                   <div key={key} className="space-y-1.5 animate-fade-in">
                     <div className="flex justify-between items-center">
-                      <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest flex items-center gap-1">
-                        {field.label} {field.required && <span className="text-red-500">*</span>}
+                      <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1">
+                        {field.label} {field.required && <span className="text-red-400">*</span>}
                       </label>
-                      {field.helpText && <button type="button" onClick={() => setActiveHelp({ title: field.label, text: field.helpText! })} className="text-gray-300 hover:text-black transition-colors"><CircleHelp className="w-3.5 h-3.5" /></button>}
+                      {field.helpText && <button type="button" onClick={() => setActiveHelp({ title: field.label, text: field.helpText! })} className="text-muted-foreground hover:text-foreground transition-colors"><CircleHelp className="w-3.5 h-3.5" /></button>}
                     </div>
                     {field.type === 'select' ? <SelectField field={fieldProps as any} onChange={(v) => handleChange(key, v)} /> : 
                      field.type === 'switch' ? <SwitchField field={fieldProps as any} onChange={(v) => handleChange(key, v)} /> : 
@@ -334,28 +334,28 @@ export const CredentialForm: React.FC<CredentialFormProps> = ({
           </form>
         </div>
 
-        <div className="flex flex-col sm:flex-row justify-between items-center px-6 py-4 border-t border-gray-100 bg-gray-50 shrink-0 gap-4">
+        <div className="flex flex-col sm:flex-row justify-between items-center px-6 py-4 border-t border-border bg-muted shrink-0 gap-4">
           <div className="w-full sm:w-auto">{renderTestButton()}</div>
           <div className="flex gap-3 w-full sm:w-auto">
-            <button type="button" onClick={onCancel} className="flex-1 sm:flex-none px-4 py-2 text-xs text-gray-500 hover:text-black rounded-md font-bold uppercase tracking-wider">Cancelar</button>
-            <button type="submit" form="credential-form" className="flex-1 sm:flex-none px-6 py-2 bg-black text-white text-xs font-bold rounded-md hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 uppercase tracking-wider"><Save className="w-3.5 h-3.5" /> Salvar</button>
+            <button type="button" onClick={onCancel} className="flex-1 sm:flex-none px-4 py-2 text-xs text-muted-foreground hover:text-foreground hover:bg-background rounded-md font-bold uppercase tracking-wider transition-colors">Cancelar</button>
+            <button type="submit" form="credential-form" className="flex-1 sm:flex-none px-6 py-2 bg-primary text-primary-foreground text-xs font-bold rounded-md hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 uppercase tracking-wider"><Save className="w-3.5 h-3.5" /> Salvar</button>
           </div>
         </div>
       </div>
 
       {activeHelp && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-white/90 backdrop-blur-sm p-4 animate-fade-in" onClick={() => setActiveHelp(null)}>
-          <div className="bg-white rounded-xl shadow-2xl border border-gray-200 w-full max-w-sm overflow-hidden animate-scale-in" onClick={(e) => e.stopPropagation()}>
-             <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                <h3 className="font-bold text-xs text-gray-900 uppercase tracking-widest">Informação</h3>
-                <button onClick={() => setActiveHelp(null)} className="text-gray-400 hover:text-black"><X className="w-4 h-4" /></button>
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-fade-in" onClick={() => setActiveHelp(null)}>
+          <div className="bg-card rounded-xl shadow-2xl border border-border w-full max-w-sm overflow-hidden animate-scale-in" onClick={(e) => e.stopPropagation()}>
+             <div className="p-4 border-b border-border flex justify-between items-center bg-muted">
+                <h3 className="font-bold text-xs text-foreground uppercase tracking-widest">Informação</h3>
+                <button onClick={() => setActiveHelp(null)} className="text-muted-foreground hover:text-foreground"><X className="w-4 h-4" /></button>
              </div>
              <div className="p-6">
-                <p className="text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-widest">{activeHelp.title}</p>
-                <div className="text-sm text-gray-800 leading-relaxed" dangerouslySetInnerHTML={{ __html: activeHelp.text }} />
+                <p className="text-[10px] font-bold text-muted-foreground mb-2 uppercase tracking-widest">{activeHelp.title}</p>
+                <div className="text-sm text-foreground leading-relaxed" dangerouslySetInnerHTML={{ __html: activeHelp.text }} />
              </div>
-             <div className="p-4 border-t border-gray-100 bg-gray-50">
-                <button onClick={() => setActiveHelp(null)} className="w-full py-2 bg-black text-white text-[10px] font-bold rounded-md uppercase tracking-widest">Entendi</button>
+             <div className="p-4 border-t border-border bg-muted">
+                <button onClick={() => setActiveHelp(null)} className="w-full py-2 bg-primary text-primary-foreground text-[10px] font-bold rounded-md uppercase tracking-widest hover:bg-primary/90 transition-colors">Entendi</button>
              </div>
           </div>
         </div>
@@ -363,3 +363,4 @@ export const CredentialForm: React.FC<CredentialFormProps> = ({
     </>
   );
 };
+

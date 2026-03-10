@@ -81,7 +81,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src, className = '', variant 
       <button 
         onClick={togglePlay}
         className={`flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-full shadow-sm transition-transform active:scale-95 ${
-          isInv ? 'bg-white text-gray-900 hover:bg-gray-100' : 'bg-gray-50 text-gray-800 hover:text-black border border-gray-300'
+          isInv ? 'bg-foreground text-background' : 'bg-muted text-foreground border border-border'
         }`}
         type="button"
       >
@@ -99,19 +99,19 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src, className = '', variant 
             className={`absolute z-10 w-full h-full opacity-0 cursor-pointer`}
           />
           {/* Custom Track */}
-          <div className={`absolute w-full h-1 rounded-full ${isInv ? 'bg-white/20' : 'bg-gray-300'}`}></div>
+          <div className="absolute w-full h-1 rounded-full bg-muted"></div>
           {/* Custom Progress */}
           <div 
-            className={`absolute h-1 rounded-full pointer-events-none ${isInv ? 'bg-white' : 'bg-gray-800'}`}
+            className="absolute h-1 rounded-full pointer-events-none bg-primary"
             style={{ width: `${progress || 0}%` }}
           ></div>
           {/* Custom Thumb */}
           <div 
-            className={`absolute h-2.5 w-2.5 rounded-full shadow-sm pointer-events-none transition-transform group-hover:scale-125 ${isInv ? 'bg-white' : 'bg-gray-800'}`}
+            className="absolute h-2.5 w-2.5 rounded-full shadow-sm pointer-events-none transition-transform group-hover:scale-125 bg-primary"
             style={{ left: `calc(${progress || 0}% - 5px)` }}
           ></div>
         </div>
-        <div className={`flex justify-between text-[10px] font-medium px-0.5 ${isInv ? 'text-white/70' : 'text-gray-500'}`}>
+        <div className={`flex justify-between text-[10px] font-medium px-0.5 ${isInv ? 'text-primary-foreground' : 'text-muted-foreground'}`}>
           <span className="tabular-nums tracking-tight">{formatTime(currentTime)}</span>
           <span className="tabular-nums tracking-tight">{formatTime(duration)}</span>
         </div>

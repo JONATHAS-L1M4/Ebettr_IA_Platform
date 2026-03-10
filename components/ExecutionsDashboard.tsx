@@ -11,7 +11,9 @@ import { ExecutionLog, DashboardFiltersState, SortConfig } from './dashboard/typ
 import { exportLogsToCSV } from './dashboard/utils';
 import { useNotification } from '../context/NotificationContext';
 import { fetchN8nExecutions } from '../services/n8nService';
-import { Loader2, RefreshCw } from './ui/Icons';
+import { RefreshCw } from './ui/Icons';
+import { Button } from './ui/button';
+import { Skeleton } from './ui/skeleton';
 
 interface ExecutionsDashboardProps {
   agent: Agent;
@@ -19,71 +21,71 @@ interface ExecutionsDashboardProps {
 
 // Skeleton Component para o Dashboard
 const DashboardSkeleton = () => (
-    <div className="flex flex-col gap-4 sm:gap-8 animate-pulse">
+    <div className="flex flex-col gap-4 sm:gap-8">
         {/* KPIs Skeleton */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[1, 2, 3].map(i => (
-                <div key={i} className="bg-white border border-gray-200 rounded-xl p-6 h-[120px] flex flex-col justify-between">
+                <div key={i} className="bg-panel border border-border rounded-xl p-6 h-[120px] flex flex-col justify-between">
                     <div className="flex justify-between items-start">
-                        <div className="h-3 bg-gray-100 rounded w-20"></div>
-                        <div className="w-6 h-6 bg-gray-50 rounded-md"></div>
+                        <Skeleton className="h-3 w-20" />
+                        <Skeleton className="h-6 w-6" />
                     </div>
                     <div>
-                        <div className="h-8 bg-gray-100 rounded w-16 mb-2"></div>
-                        <div className="h-3 bg-gray-50 rounded w-24"></div>
+                        <Skeleton className="h-8 w-16 mb-2" />
+                        <Skeleton className="h-3 w-24" />
                     </div>
                 </div>
             ))}
         </div>
 
         {/* Filter Bar Skeleton */}
-        <div className="bg-white p-4 rounded-lg border border-gray-200 h-[74px] flex flex-col md:flex-row items-center gap-4">
+        <div className="bg-card p-4 rounded-lg border border-border h-[74px] flex flex-col md:flex-row items-center gap-4">
              <div className="flex gap-2 w-full md:w-auto flex-1">
-                <div className="h-9 bg-gray-100 rounded w-full md:w-60"></div>
-                <div className="h-9 bg-gray-50 rounded flex-1 hidden md:block"></div>
-                <div className="h-9 bg-gray-50 rounded flex-1 hidden md:block"></div>
+                <Skeleton className="h-9 w-full md:w-60" />
+                <Skeleton className="h-9 flex-1 hidden md:block" />
+                <Skeleton className="h-9 flex-1 hidden md:block" />
              </div>
              <div className="flex gap-2 w-full md:w-auto">
-                <div className="h-9 bg-gray-100 rounded w-full md:w-32"></div>
+                <Skeleton className="h-9 w-full md:w-32" />
              </div>
         </div>
 
         {/* Charts Skeleton */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-            <div className="lg:col-span-2 bg-white border border-gray-200 rounded-lg p-5 h-[300px] flex flex-col">
-                <div className="h-4 bg-gray-100 rounded w-32 mb-1"></div>
-                <div className="h-3 bg-gray-50 rounded w-20 mb-6"></div>
-                <div className="flex-1 bg-gray-50/30 rounded-lg flex items-end justify-between px-4 pb-0 gap-2 overflow-hidden">
+            <div className="lg:col-span-2 bg-panel border border-border rounded-lg p-5 h-[300px] flex flex-col">
+                <Skeleton className="h-4 w-32 mb-1" />
+                <Skeleton className="h-3 w-20 mb-6" />
+                <div className="flex-1 bg-muted/40 rounded-lg flex items-end justify-between px-4 pb-0 gap-2 overflow-hidden">
                     {[...Array(15)].map((_, i) => (
-                        <div key={i} className="bg-gray-200/50 rounded-t w-full" style={{ height: `${Math.random() * 60 + 20}%`}}></div>
+                        <Skeleton key={i} className="rounded-t w-full rounded-b-none" style={{ height: `${Math.random() * 60 + 20}%` }} />
                     ))}
                 </div>
             </div>
-            <div className="lg:col-span-1 bg-white border border-gray-200 rounded-lg p-5 h-[300px] flex flex-col">
-                <div className="h-4 bg-gray-100 rounded w-32 mb-1"></div>
-                <div className="h-3 bg-gray-50 rounded w-24 mb-6"></div>
+            <div className="lg:col-span-1 bg-panel border border-border rounded-lg p-5 h-[300px] flex flex-col">
+                <Skeleton className="h-4 w-32 mb-1" />
+                <Skeleton className="h-3 w-24 mb-6" />
                 <div className="flex-1 flex items-center justify-center">
-                    <div className="w-40 h-40 rounded-full border-[12px] border-gray-50"></div>
+                    <Skeleton className="w-40 h-40 rounded-full border-[12px] border-muted/70 bg-transparent" />
                 </div>
             </div>
         </div>
 
         {/* Table Skeleton */}
-        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden min-h-[400px]">
-            <div className="p-5 border-b border-gray-100">
-                <div className="h-5 bg-gray-100 rounded w-40 mb-1"></div>
-                <div className="h-3 bg-gray-50 rounded w-60"></div>
+        <div className="bg-panel border border-border rounded-lg overflow-hidden min-h-[400px]">
+            <div className="p-5 border-b border-border">
+                <Skeleton className="h-5 w-40 mb-1" />
+                <Skeleton className="h-3 w-60" />
             </div>
-            <div className="divide-y divide-gray-50">
+            <div className="divide-y divide-border">
                 {[1, 2, 3, 4, 5, 6].map(i => (
                     <div key={i} className="p-4 flex items-center justify-between gap-4">
                         <div className="flex items-center gap-4 w-full md:w-1/4">
-                            <div className="w-2 h-2 rounded-full bg-gray-200"></div>
-                            <div className="h-3 bg-gray-100 rounded w-12"></div>
+                            <Skeleton className="w-2 h-2 rounded-full" />
+                            <Skeleton className="h-3 w-12" />
                         </div>
-                        <div className="h-3 bg-gray-50 rounded w-1/4 hidden md:block"></div>
-                        <div className="h-3 bg-gray-50 rounded w-1/4 hidden sm:block"></div>
-                        <div className="w-8 h-8 bg-gray-100 rounded-md ml-auto"></div>
+                        <Skeleton className="h-3 w-1/4 hidden md:block" />
+                        <Skeleton className="h-3 w-1/4 hidden sm:block" />
+                        <Skeleton className="w-8 h-8 rounded-md ml-auto" />
                     </div>
                 ))}
             </div>
@@ -342,7 +344,7 @@ export const ExecutionsDashboard: React.FC<ExecutionsDashboardProps> = ({ agent 
 
   if (!currentWorkflowId) {
       return (
-          <div className="h-64 flex flex-col items-center justify-center text-gray-400 bg-gray-50 border border-dashed border-gray-200 rounded-lg m-4">
+          <div className="h-64 flex flex-col items-center justify-center text-muted-foreground bg-card border border-dashed border-border rounded-lg m-4">
               <span className="text-sm font-semibold">Workflow não configurado</span>
               <p className="text-xs mt-1">Configure o ID do Workflow nas configurações do agente para ver as execuções.</p>
           </div>
@@ -360,31 +362,28 @@ export const ExecutionsDashboard: React.FC<ExecutionsDashboardProps> = ({ agent 
         <div className="mb-4 flex items-end justify-between">
             <div>
                 <div className="flex items-center gap-3">
-                    <div className="w-1 h-6 bg-emerald-600 rounded-full"></div>
-                    <h2 className="text-lg font-bold text-gray-900 tracking-tight">Execuções & Logs</h2>
+                    <div className="w-1 h-6 bg-primary rounded-full"></div>
+                    <h2 className="text-lg font-bold text-foreground tracking-tight">Execuções & Logs</h2>
                 </div>
-                <p className="text-sm text-gray-500 mt-1 pl-4">Acompanhe o histórico de atividades e performance do agente.</p>
+                <p className="text-sm text-muted-foreground mt-1 pl-4">Acompanhe o histórico de atividades e performance do agente.</p>
             </div>
 
-            <button 
+            <Button
                 onClick={handleRefresh}
                 disabled={isSyncing}
-                className={`
-                    flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-all shadow-sm border
-                    ${isSyncing 
-                        ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed' 
-                        : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400 hover:text-black hover:bg-gray-50'}
-                `}
+                variant="outline"
+                size="sm"
+                className="h-10 rounded-lg border-border bg-card px-4 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm hover:border-ring/40 hover:bg-accent hover:text-foreground"
                 title="Sincronizar com n8n"
             >
                 <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
                 Sincronizar
-            </button>
+            </Button>
         </div>
 
         {/* Sync Indicator sutil fixo no topo */}
         {isSyncing && allLogs.length > 0 && (
-            <div className="absolute top-20 right-0 flex items-center gap-2 text-[10px] text-gray-400 font-bold uppercase tracking-widest animate-fade-in">
+            <div className="absolute top-20 right-0 flex items-center gap-2 text-[10px] text-muted-foreground font-bold uppercase tracking-widest animate-fade-in">
                 <RefreshCw className="w-3 h-3 animate-spin" /> Atualizando Dados
             </div>
         )}
@@ -436,3 +435,4 @@ export const ExecutionsDashboard: React.FC<ExecutionsDashboardProps> = ({ agent 
     </div>
   );
 };
+

@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Key, Loader2, AlertCircle, Eye, EyeOff, X, RefreshCw } from '../ui/Icons';
+import { Key, AlertCircle, Eye, EyeOff } from '../ui/Icons';
 import { useNotification } from '../../context/NotificationContext';
 import { fetchN8nWorkflowFullJson, extractCredentialsFromWorkflow, WorkflowCredential, updateN8nCredential } from '../../services/n8nService';
 import SpotlightCard from '../ui/SpotlightCard';
@@ -20,14 +20,14 @@ interface CredentialMeta {
 
 // Componente de Skeleton para efeito de carregamento premium
 const CredentialSkeleton = () => (
-    <div className="border border-gray-100 rounded-xl bg-white p-6 h-full animate-pulse">
+    <div className="border border-border rounded-xl bg-card p-6 h-full animate-pulse">
         <div className="flex justify-between items-start mb-4">
-            <div className="w-10 h-10 bg-gray-100 rounded-lg"></div>
-            <div className="w-6 h-6 bg-gray-50 rounded"></div>
+            <div className="w-10 h-10 bg-muted rounded-lg"></div>
+            <div className="w-6 h-6 bg-muted rounded"></div>
         </div>
         <div className="space-y-3">
-            <div className="h-4 bg-gray-100 rounded w-3/4"></div>
-            <div className="h-3 bg-gray-50 rounded w-1/2"></div>
+            <div className="h-4 bg-muted rounded w-3/4"></div>
+            <div className="h-3 bg-muted rounded w-1/2"></div>
         </div>
     </div>
 );
@@ -168,7 +168,7 @@ export const CredentialsManager: React.FC<CredentialsManagerProps> = ({ workflow
 
   if (!workflowId) {
       return (
-        <div className="flex flex-col items-center justify-center p-12 bg-gray-50 border border-dashed border-gray-200 rounded-xl text-gray-400">
+        <div className="flex flex-col items-center justify-center p-12 bg-muted/40 border border-dashed border-border rounded-xl text-muted-foreground">
             <AlertCircle className="w-8 h-8 mb-2 opacity-50" />
             <span className="text-sm font-medium">Workflow não configurado</span>
             <p className="text-xs mt-1">Vincule um Workflow ID para gerenciar credenciais.</p>
@@ -187,10 +187,10 @@ export const CredentialsManager: React.FC<CredentialsManagerProps> = ({ workflow
           <div className="mb-8 flex items-end justify-between">
             <div>
               <div className="flex items-center gap-3">
-                <div className="w-1 h-6 bg-slate-800 rounded-full"></div>
-                <h2 className="text-lg font-bold text-slate-800 tracking-tight">Credenciais & Segredos</h2>
+                <div className="w-1 h-6 bg-primary rounded-full"></div>
+                <h2 className="text-lg font-bold text-foreground tracking-tight">Credenciais & Segredos</h2>
               </div>
-              <p className="text-sm text-gray-500 mt-1 pl-4">Gerencie as chaves de API e conexões seguras.</p>
+              <p className="text-sm text-muted-foreground mt-1 pl-4">Gerencie as chaves de API e conexões seguras.</p>
             </div>
             
             {!isClientMode && (
@@ -207,9 +207,9 @@ export const CredentialsManager: React.FC<CredentialsManagerProps> = ({ workflow
                     <CredentialSkeleton />
                   </>
               ) : visibleCredentials.length === 0 ? (
-                  <div className="col-span-full py-12 text-center bg-gray-50/50 border border-dashed border-gray-200 rounded-xl animate-fade-in">
-                      <Key className="w-8 h-8 mx-auto mb-3 text-gray-300" />
-                      <p className="text-sm text-gray-500 font-medium">Nenhuma credencial detectada neste workflow.</p>
+                  <div className="col-span-full py-12 text-center bg-muted/40 border border-dashed border-border rounded-xl animate-fade-in">
+                      <Key className="w-8 h-8 mx-auto mb-3 text-muted-foreground" />
+                      <p className="text-sm text-muted-foreground font-medium">Nenhuma credencial detectada neste workflow.</p>
                   </div>
               ) : (
                   visibleCredentials.map(cred => {
@@ -222,26 +222,26 @@ export const CredentialsManager: React.FC<CredentialsManagerProps> = ({ workflow
                             key={cred.id} 
                             onClick={() => handleEditCredential(cred)}
                             className={`
-                                h-full group/card cursor-pointer hover:border-gray-300 animate-fade-in
+                                h-full group/card cursor-pointer hover:border-muted-foreground/40 animate-fade-in
                                 ${isHidden ? 'border-dashed opacity-80' : ''}
                             `}
                         >
                             <div className="p-6 flex flex-col h-full relative">
                                 <div className="flex justify-between items-start mb-4">
-                                    <div className="w-10 h-10 bg-gray-50 border border-gray-200 rounded-lg flex items-center justify-center text-gray-600 group-hover/card:bg-white group-hover/card:border-gray-300 transition-colors">
+                                    <div className="w-10 h-10 bg-muted border border-border rounded-lg flex items-center justify-center text-muted-foreground group-hover/card:bg-card group-hover/card:border-muted-foreground/40 transition-colors">
                                         <Key className="w-5 h-5" />
                                     </div>
 
                                     {!isClientMode && (
                                         <div className="flex items-center">
                                             {isHidden && (
-                                                <span className="text-[9px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded border border-gray-200 font-bold uppercase tracking-wider mr-2">
+                                                <span className="text-[9px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded border border-border font-bold uppercase tracking-wider mr-2">
                                                     Oculto
                                                 </span>
                                             )}
                                             <button 
                                                 onClick={(e) => handleToggleVisibility(e, cred.id)}
-                                                className="p-1.5 text-gray-300 hover:text-black transition-colors rounded-md hover:bg-gray-50 opacity-0 group-hover/card:opacity-100"
+                                                className="p-1.5 text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted opacity-0 group-hover/card:opacity-100"
                                                 title={isHidden ? "Mostrar para Cliente" : "Ocultar do Cliente"}
                                             >
                                                 {isHidden ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -251,10 +251,10 @@ export const CredentialsManager: React.FC<CredentialsManagerProps> = ({ workflow
                                 </div>
                                 
                                 <div className="space-y-1">
-                                    <h3 className="text-sm font-bold text-gray-900 truncate transition-colors" title={cred.name}>
+                                    <h3 className="text-sm font-bold text-foreground truncate transition-colors" title={cred.name}>
                                         {cred.name}
                                     </h3>
-                                    <p className="text-xs text-gray-400 font-mono truncate" title={displayDescription}>
+                                    <p className="text-xs text-muted-foreground font-mono truncate" title={displayDescription}>
                                         {displayDescription}
                                     </p>
                                 </div>
@@ -266,8 +266,8 @@ export const CredentialsManager: React.FC<CredentialsManagerProps> = ({ workflow
           </div>
 
           {selectedCredential && (
-            <div className="fixed inset-0 bg-white/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-fade-in">
-                <div className="bg-white w-full max-w-2xl h-[85vh] rounded-xl shadow-2xl border border-gray-200 overflow-hidden animate-scale-in ring-1 ring-gray-100 flex flex-col">
+            <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-fade-in">
+                <div className="bg-card w-full max-w-2xl h-[85vh] rounded-xl shadow-2xl border border-border overflow-hidden animate-scale-in ring-1 ring-border flex flex-col">
                     <CredentialForm 
                         workflowId={workflowId}
                         credentialType={selectedCredential.type}
@@ -283,3 +283,4 @@ export const CredentialsManager: React.FC<CredentialsManagerProps> = ({ workflow
       </>
   );
 };
+

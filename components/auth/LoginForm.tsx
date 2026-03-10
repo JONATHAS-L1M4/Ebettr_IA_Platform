@@ -111,7 +111,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             <button
               type="button"
               onClick={() => setShowPassword((current) => !current)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 transition hover:text-white"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
               aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
             >
               {showPassword ? (
@@ -145,7 +145,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           <button
             type="button"
             onClick={onSignUp}
-            className="font-medium text-white underline-offset-4 transition hover:underline"
+            className="font-medium text-foreground underline-offset-4 transition hover:underline"
           >
             Criar cadastro
           </button>

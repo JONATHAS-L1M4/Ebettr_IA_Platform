@@ -6,6 +6,10 @@ interface DurationChartProps {
   logs: ExecutionLog[];
 }
 
+const CHART_PRIMARY = '#4e00b0';
+const CHART_GRID = '#3f3f46';
+const CHART_TEXT = '#a1a1aa';
+
 export const DurationChart: React.FC<DurationChartProps> = ({ logs }) => {
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -17,10 +21,7 @@ export const DurationChart: React.FC<DurationChartProps> = ({ logs }) => {
   const chartData = useMemo(() => {
     if (!logs || logs.length === 0) return [];
 
-    // Filter only finished logs with both start and stop times
     const finishedLogs = logs.filter(l => l.startedAt && l.stoppedAt);
-    
-    // Sort by startedAt ascending so the chart flows left to right (oldest to newest)
     const sortedLogs = [...finishedLogs].sort(
       (a, b) => new Date(a.startedAt).getTime() - new Date(b.startedAt).getTime()
     );
@@ -28,24 +29,21 @@ export const DurationChart: React.FC<DurationChartProps> = ({ logs }) => {
     return sortedLogs.map(log => {
       const start = new Date(log.startedAt).getTime();
       const end = new Date(log.stoppedAt!).getTime();
-      const durationMs = Math.max(0, end - start);
-      // Convert to seconds for better readability if large, else keep ms
       return {
         x: start,
-        y: durationMs,
-        status: log.status
+        y: Math.max(0, end - start),
       };
     });
   }, [logs]);
 
   if (!chartData || chartData.length === 0) {
     return (
-      <div className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm flex flex-col h-[300px] animate-fade-in w-full">
+      <div className="bg-panel border border-border rounded-lg p-5 shadow-sm flex flex-col h-[300px] animate-fade-in w-full">
         <div className="mb-4">
-          <h3 className="text-base font-bold text-gray-900">Duração das Execuções</h3>
-          <p className="text-xs text-gray-500">Sem dados para exibir.</p>
+          <h3 className="text-base font-bold text-foreground">Duracao das Execucoes</h3>
+          <p className="text-xs text-muted-foreground">Sem dados para exibir.</p>
         </div>
-        <div className="flex-1 flex items-center justify-center text-gray-400 text-sm bg-gray-50/50 rounded-lg border border-dashed border-gray-200">
+        <div className="flex-1 flex items-center justify-center text-muted-foreground text-sm bg-muted/30 rounded-lg border border-dashed border-border">
           Sem dados
         </div>
       </div>
@@ -54,9 +52,9 @@ export const DurationChart: React.FC<DurationChartProps> = ({ logs }) => {
 
   const series = [
     {
-      name: 'Duração (ms)',
-      data: chartData
-    }
+      name: 'Duracao (ms)',
+      data: chartData,
+    },
   ];
 
   const options: any = {
@@ -73,23 +71,26 @@ export const DurationChart: React.FC<DurationChartProps> = ({ logs }) => {
         enabled: true,
         easing: 'easeinout',
         speed: 500,
-      }
+      },
+    },
+    theme: {
+      mode: 'dark',
     },
     dataLabels: { enabled: false },
     stroke: {
       curve: 'smooth',
       width: 2,
-      colors: ['#6e0eff']
+      colors: [CHART_PRIMARY],
     },
     markers: {
       size: 0,
       hover: {
         size: 4,
-        sizeOffset: 2
+        sizeOffset: 2,
       },
-      colors: ['#6e0eff'],
-      strokeColors: '#ffffff',
-      strokeWidth: 2
+      colors: [CHART_PRIMARY],
+      strokeColors: '#18181b',
+      strokeWidth: 2,
     },
     title: { text: undefined },
     subtitle: { text: undefined },
@@ -98,27 +99,27 @@ export const DurationChart: React.FC<DurationChartProps> = ({ logs }) => {
       axisBorder: { show: false },
       axisTicks: { show: false },
       labels: {
-        datetimeUTC: false, // Força o uso do horário local
-        style: { colors: '#9ca3af', fontSize: '10px', fontFamily: '"Plus Jakarta Sans", sans-serif' },
-        datetimeFormatter: { year: 'yyyy', month: 'MMM', day: 'dd MMM', hour: 'HH:mm' }
+        datetimeUTC: false,
+        style: { colors: CHART_TEXT, fontSize: '10px', fontFamily: '"Plus Jakarta Sans", sans-serif' },
+        datetimeFormatter: { year: 'yyyy', month: 'MMM', day: 'dd MMM', hour: 'HH:mm' },
       },
-      tooltip: { enabled: true }
+      tooltip: { enabled: true },
     },
     yaxis: {
       opposite: true,
       labels: {
-        style: { colors: '#9ca3af', fontSize: '10px', fontFamily: 'monospace' },
+        style: { colors: CHART_TEXT, fontSize: '10px', fontFamily: 'monospace' },
         formatter: (val: number) => {
           if (val > 1000) return `${(val / 1000).toFixed(1)}s`;
           return `${Math.round(val)}ms`;
-        }
-      }
+        },
+      },
     },
     legend: { show: false },
     grid: {
-      borderColor: '#f3f4f6',
+      borderColor: CHART_GRID,
       xaxis: { lines: { show: true } },
-      padding: { top: 5, right: 0, bottom: 0, left: 5 }
+      padding: { top: 5, right: 0, bottom: 0, left: 5 },
     },
     fill: {
       type: 'gradient',
@@ -128,75 +129,73 @@ export const DurationChart: React.FC<DurationChartProps> = ({ logs }) => {
         opacityTo: 0.05,
         stops: [0, 100],
         colorStops: [
-          { offset: 0, color: '#6e0eff', opacity: 0.15 },
-          { offset: 100, color: '#6e0eff', opacity: 0 }
-        ]
-      }
+          { offset: 0, color: CHART_PRIMARY, opacity: 0.22 },
+          { offset: 100, color: CHART_PRIMARY, opacity: 0 },
+        ],
+      },
     },
-    colors: ['#6e0eff'],
+    colors: [CHART_PRIMARY],
     tooltip: {
-      theme: 'light',
+      theme: 'dark',
       x: { format: 'dd MMM HH:mm:ss' },
       y: {
         formatter: (val: number) => {
           if (val > 1000) return `${(val / 1000).toFixed(2)}s`;
           return `${Math.round(val)}ms`;
-        }
+        },
       },
       marker: { show: false },
-      style: { fontSize: '11px', fontFamily: '"Plus Jakarta Sans", sans-serif' }
-    }
+      style: { fontSize: '11px', fontFamily: '"Plus Jakarta Sans", sans-serif' },
+    },
   };
 
-  // Calculate some stats
   const durations = chartData.map(d => d.y);
   const min = Math.min(...durations);
   const max = Math.max(...durations);
   const avg = durations.reduce((a, b) => a + b, 0) / durations.length;
-  
-  const formatTime = (ms: number) => ms > 1000 ? `${(ms / 1000).toFixed(2)}s` : `${Math.round(ms)}ms`;
+
+  const formatTime = (ms: number) => (ms > 1000 ? `${(ms / 1000).toFixed(2)}s` : `${Math.round(ms)}ms`);
 
   const formatDateLabel = (timestamp: number) => {
     const d = new Date(timestamp);
-    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }) + ', ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    return (
+      d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }) +
+      ', ' +
+      d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+    );
   };
 
-  const periodLabel = chartData.length > 0 
-    ? `${formatDateLabel(chartData[chartData.length - 1].x)} até ${formatDateLabel(chartData[0].x)}`
-    : `Latência dos últimos ${logs.length} registros`;
+  const periodLabel =
+    chartData.length > 0
+      ? `${formatDateLabel(chartData[0].x)} ate ${formatDateLabel(chartData[chartData.length - 1].x)}`
+      : `Latencia dos ultimos ${logs.length} registros`;
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm animate-fade-in w-full overflow-hidden flex flex-col h-[300px]">
+    <div className="bg-panel border border-border rounded-lg p-5 shadow-sm animate-fade-in w-full overflow-hidden flex flex-col h-[300px]">
       <div className="mb-1 flex justify-between items-start">
-         <div>
-           <h3 className="text-base font-bold text-gray-900">Duração das Execuções</h3>
-           <p className="text-[11px] text-gray-500">{periodLabel}</p>
-         </div>
-         <div className="flex gap-3 text-[10px] text-gray-500 bg-gray-50 px-3 py-1.5 rounded-md border border-gray-100">
-            <div className="flex flex-col">
-              <span className="uppercase tracking-wider text-[9px] text-gray-400">Mín</span>
-              <span className="font-mono font-medium text-gray-700">{formatTime(min)}</span>
-            </div>
-            <div className="w-px bg-gray-200"></div>
-            <div className="flex flex-col">
-              <span className="uppercase tracking-wider text-[9px] text-gray-400">Méd</span>
-              <span className="font-mono font-medium text-gray-700">{formatTime(avg)}</span>
-            </div>
-            <div className="w-px bg-gray-200"></div>
-            <div className="flex flex-col">
-              <span className="uppercase tracking-wider text-[9px] text-gray-400">Máx</span>
-              <span className="font-mono font-medium text-gray-700">{formatTime(max)}</span>
-            </div>
-         </div>
+        <div>
+          <h3 className="text-base font-bold text-foreground">Duracao das Execucoes</h3>
+          <p className="text-[11px] text-muted-foreground">{periodLabel}</p>
+        </div>
+        <div className="flex gap-3 text-[10px] text-muted-foreground bg-muted/40 px-3 py-1.5 rounded-md border border-border">
+          <div className="flex flex-col">
+            <span className="uppercase tracking-wider text-[9px] text-muted-foreground">Min</span>
+            <span className="font-mono font-medium text-foreground">{formatTime(min)}</span>
+          </div>
+          <div className="w-px bg-border" />
+          <div className="flex flex-col">
+            <span className="uppercase tracking-wider text-[9px] text-muted-foreground">Med</span>
+            <span className="font-mono font-medium text-foreground">{formatTime(avg)}</span>
+          </div>
+          <div className="w-px bg-border" />
+          <div className="flex flex-col">
+            <span className="uppercase tracking-wider text-[9px] text-muted-foreground">Max</span>
+            <span className="font-mono font-medium text-foreground">{formatTime(max)}</span>
+          </div>
+        </div>
       </div>
       <div className="flex-1 w-full min-h-0 -ml-2 mt-2">
-        <Chart
-            options={options}
-            series={series}
-            type="area"
-            height="100%"
-            width="100%"
-        />
+        <Chart options={options} series={series} type="area" height="100%" width="100%" />
       </div>
     </div>
   );

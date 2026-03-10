@@ -40,7 +40,7 @@ export const TextField: React.FC<TextFieldProps> = ({ field, onChange }) => {
           <button 
             type="button"
             onClick={() => setIsExpanded(true)}
-            className="absolute right-2 top-2 text-gray-400 hover:text-black opacity-0 group-hover:opacity-100 transition-all bg-white rounded p-0.5 hover:bg-gray-100"
+            className="absolute right-2 top-2 text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-all bg-card rounded p-0.5 hover:bg-muted"
             title="Expandir editor"
           >
             <Maximize2 className="w-3.5 h-3.5" />
@@ -50,7 +50,7 @@ export const TextField: React.FC<TextFieldProps> = ({ field, onChange }) => {
         {/* Contador de Caracteres 0/max */}
         <div className={`text-[9px] text-right mt-1 font-mono transition-colors ${
             maxLength && currentLength >= maxLength ? 'text-red-500 font-bold' : 
-            maxLength && currentLength >= maxLength * 0.9 ? 'text-amber-500' : 'text-gray-400'
+            maxLength && currentLength >= maxLength * 0.9 ? 'text-amber-500' : 'text-muted-foreground'
         }`}>
             {currentLength}{maxLength ? `/${maxLength}` : ''}
         </div>

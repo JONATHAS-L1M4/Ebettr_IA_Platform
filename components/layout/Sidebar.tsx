@@ -1,15 +1,46 @@
-
-import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { PanelLeftClose, PanelLeftOpen, Bot, LogOut, X, Box, UserCog, Server, Users, Lock, User, Building2, AlertTriangle, Shield, Headset, BarChart3 } from '../ui/Icons';
+import React, { useMemo, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import {
+  AlertTriangle,
+  BarChart3,
+  Bot,
+  Box,
+  Building2,
+  Headset,
+  Lock,
+  LogOut,
+  MoreHorizontal,
+  Server,
+  Shield,
+  User,
+  Users
+} from '../ui/Icons';
+import {
+  Sidebar as SidebarRoot,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar
+} from '../ui/sidebar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '../ui/dropdown-menu';
 import { Agent, UserRole } from '../../types';
 import { useNotification } from '../../context/NotificationContext';
+import { cn } from '../../utils/cn';
 
 interface SidebarProps {
-  isCollapsed: boolean;
-  setIsCollapsed: (collapsed: boolean) => void;
-  isMobileOpen: boolean; 
-  closeMobile: () => void;
   userRole: UserRole | null;
   currentUser?: { name: string; email: string; role: any; avatarUrl?: string } | null;
   allAgents: Agent[];
@@ -17,11 +48,14 @@ interface SidebarProps {
   isLoading?: boolean;
 }
 
+interface NavigationItem {
+  key: string;
+  label: string;
+  path: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
 export const Sidebar: React.FC<SidebarProps> = ({
-  isCollapsed,
-  setIsCollapsed,
-  isMobileOpen,
-  closeMobile,
   userRole,
   currentUser,
   allAgents,
@@ -31,411 +65,337 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const navigate = useNavigate();
   const location = useLocation();
   const { addNotification } = useNotification();
+  const { isMobile, setOpenMobile } = useSidebar();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-  
-  const sidebarClasses = `
-    fixed inset-y-0 left-0 z-50 bg-sidebar flex flex-col border-r border-sidebar-border
-    transition-transform duration-300 ease-in-out
-    w-56 md:translate-x-0
-    ${isMobileOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'}
-    ${isCollapsed ? 'md:w-16' : 'md:w-56'}
-  `;
 
   const normalizedRole = userRole?.toLowerCase().trim();
+  const currentPath = location.pathname;
+  const isAdmin = normalizedRole === 'admin';
+  const canViewMetrics = normalizedRole === 'admin' || normalizedRole === 'support';
+
+  const appItems = useMemo<NavigationItem[]>(() => {
+    const baseItems: NavigationItem[] = [
+      { key: 'agents', label: 'Todos Agentes', path: '/agents', icon: Box },
+      { key: 'support', label: 'Suporte', path: '/support-chat', icon: Headset }
+    ];
+
+    if (canViewMetrics) {
+      baseItems.splice(1, 0, {
+        key: 'metrics',
+        label: 'Metricas de Execucao',
+        path: '/admin/workflows/execution-metrics',
+        icon: BarChart3
+      });
+    }
+
+    return baseItems;
+  }, [canViewMetrics]);
+
+  const adminItems = useMemo<NavigationItem[]>(() => {
+    if (!isAdmin) return [];
+
+    return [
+      { key: 'servers', label: 'Servidores', path: '/admin/servers', icon: Server },
+      { key: 'companies', label: 'Empresas / Grupos', path: '/admin/companies', icon: Building2 },
+      { key: 'admins', label: 'Usuarios Admins', path: '/admin/users', icon: Users },
+      { key: 'clients', label: 'Usuarios Clientes', path: '/admin/clients', icon: User },
+      { key: 'sessions', label: 'Sessoes e Logins', path: '/admin/sessions', icon: Shield },
+      { key: 'alerts', label: 'Alertas', path: '/admin/alerts', icon: AlertTriangle }
+    ];
+  }, [isAdmin]);
 
   const getRoleBadge = () => {
-      switch (normalizedRole) {
-          case 'client': return 'CL';
-          case 'support': return 'SP';
-          case 'editor': return 'ED';
-          case 'admin': default: return 'AD';
-      }
+    switch (normalizedRole) {
+      case 'client':
+        return 'CL';
+      case 'support':
+        return 'SP';
+      case 'editor':
+        return 'ED';
+      case 'admin':
+      default:
+        return 'AD';
+    }
   };
 
   const getInitials = () => {
-      if (!currentUser?.name) return getRoleBadge();
-      
-      const parts = currentUser.name.trim().split(/\s+/);
-      if (parts.length === 0) return getRoleBadge();
-      
-      if (parts.length === 1) {
-          return parts[0].substring(0, 2).toUpperCase();
-      }
-      
-      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    if (!currentUser?.name) return getRoleBadge();
+    const parts = currentUser.name.trim().split(/\s+/);
+    if (parts.length === 0) return getRoleBadge();
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+  };
+
+  const displayName = currentUser?.name || 'Usuario';
+  const displayInitials = getInitials();
+  const renderStaticSkeleton = (widthClass: string) => (
+    <div className="flex h-8 items-center gap-2 rounded-md px-2">
+      <div className="h-4 w-4 shrink-0 rounded bg-sidebar-accent/40" />
+      <div className={cn('h-3 rounded bg-sidebar-accent/40', widthClass)} />
+    </div>
+  );
+
+  const closeIfMobile = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
+
+  const handleNavClick = (path: string) => {
+    navigate(path);
+    closeIfMobile();
   };
 
   const handleAgentClick = (agent: Agent) => {
-      // Regra de Bloqueio: Se bloqueado e não for admin, impede navegação
-      if (agent.isBlocked && normalizedRole !== 'admin') {
-          addNotification(
-              'warning',
-              'Acesso Restrito',
-              'Este agente está temporariamente indisponível. Contate o administrador.'
-          );
-          return;
-      }
-      navigate(`/agents/${agent.id}`);
-      closeMobile();
+    if (agent.isBlocked && normalizedRole !== 'admin') {
+      addNotification(
+        'warning',
+        'Acesso Restrito',
+        'Este agente esta temporariamente indisponivel. Contate o administrador.'
+      );
+      return;
+    }
+
+    navigate(`/agents/${agent.id}`);
+    closeIfMobile();
   };
 
   const handleConfirmLogout = () => {
-      setShowLogoutConfirm(false);
-      onLogout();
+    setShowLogoutConfirm(false);
+    onLogout();
   };
 
-  const displayName = currentUser?.name || 'Usuário';
-  const displayInitials = getInitials();
-  
-  const currentPath = location.pathname;
-  const isAgentsActive = currentPath === '/agents' || currentPath === '/';
-  const isProfileActive = currentPath === '/profile';
-  const isServersActive = currentPath === '/admin/servers';
-  const isAdminUsersActive = currentPath === '/admin/users';
-  const isClientUsersActive = currentPath === '/admin/clients';
-  const isCompaniesActive = currentPath === '/admin/companies';
-  const isSessionsActive = currentPath === '/admin/sessions';
+  const isPathActive = (path: string) => {
+    if (path === '/agents') return currentPath === '/' || currentPath === '/agents';
+    return currentPath === path;
+  };
 
   return (
     <>
-      {isMobileOpen && (
-        <div 
-          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 md:hidden animate-fade-in"
-          onClick={closeMobile}
-        />
-      )}
-
-      <aside className={sidebarClasses}>
-        {/* Header / Logo */}
-        <div className={`h-16 flex items-center shrink-0 ${isCollapsed ? 'md:justify-center px-0' : 'justify-between px-4'}`}>
-          <div 
-            className={`flex items-center gap-3 cursor-pointer transition-all ${!isCollapsed ? 'pl-2' : ''}`}
-            onClick={() => navigate('/agents')}
-            title={isCollapsed ? "Ebettr IA" : undefined}
-          >
-            <img 
-              src={isCollapsed ? "http://img.ebettr.com/images/2026/03/06/favicon.png" : "http://img.ebettr.com/images/2026/03/06/logotipo.png"}
-              alt="Ebettr IA" 
-              className={`object-contain transition-all ${isCollapsed ? 'w-8 h-8' : 'h-6 w-auto brightness-0 invert'}`}
-            />
-          </div>
-
-          <button 
-            onClick={closeMobile}
-            className="md:hidden text-gray-400 hover:text-white transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
-
-          {!isCollapsed && (
-            <button 
-                onClick={() => setIsCollapsed(true)}
-                className="hidden md:block text-gray-500 hover:text-white transition-colors p-1"
-            >
-                <PanelLeftClose className="w-4 h-4" />
-            </button>
-          )}
-        </div>
-        
-        {isCollapsed && (
-            <div className="hidden md:flex justify-center pb-4 pt-2 border-b border-white/5 mx-4 mb-2">
-                <button 
-                    onClick={() => setIsCollapsed(false)}
-                    className="text-gray-500 hover:text-white transition-colors"
-                    title="Expandir"
-                >
-                    <PanelLeftOpen className="w-4 h-4" />
-                </button>
+      <SidebarRoot collapsible="none">
+        <SidebarHeader className="pb-3">
+          <div className="flex items-center justify-between px-2">
+            <div className="flex min-w-0 items-center gap-3 mt-2">
+              <img
+                src="http://img.ebettr.com/images/2026/03/06/favicon.png"
+                alt="Ebettr IA"
+                className="h-8 w-auto object-contain"
+              />
+              <div className="grid min-w-0 text-left text-sm leading-tight">
+                <span className="truncate font-medium">Ebettr IA</span>
+                <span className="truncate text-[11px] text-sidebar-foreground/70">Workspace</span>
+              </div>
             </div>
-        )}
+          </div>
+        </SidebarHeader>
 
-        {/* Navigation */}
-        <nav className="flex-1 px-3 py-2 space-y-6 overflow-y-auto overflow-x-hidden scrollbar-hide">
-          <div className="space-y-1">
-              {isLoading && !currentUser ? (
-                  <div className="flex flex-col gap-1">
-                      {[1, 2, 3, 4, 5, 6].map((i) => (
-                          <div key={i} className={`w-full flex items-center gap-3 px-3 py-2 rounded-md ${isCollapsed ? 'md:justify-center' : ''}`}>
-                              <div className="w-4 h-4 rounded-md bg-gray-700/50 animate-pulse shrink-0" />
-                              {(!isCollapsed || isMobileOpen) && <div className="h-3 w-24 bg-gray-700/50 rounded animate-pulse" />}
-                          </div>
-                      ))}
-                  </div>
-              ) : (
-                  <>
-                      <button 
-                        onClick={() => { navigate('/agents'); closeMobile(); }}
-                        className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all font-medium
-                        ${isAgentsActive 
-                          ? 'bg-gray-800 text-white shadow-sm' 
-                          : 'text-gray-400 hover:text-white hover:bg-white/5'}
-                        ${isCollapsed ? 'md:justify-center' : ''}`}
-                        title="Todos Agentes"
-                      >
-                        <Box className="w-4 h-4 shrink-0" />
-                        {(!isCollapsed || isMobileOpen) && <span>Todos Agentes</span>}
-                      </button>
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupLabel>Plataforma</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {isLoading && !currentUser
+                  ? Array.from({ length: 3 }).map((_, index) => (
+                      <SidebarMenuItem key={`loading-app-${index}`}>
+                        {renderStaticSkeleton('w-20')}
+                      </SidebarMenuItem>
+                    ))
+                  : appItems.map((item) => {
+                      const Icon = item.icon;
+                      const isActive = isPathActive(item.path);
 
-                      {normalizedRole === 'admin' && (
-                        <>
-                          <button 
-                            onClick={() => { navigate('/admin/servers'); closeMobile(); }}
-                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all font-medium mt-1
-                            ${isServersActive 
-                              ? 'bg-gray-800 text-white shadow-sm' 
-                              : 'text-gray-400 hover:text-white hover:bg-white/5'}
-                            ${isCollapsed ? 'md:justify-center' : ''}`}
-                            title="Servidores"
+                      return (
+                        <SidebarMenuItem key={item.key}>
+                          <SidebarMenuButton
+                            isActive={isActive}
+                            onClick={() => handleNavClick(item.path)}
+                            tooltip={item.label}
                           >
-                            <Server className="w-4 h-4 shrink-0" />
-                            {(!isCollapsed || isMobileOpen) && <span>Servidores</span>}
-                          </button>
+                            <Icon className="h-4 w-4 shrink-0" />
+                            <span>{item.label}</span>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      );
+                    })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
 
-                          <button 
-                            onClick={() => { navigate('/admin/companies'); closeMobile(); }}
-                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all font-medium mt-1
-                            ${isCompaniesActive 
-                              ? 'bg-gray-800 text-white shadow-sm' 
-                              : 'text-gray-400 hover:text-white hover:bg-white/5'}
-                            ${isCollapsed ? 'md:justify-center' : ''}`}
-                            title="Empresas / Grupos"
-                          >
-                            <Building2 className="w-4 h-4 shrink-0" />
-                            {(!isCollapsed || isMobileOpen) && <span>Empresas / Grupos</span>}
-                          </button>
+          {adminItems.length > 0 && (
+            <SidebarGroup>
+              <SidebarGroupLabel>Administracao</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {isLoading && !currentUser
+                    ? Array.from({ length: 4 }).map((_, index) => (
+                        <SidebarMenuItem key={`loading-admin-${index}`}>
+                          {renderStaticSkeleton('w-24')}
+                        </SidebarMenuItem>
+                      ))
+                    : adminItems.map((item) => {
+                        const Icon = item.icon;
+                        const isActive = isPathActive(item.path);
 
-                          <button 
-                            onClick={() => { navigate('/admin/users'); closeMobile(); }}
-                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all font-medium mt-1
-                            ${isAdminUsersActive 
-                              ? 'bg-gray-800 text-white shadow-sm' 
-                              : 'text-gray-400 hover:text-white hover:bg-white/5'}
-                            ${isCollapsed ? 'md:justify-center' : ''}`}
-                            title="Usuários Admins"
-                          >
-                            <Users className="w-4 h-4 shrink-0" />
-                            {(!isCollapsed || isMobileOpen) && <span>Usuários Admins</span>}
-                          </button>
-
-                          <button 
-                            onClick={() => { navigate('/admin/clients'); closeMobile(); }}
-                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all font-medium mt-1
-                            ${isClientUsersActive 
-                              ? 'bg-gray-800 text-white shadow-sm' 
-                              : 'text-gray-400 hover:text-white hover:bg-white/5'}
-                            ${isCollapsed ? 'md:justify-center' : ''}`}
-                            title="Usuários Clientes"
-                          >
-                            <User className="w-4 h-4 shrink-0" />
-                            {(!isCollapsed || isMobileOpen) && <span>Usuários Clientes</span>}
-                          </button>
-
-                          <button 
-                            onClick={() => { navigate('/admin/sessions'); closeMobile(); }}
-                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all font-medium mt-1
-                            ${isSessionsActive 
-                              ? 'bg-gray-800 text-white shadow-sm' 
-                              : 'text-gray-400 hover:text-white hover:bg-white/5'}
-                            ${isCollapsed ? 'md:justify-center' : ''}`}
-                            title="Sessões & Logins"
-                          >
-                            <Shield className="w-4 h-4 shrink-0" />
-                            {(!isCollapsed || isMobileOpen) && <span>Sessões & Logins</span>}
-                          </button>
-
-                          <button 
-                            onClick={() => { navigate('/admin/alerts'); closeMobile(); }}
-                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all font-medium mt-1
-                            ${currentPath === '/admin/alerts' 
-                              ? 'bg-gray-800 text-white shadow-sm' 
-                              : 'text-gray-400 hover:text-white hover:bg-white/5'}
-                            ${isCollapsed ? 'md:justify-center' : ''}`}
-                            title="Alertas"
-                          >
-                            <AlertTriangle className="w-4 h-4 shrink-0" />
-                            {(!isCollapsed || isMobileOpen) && <span>Alertas</span>}
-                          </button>
-                        </>
-                      )}
-
-                      {(normalizedRole === 'admin' || normalizedRole === 'support') && (
-                          <button 
-                            onClick={() => { navigate('/admin/workflows/execution-metrics'); closeMobile(); }}
-                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all font-medium mt-1
-                            ${currentPath === '/admin/workflows/execution-metrics' 
-                              ? 'bg-gray-800 text-white shadow-sm' 
-                              : 'text-gray-400 hover:text-white hover:bg-white/5'}
-                            ${isCollapsed ? 'md:justify-center' : ''}`}
-                            title="Métricas de Execução"
-                          >
-                            <BarChart3 className="w-4 h-4 shrink-0" />
-                            {(!isCollapsed || isMobileOpen) && <span>Métricas de Execução</span>}
-                          </button>
-                      )}
-
-                      <button 
-                        onClick={() => { navigate('/support-chat'); closeMobile(); }}
-                        className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all font-medium mt-1
-                        ${currentPath === '/support-chat' 
-                          ? 'bg-gray-800 text-white shadow-sm' 
-                          : 'text-gray-400 hover:text-white hover:bg-white/5'}
-                        ${isCollapsed ? 'md:justify-center' : ''}`}
-                        title="Suporte"
-                        >
-                        <Headset className="w-4 h-4 shrink-0" />
-                        {(!isCollapsed || isMobileOpen) && <span>Suporte</span>}
-                      </button>
-                  </>
-              )}
-              
-              {/* Lista de Agentes (Acesso Rápido) */}
-              <div className="flex flex-col gap-0.5 mt-2">
-                  {(!isCollapsed || isMobileOpen) && (
-                      <div className="px-3 mb-2 mt-4 text-[10px] font-bold text-gray-500 uppercase tracking-widest flex justify-between items-center h-4">
-                          <span>Meus Agentes</span>
-                          {isLoading && <div className="w-2 h-2 rounded-full bg-white/20 animate-pulse" />}
-                      </div>
-                  )}
-
-                  {isLoading ? (
-                      // Skeleton Loading
-                      <div className="flex flex-col gap-1 mt-1">
-                          {[1, 2, 3, 4, 5].map((i) => (
-                              <div key={i} className={`w-full flex items-center gap-3 px-3 py-2 rounded-md ${isCollapsed ? 'md:justify-center' : 'pl-3'}`}>
-                                  <div className="w-4 h-4 rounded-md bg-gray-700/50 animate-pulse shrink-0" />
-                                  {(!isCollapsed || isMobileOpen) && (
-                                      <div className="flex-1 flex items-center">
-                                          <div className="h-3 w-3/4 bg-gray-700/50 rounded animate-pulse" />
-                                      </div>
-                                  )}
-                              </div>
-                          ))}
-                      </div>
-                  ) : (
-                      // Actual List
-                      allAgents.map(agent => {
-                          const isActive = currentPath === `/agents/${agent.id}`;
-                          const isLocked = agent.isBlocked;
-                          
-                          return (
-                            <button
-                              key={agent.id}
-                              onClick={() => handleAgentClick(agent)}
-                              className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all group
-                              ${isActive 
-                                ? 'bg-gray-800 text-white font-medium shadow-sm' 
-                                : 'text-gray-400 hover:text-white hover:bg-white/5'}
-                              ${isCollapsed ? 'md:justify-center' : 'pl-3'}
-                              ${isLocked && normalizedRole !== 'admin' ? 'opacity-50 cursor-not-allowed' : ''}
-                              `} 
-                              title={isLocked && normalizedRole !== 'admin' ? "Indisponível" : agent.name}
+                        return (
+                          <SidebarMenuItem key={item.key}>
+                            <SidebarMenuButton
+                              isActive={isActive}
+                              onClick={() => handleNavClick(item.path)}
+                              tooltip={item.label}
                             >
-                              {isLocked ? (
-                                  <Lock className={`w-4 h-4 shrink-0 ${isActive ? 'text-red-400' : 'text-red-500/70'}`} />
-                              ) : (
-                                  <Bot className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-gray-500 group-hover:text-gray-300'}`} />
-                              )}
-                              
-                              {(!isCollapsed || isMobileOpen) && (
-                                  <span className={`truncate ${isLocked ? 'text-gray-500 italic' : ''}`}>
-                                    {agent.name}
-                                  </span>
-                              )}
-                            </button>
-                          );
-                      })
-                  )}
-              </div>
-          </div>
-        </nav>
-
-        {/* Footer User Profile - Expandido */}
-        <div className="p-4 border-t border-white/10 bg-transparent">
-          {isLoading && !currentUser ? (
-              <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'} gap-3`}>
-                  <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-7 h-7 rounded-sm bg-gray-700/50 animate-pulse shrink-0" />
-                      {!isCollapsed && (
-                          <div className="flex-1 min-w-0 flex flex-col gap-1.5">
-                              <div className="h-3 w-20 bg-gray-700/50 rounded animate-pulse" />
-                              <div className="h-2 w-28 bg-gray-700/50 rounded animate-pulse" />
-                          </div>
-                      )}
-                  </div>
-              </div>
-          ) : (
-              <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'} gap-3`}>
-                
-                <div 
-                    className="flex items-center gap-3 min-w-0 cursor-pointer group"
-                    onClick={() => { navigate('/profile'); closeMobile(); }}
-                    title="Editar Perfil"
-                >
-                    <div className="w-7 h-7 rounded-sm bg-white border border-gray-300 flex items-center justify-center text-xs font-bold text-black overflow-hidden shrink-0">
-                        {currentUser?.avatarUrl ? (
-                            <img 
-                                src={currentUser.avatarUrl} 
-                                alt={displayName} 
-                                className="w-full h-full object-cover" 
-                            />
-                        ) : (
-                            <span className="text-black leading-none">{displayInitials}</span>
-                        )}
-                    </div>
-
-                    {!isCollapsed && (
-                        <div className="flex-1 min-w-0">
-                            <p className="text-xs font-bold text-gray-200 truncate group-hover:text-white transition-colors">{displayName}</p>
-                            <p className="text-[10px] text-gray-500 truncate group-hover:text-gray-400 transition-colors">{currentUser?.email}</p>
-                        </div>
-                    )}
-                </div>
-
-                {/* Logout Button - Visível apenas quando expandido, ou se mobile */}
-                {!isCollapsed && (
-                    <button 
-                        onClick={() => setShowLogoutConfirm(true)}
-                        className="text-gray-500 hover:text-red-400 transition-colors p-1.5 hover:bg-white/5 rounded-md"
-                        title="Sair"
-                    >
-                        <LogOut className="w-4 h-4" />
-                    </button>
-                )}
-              </div>
+                              <Icon className="h-4 w-4 shrink-0" />
+                              <span>{item.label}</span>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        );
+                      })}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
           )}
-        </div>
-      </aside>
 
-      {/* CONFIRMATION LOGOUT MODAL */}
-      {showLogoutConfirm && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/20 backdrop-blur-sm p-4 animate-fade-in">
-            <div className="bg-white rounded-xl shadow-2xl border border-gray-200 w-full max-w-sm p-6 animate-scale-in">
-                <div className="flex flex-col items-center text-center gap-4">
-                    <div className="w-12 h-12 bg-red-50 text-red-500 rounded-full flex items-center justify-center border border-red-100">
-                        <LogOut className="w-6 h-6 ml-0.5" />
-                    </div>
-                    <div>
-                        <h3 className="text-lg font-bold text-gray-900">Encerrar Sessão?</h3>
-                        <p className="text-sm text-gray-500 mt-2">
-                            Você tem certeza que deseja sair da plataforma?
-                        </p>
-                    </div>
-                    <div className="flex gap-3 w-full pt-2">
-                        <button 
-                            onClick={() => setShowLogoutConfirm(false)}
-                            className="flex-1 py-2.5 text-sm font-bold text-gray-600 hover:bg-gray-50 hover:text-black rounded-lg transition-colors border border-gray-200 hover:border-gray-300"
-                        >
-                            Cancelar
-                        </button>
-                        <button 
-                            onClick={handleConfirmLogout}
-                            className="flex-1 py-2.5 text-sm font-bold text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors shadow-sm"
-                        >
-                            Sair
-                        </button>
-                    </div>
-                </div>
+          <SidebarGroup>
+            <div className="flex items-center justify-between">
+              <SidebarGroupLabel>Meus Agentes</SidebarGroupLabel>
+              {isLoading && (
+                <div className="h-2 w-2 rounded-full bg-sidebar-foreground/25 animate-pulse" />
+              )}
             </div>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {isLoading ? (
+                  Array.from({ length: 5 }).map((_, index) => (
+                    <SidebarMenuItem key={`loading-agents-${index}`}>
+                      {renderStaticSkeleton('w-28')}
+                    </SidebarMenuItem>
+                  ))
+                ) : allAgents.length === 0 ? (
+                  <p className="px-2 py-2 text-xs text-sidebar-foreground/60">Nenhum agente disponivel.</p>
+                ) : (
+                  allAgents.map((agent) => {
+                    const isActive =
+                      currentPath === `/agents/${agent.id}` ||
+                      (agent.workflowId ? currentPath === `/agents/${agent.workflowId}` : false);
+                    const isLocked = Boolean(agent.isBlocked);
+                    const isDisabled = isLocked && normalizedRole !== 'admin';
+
+                    return (
+                      <SidebarMenuItem key={agent.id}>
+                        <SidebarMenuButton
+                          isActive={isActive}
+                          onClick={() => handleAgentClick(agent)}
+                          tooltip={agent.name}
+                          className={cn(isDisabled ? 'cursor-not-allowed opacity-50' : '')}
+                        >
+                          {isLocked ? (
+                            <Lock className={cn('h-4 w-4 shrink-0', isActive ? 'text-red-400' : 'text-red-500/80')} />
+                          ) : (
+                            <Bot className="h-4 w-4 shrink-0" />
+                          )}
+                          <span className={cn(isDisabled ? 'italic' : '')}>{agent.name}</span>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    );
+                  })
+                )}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+
+        <SidebarFooter className="pt-3">
+          {isLoading && !currentUser ? (
+            <SidebarMenu>
+              <SidebarMenuItem>
+                {renderStaticSkeleton('w-20')}
+              </SidebarMenuItem>
+            </SidebarMenu>
+          ) : (
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <SidebarMenuButton
+                      size="lg"
+                      className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                      tooltip={displayName}
+                    >
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-white text-xs font-bold text-black">
+                        {currentUser?.avatarUrl ? (
+                          <img src={currentUser.avatarUrl} alt={displayName} className="h-full w-full object-cover" />
+                        ) : (
+                          <span className="leading-none">{displayInitials}</span>
+                        )}
+                      </div>
+                      <div className="grid flex-1 text-left text-sm leading-tight">
+                        <span className="truncate font-medium">{displayName}</span>
+                        <span className="truncate text-[10px] text-sidebar-foreground/70">{currentUser?.email}</span>
+                      </div>
+                      <MoreHorizontal className="ml-auto h-4 w-4 text-sidebar-foreground/70 rotate-90" />
+                    </SidebarMenuButton>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    side={isMobile ? 'bottom' : 'right'}
+                    align={isMobile ? 'end' : 'start'}
+                    sideOffset={4}
+                    alignOffset={0}
+                    className="min-w-56 data-[side=right]:-translate-y-1.5 data-[side=left]:-translate-y-3"
+                  >
+                    <DropdownMenuLabel className="p-0 font-normal">
+                      <div className="flex items-center gap-2 px-2 py-2 text-left text-sm">
+                        <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg bg-white text-xs font-bold text-black">
+                          {currentUser?.avatarUrl ? (
+                            <img src={currentUser.avatarUrl} alt={displayName} className="h-full w-full object-cover" />
+                          ) : (
+                            <span className="leading-none">{displayInitials}</span>
+                          )}
+                        </div>
+                        <div className="grid flex-1 text-left text-sm leading-tight">
+                          <span className="truncate font-medium">{displayName}</span>
+                          <span className="truncate text-[10px] text-sidebar-foreground/70">{currentUser?.email}</span>
+                        </div>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => handleNavClick('/profile')}>Account</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => setShowLogoutConfirm(true)}>Log out</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          )}
+        </SidebarFooter>
+
+      </SidebarRoot>
+
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/30 p-4 backdrop-blur-sm animate-fade-in">
+          <div className="w-full max-w-sm rounded-xl border border-gray-200 bg-white p-6 shadow-2xl animate-scale-in">
+            <div className="flex flex-col items-center gap-4 text-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full border border-red-100 bg-red-50 text-red-500">
+                <LogOut className="h-6 w-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-gray-900">Encerrar Sessao?</h3>
+                <p className="mt-2 text-sm text-gray-500">Voce tem certeza que deseja sair da plataforma?</p>
+              </div>
+              <div className="flex w-full gap-3 pt-2">
+                <button
+                  onClick={() => setShowLogoutConfirm(false)}
+                  className="flex-1 rounded-lg border border-gray-200 py-2.5 text-sm font-bold text-gray-600 transition-colors hover:border-gray-300 hover:bg-gray-50 hover:text-black"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleConfirmLogout}
+                  className="flex-1 rounded-lg bg-red-600 py-2.5 text-sm font-bold text-white shadow-sm transition-colors hover:bg-red-700"
+                >
+                  Sair
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </>

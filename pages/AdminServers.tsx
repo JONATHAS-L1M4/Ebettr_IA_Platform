@@ -10,6 +10,7 @@ import { inputBaseClass } from '../components/inputs/styles';
 import { serverManagementService } from '../services/serverManagementService';
 import { supabaseServerService } from '../services/supabaseServerService';
 import { DeleteWithCodeModal } from '../components/shared/DeleteWithCodeModal';
+import DarkPage from '../components/layout/DarkPage';
 
 const STORAGE_KEY = 'ebettr_servers';
 
@@ -18,22 +19,22 @@ interface AdminServersProps {
 }
 
 const ServerCardSkeleton = () => (
-  <div className="h-full min-h-[200px] border border-gray-200 rounded-xl bg-white p-6 flex flex-col justify-between animate-pulse">
+  <div className="h-full min-h-[200px] border border-border rounded-xl bg-card p-6 flex flex-col justify-between animate-pulse">
       <div className="flex justify-between items-start mb-3">
-          <div className="w-10 h-10 bg-gray-100 rounded-lg"></div>
-          <div className="w-8 h-5 bg-gray-100 rounded-full"></div>
+          <div className="w-10 h-10 bg-muted rounded-lg"></div>
+          <div className="w-8 h-5 bg-muted rounded-full"></div>
       </div>
       <div className="flex-1 flex flex-col justify-start mt-2 space-y-3">
-          <div className="h-4 bg-gray-100 rounded w-1/3"></div>
-          <div className="h-3 bg-gray-50 rounded w-2/3"></div>
+          <div className="h-4 bg-muted rounded w-1/3"></div>
+          <div className="h-3 bg-muted rounded w-2/3"></div>
           <div className="flex gap-2 mt-auto">
-              <div className="h-6 w-20 bg-gray-50 rounded"></div>
-              <div className="h-6 w-16 bg-gray-50 rounded"></div>
+              <div className="h-6 w-20 bg-muted rounded"></div>
+              <div className="h-6 w-16 bg-muted rounded"></div>
           </div>
       </div>
-      <div className="mt-4 pt-3 border-t border-gray-50 flex justify-between">
-          <div className="h-3 bg-gray-100 rounded w-16"></div>
-          <div className="h-3 bg-gray-100 rounded w-12"></div>
+      <div className="mt-4 pt-3 border-t border-border flex justify-between">
+          <div className="h-3 bg-muted rounded w-16"></div>
+          <div className="h-3 bg-muted rounded w-12"></div>
       </div>
   </div>
 );
@@ -371,19 +372,20 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
   // --- RENDER FORM ---
   if (isFormOpen) {
     return (
+      <DarkPage className="min-h-[calc(100vh-4rem)]">
       <div className="max-w-3xl mx-auto animate-fade-in pb-12">
         <div className="flex items-center gap-4 mb-8">
            <button 
              onClick={resetForm}
-             className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center hover:border-gray-400 hover:text-black text-gray-500 transition-colors bg-white"
+             className="w-8 h-8 rounded-full border border-border flex items-center justify-center hover:border-border hover:text-foreground text-muted-foreground transition-colors bg-card"
            >
              <X className="w-4 h-4" />
            </button>
            <div>
-             <h1 className="text-xl font-bold text-gray-900">
+             <h1 className="text-xl font-bold text-foreground">
                 {editingId ? 'Editar Servidor' : 'Novo Servidor'} {activeTab === 'supabase' ? 'RAG' : ''}
              </h1>
-             <p className="text-sm text-gray-500 font-light">
+             <p className="text-sm text-muted-foreground font-light">
                 {activeTab === 'n8n' 
                     ? 'Configure as credenciais de acesso ao n8n.' 
                     : 'Configure as credenciais do Supabase para RAG.'}
@@ -391,15 +393,15 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
            </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+        <form onSubmit={handleSubmit} className="bg-panel rounded-lg border border-border shadow-sm overflow-hidden">
            
            {/* cURL Import Section - ONLY FOR N8N */}
            {activeTab === 'n8n' && (
-               <div className="border-b border-gray-100 bg-gray-50/50 p-4">
+               <div className="border-b border-border bg-muted p-4">
                    <button 
                        type="button"
                        onClick={() => setShowCurlImport(!showCurlImport)}
-                       className="flex items-center gap-2 text-xs font-bold text-gray-600 hover:text-black uppercase tracking-wide transition-colors"
+                       className="flex items-center gap-2 text-xs font-bold text-muted-foreground hover:text-foreground uppercase tracking-wide transition-colors"
                    >
                        <Terminal className="w-4 h-4" />
                        {showCurlImport ? 'Ocultar Importação' : 'Importar Rápida via cURL'}
@@ -407,14 +409,14 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                    
                    {showCurlImport && (
                        <div className="mt-3 animate-fade-in">
-                           <p className="text-[10px] text-gray-500 mb-2 leading-relaxed">
+                           <p className="text-[10px] text-muted-foreground mb-2 leading-relaxed">
                                Cole o comando cURL copiado do navegador (DevTools &gt; Network &gt; Copy as cURL).<br/>
                                O sistema extrairá automaticamente <strong>Cookie (-b)</strong> e <strong>browser-id</strong>.
                            </p>
                            <textarea 
                                value={curlInput}
                                onChange={(e) => setCurlInput(e.target.value)}
-                               className="w-full h-24 p-3 text-xs font-mono bg-white text-gray-800 rounded-md border border-gray-300 focus:border-gray-500 focus:outline-none resize-none shadow-inner placeholder:text-gray-300"
+                               className="w-full h-24 p-3 text-xs font-mono bg-background text-foreground rounded-md border border-input focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background resize-none shadow-inner placeholder:text-muted-foreground"
                                placeholder={`curl 'https://n8n.exemplo.com/...' \n  -H 'browser-id: ...' \n  -b 'n8n-auth=...; ...'`}
                            />
                            <div className="flex justify-end mt-2">
@@ -422,7 +424,7 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                                    type="button"
                                    onClick={handleProcessCurl}
                                    disabled={!curlInput}
-                                   className="px-3 py-1.5 bg-gray-900 text-white text-xs font-bold rounded hover:bg-black transition-colors disabled:opacity-50 flex items-center gap-2"
+                                   className="px-3 py-1.5 bg-primary text-primary-foreground text-xs font-bold rounded hover:bg-primary transition-colors disabled:opacity-50 flex items-center gap-2"
                                >
                                    <Code className="w-3 h-3" /> Processar Dados
                                </button>
@@ -439,7 +441,7 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                   <>
                     {/* Identity */}
                     <div className="space-y-1">
-                        <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Nome Identificador</label>
+                        <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Nome Identificador</label>
                         <input 
                             type="text" 
                             value={formName} 
@@ -453,7 +455,7 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
 
                     {/* URL */}
                     <div className="space-y-1">
-                        <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide flex items-center gap-2">
+                        <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
                             <Globe className="w-3.5 h-3.5" /> URL_N8N
                         </label>
                         <input 
@@ -468,7 +470,7 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
 
                     {/* API Key */}
                     <div className="space-y-1">
-                        <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide flex items-center gap-2">
+                        <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
                             <Key className="w-3.5 h-3.5" /> X_N8N_API_KEY
                         </label>
                         <div className="relative">
@@ -483,7 +485,7 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                             <button 
                                 type="button"
                                 onClick={() => setShowKey(!showKey)}
-                                className="absolute right-3 top-2.5 text-gray-400 hover:text-black"
+                                className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground"
                             >
                                 {showKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </button>
@@ -493,7 +495,7 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                     {/* Cookie */}
                     <div className="space-y-1">
                         <div className="flex justify-between items-center">
-                            <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide flex items-center gap-2">
+                            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
                                 <Shield className="w-3.5 h-3.5" /> Cookie
                             </label>
                         </div>
@@ -510,18 +512,18 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                             <button 
                                 type="button"
                                 onClick={() => setRevealCookie(!revealCookie)}
-                                className="absolute right-3 top-2.5 text-gray-400 hover:text-black"
+                                className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground"
                             >
                                 {revealCookie ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </button>
                         </div>
-                        <p className="text-[10px] text-gray-400">Extraído do parâmetro <code>-b</code> ou header <code>Cookie</code>.</p>
+                        <p className="text-[10px] text-muted-foreground">Extraído do parâmetro <code>-b</code> ou header <code>Cookie</code>.</p>
                     </div>
 
                     {/* Browser ID */}
                     <div className="space-y-1">
                         <div className="flex justify-between items-center">
-                            <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide flex items-center gap-2">
+                            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
                                 <Terminal className="w-3.5 h-3.5" /> Browser ID
                             </label>
                         </div>
@@ -538,12 +540,12 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                             <button 
                                 type="button"
                                 onClick={() => setRevealBrowserId(!revealBrowserId)}
-                                className="absolute right-3 top-2.5 text-gray-400 hover:text-black"
+                                className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground"
                             >
                                 {revealBrowserId ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </button>
                         </div>
-                        <p className="text-[10px] text-gray-400">Prioriza o header <code>browser-id</code> se disponível.</p>
+                        <p className="text-[10px] text-muted-foreground">Prioriza o header <code>browser-id</code> se disponível.</p>
                     </div>
                   </>
               )}
@@ -553,7 +555,7 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                   <>
                     {/* Identity */}
                     <div className="space-y-1">
-                        <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Nome Identificador</label>
+                        <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Nome Identificador</label>
                         <input 
                             type="text" 
                             value={supaFormName} 
@@ -567,7 +569,7 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
 
                     {/* URL */}
                     <div className="space-y-1">
-                        <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide flex items-center gap-2">
+                        <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
                             <Globe className="w-3.5 h-3.5" /> URL Supabase
                         </label>
                         <input 
@@ -582,7 +584,7 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
 
                     {/* API Key */}
                     <div className="space-y-1">
-                        <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide flex items-center gap-2">
+                        <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
                             <Key className="w-3.5 h-3.5" /> API Key (Service Role / Anon)
                         </label>
                         <div className="relative">
@@ -597,7 +599,7 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                             <button 
                                 type="button"
                                 onClick={() => setShowKey(!showKey)}
-                                className="absolute right-3 top-2.5 text-gray-400 hover:text-black"
+                                className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground"
                             >
                                 {showKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </button>
@@ -608,12 +610,12 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
 
            </div>
 
-           <div className="p-6 bg-gray-50 border-t border-gray-200 flex items-center justify-end gap-3">
+           <div className="p-6 bg-muted border-t border-border flex items-center justify-end gap-3">
                <button 
                  type="button"
                  onClick={resetForm}
                  disabled={isSubmitting}
-                 className="px-4 py-2 text-sm text-gray-600 hover:text-black font-medium transition-colors disabled:opacity-50"
+                 className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground font-medium transition-colors disabled:opacity-50"
                >
                  Cancelar
                </button>
@@ -630,14 +632,14 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
 
         {/* DANGER ZONE */}
         {editingId && (
-            <div className="mt-8 pt-8 border-t border-gray-100 animate-fade-in">
+            <div className="mt-8 pt-8 border-t border-border animate-fade-in">
                 <h3 className="text-xs font-bold text-red-600 uppercase tracking-widest mb-4 flex items-center gap-2">
                     <AlertTriangle className="w-4 h-4" /> Zona de Perigo
                 </h3>
-                <div className="border border-red-100 bg-red-50/50 rounded-lg p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="border border-red-900/50 bg-red-950/40 rounded-lg p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <h4 className="text-sm font-bold text-gray-900">Excluir Servidor</h4>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <h4 className="text-sm font-bold text-foreground">Excluir Servidor</h4>
+                        <p className="text-xs text-muted-foreground mt-1">
                             Esta ação removerá permanentemente as credenciais de <strong>{activeTab === 'n8n' ? formName : supaFormName}</strong> da nuvem.
                         </p>
                     </div>
@@ -645,7 +647,7 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                         type="button"
                         onClick={() => setIsDeleteModalOpen(true)}
                         disabled={isSubmitting}
-                        className="px-4 py-2 bg-white border border-red-200 text-red-600 text-xs font-bold rounded-md hover:bg-red-600 hover:text-white transition-all flex items-center justify-center gap-2 shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-4 py-2 bg-card border border-red-200 text-red-600 text-xs font-bold rounded-md hover:bg-red-600 hover:text-white transition-all flex items-center justify-center gap-2 shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
                         Excluir Servidor
@@ -662,25 +664,27 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
             onConfirm={handleConfirmDelete}
         />
       </div>
+      </DarkPage>
     );
   }
 
   // --- RENDER LIST ---
   return (
+    <DarkPage className="min-h-[calc(100vh-4rem)]">
     <div className="animate-fade-in max-w-7xl mx-auto pb-12">
         
         {/* Header */}
-        <div className="flex flex-col gap-4 border-b border-gray-100 pb-4 mb-8">
+        <div className="flex flex-col gap-4 border-b border-border pb-4 mb-8">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 border border-gray-700 rounded-lg flex items-center justify-center text-gray-100 bg-gray-800">
+                    <div className="w-10 h-10 border border-border rounded-lg flex items-center justify-center text-foreground bg-muted">
                         <Server className="w-5 h-5" />
                     </div>
                     <div>
-                        <h1 className="text-xl font-semibold text-gray-900 tracking-tight">
+                        <h1 className="text-xl font-semibold text-foreground tracking-tight">
                             Gerenciar Servidores
                         </h1>
-                        <p className="text-sm text-gray-500 mt-0.5 font-light">
+                        <p className="text-sm text-muted-foreground mt-0.5 font-light">
                             Lista de instâncias N8N e credenciais de acesso.
                         </p>
                     </div>
@@ -688,12 +692,12 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                 
                 <div className="flex items-center gap-3 w-full md:w-auto">
                     <div className="relative group flex-1 md:w-64">
-                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400 group-focus-within:text-black">
+                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground group-focus-within:text-foreground">
                             <Search className="w-4 h-4" />
                         </div>
                         <input 
                             type="text" 
-                            className="bg-white border border-gray-200 text-gray-900 text-sm rounded-md focus:border-gray-400 focus:outline-none block w-full pl-10 h-9 placeholder-gray-400 shadow-sm" 
+                            className="bg-background border border-input text-foreground text-sm rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background block w-full pl-10 h-9 placeholder:text-muted-foreground shadow-sm" 
                             placeholder="Buscar servidor..." 
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
@@ -718,8 +722,8 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                     onClick={() => setActiveTab('n8n')}
                     className={`pb-2 text-sm font-medium transition-colors border-b-2 ${
                         activeTab === 'n8n' 
-                        ? 'border-primary text-gray-900' 
-                        : 'border-transparent text-gray-500 hover:text-gray-700'
+                        ? 'border-primary text-foreground' 
+                        : 'border-transparent text-muted-foreground hover:text-muted-foreground'
                     }`}
                 >
                     Servidores n8n
@@ -728,8 +732,8 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                     onClick={() => setActiveTab('supabase')}
                     className={`pb-2 text-sm font-medium transition-colors border-b-2 ${
                         activeTab === 'supabase' 
-                        ? 'border-primary text-gray-900' 
-                        : 'border-transparent text-gray-500 hover:text-gray-700'
+                        ? 'border-primary text-foreground' 
+                        : 'border-transparent text-muted-foreground hover:text-muted-foreground'
                     }`}
                 >
                     Servidores RAG (Supabase)
@@ -753,14 +757,14 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                             <SpotlightCard 
                                 key={server.id} 
                                 onClick={() => handleEdit(server)}
-                                className={`h-full min-h-[200px] cursor-pointer group border-gray-200 hover:border-gray-300 ${!server.isActive ? 'opacity-75' : ''}`}
+                                className={`h-full min-h-[200px] cursor-pointer group border-border hover:border-border ${!server.isActive ? 'opacity-75' : ''}`}
                             >
                                 <div className="flex flex-col justify-between h-full p-6">
                                     
                                     {/* Header */}
                                     <div className="flex justify-between items-start mb-3">
                                         {/* Icon */}
-                                        <div className={`w-10 h-10 rounded-lg border flex items-center justify-center transition-colors border-gray-200 bg-gray-50 text-gray-900`}>
+                                        <div className={`w-10 h-10 rounded-lg border flex items-center justify-center transition-colors border-border bg-muted text-foreground`}>
                                             <Server className="w-5 h-5" />
                                         </div>
                                         
@@ -777,47 +781,47 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                                     {/* Content */}
                                     <div className="flex-1 flex flex-col justify-start mt-2">
                                         <div className="mb-1">
-                                            <h3 className={`text-sm font-bold tracking-tight truncate ${server.isActive ? 'text-gray-900' : 'text-gray-500'}`}>
+                                            <h3 className={`text-sm font-bold tracking-tight truncate ${server.isActive ? 'text-foreground' : 'text-muted-foreground'}`}>
                                                 {server.name}
                                             </h3>
                                         </div>
                                         
                                         {/* URL Display */}
-                                        <div className="flex items-center gap-1.5 text-gray-500 mb-3" title={server.url}>
+                                        <div className="flex items-center gap-1.5 text-muted-foreground mb-3" title={server.url}>
                                             <Globe className="w-3 h-3 shrink-0" />
                                             <span className="text-xs truncate font-mono">{server.url}</span>
                                         </div>
 
                                         {/* Keys/Info Chips */}
                                         <div className="flex flex-wrap gap-2 mt-auto">
-                                            <div className="bg-gray-50 px-2 py-1 rounded border border-gray-100 flex items-center gap-1.5 max-w-full">
-                                                <Key className="w-3 h-3 text-gray-400 shrink-0" />
-                                                <span className="text-[10px] font-mono text-gray-600 truncate">••••{server.apiKey.slice(-4)}</span>
+                                            <div className="bg-muted px-2 py-1 rounded border border-border flex items-center gap-1.5 max-w-full">
+                                                <Key className="w-3 h-3 text-muted-foreground shrink-0" />
+                                                <span className="text-[10px] font-mono text-muted-foreground truncate">••••{server.apiKey.slice(-4)}</span>
                                             </div>
                                             {server.browserId && (
-                                                <div className="bg-gray-50 px-2 py-1 rounded border border-gray-100 flex items-center gap-1.5 max-w-full">
-                                                    <Terminal className="w-3 h-3 text-gray-400 shrink-0" />
-                                                    <span className="text-[10px] font-mono text-gray-600 truncate">ID Config</span>
+                                                <div className="bg-muted px-2 py-1 rounded border border-border flex items-center gap-1.5 max-w-full">
+                                                    <Terminal className="w-3 h-3 text-muted-foreground shrink-0" />
+                                                    <span className="text-[10px] font-mono text-muted-foreground truncate">ID Config</span>
                                                 </div>
                                             )}
                                         </div>
                                     </div>
 
                                     {/* Footer */}
-                                    <div className="mt-4 flex items-center justify-between pt-3 border-t border-gray-50">
+                                    <div className="mt-4 flex items-center justify-between pt-3 border-t border-border">
                                         {server.isActive ? (
                                             <div className="flex items-center gap-1.5">
                                                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
-                                                <span className="text-[10px] font-bold text-gray-600 uppercase tracking-wider">Online</span>
+                                                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Online</span>
                                             </div>
                                         ) : (
-                                            <div className="flex items-center gap-1.5 text-gray-400">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-gray-300"></div>
+                                            <div className="flex items-center gap-1.5 text-muted-foreground">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground"></div>
                                                 <span className="text-[10px] font-bold uppercase tracking-wider">Inativo</span>
                                             </div>
                                         )}
                                         
-                                        <div className="flex items-center gap-1 text-[10px] text-gray-400" title="Sincronizado na nuvem">
+                                        <div className="flex items-center gap-1 text-[10px] text-muted-foreground" title="Sincronizado na nuvem">
                                             <CheckCircle2 className="w-3 h-3" />
                                             <span>Cloud</span>
                                         </div>
@@ -842,14 +846,14 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                             <SpotlightCard 
                                 key={server.id} 
                                 onClick={() => handleEdit(server)}
-                                className={`h-full min-h-[200px] cursor-pointer group border-gray-200 hover:border-gray-300 ${!server.is_active ? 'opacity-75' : ''}`}
+                                className={`h-full min-h-[200px] cursor-pointer group border-border hover:border-border ${!server.is_active ? 'opacity-75' : ''}`}
                             >
                                 <div className="flex flex-col justify-between h-full p-6">
                                     
                                     {/* Header */}
                                     <div className="flex justify-between items-start mb-3">
                                         {/* Icon */}
-                                        <div className={`w-10 h-10 rounded-lg border flex items-center justify-center transition-colors border-gray-200 bg-gray-50 text-gray-900`}>
+                                        <div className={`w-10 h-10 rounded-lg border flex items-center justify-center transition-colors border-border bg-muted text-foreground`}>
                                             <Database className="w-5 h-5" />
                                         </div>
                                         
@@ -866,13 +870,13 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                                     {/* Content */}
                                     <div className="flex-1 flex flex-col justify-start mt-2">
                                         <div className="mb-1">
-                                            <h3 className="text-sm font-bold tracking-tight truncate text-gray-900">
+                                            <h3 className="text-sm font-bold tracking-tight truncate text-foreground">
                                                 {server.name}
                                             </h3>
                                         </div>
                                         
                                         {/* URL Display */}
-                                        <div className="flex items-center gap-1.5 text-gray-500 mb-3" title={server.url}>
+                                        <div className="flex items-center gap-1.5 text-muted-foreground mb-3" title={server.url}>
                                             <Globe className="w-3 h-3 shrink-0" />
                                             <span className="text-xs truncate font-mono">{server.url}</span>
                                         </div>
@@ -884,8 +888,8 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                                     </div>
 
                                     {/* Footer */}
-                                    <div className="mt-4 flex items-center justify-between pt-3 border-t border-gray-50">
-                                        <div className="flex items-center gap-1.5 text-gray-400">
+                                    <div className="mt-4 flex items-center justify-between pt-3 border-t border-border">
+                                        <div className="flex items-center gap-1.5 text-muted-foreground">
                                             <span className="text-[10px]">Criado em {new Date(server.created_at).toLocaleDateString()}</span>
                                         </div>
                                     </div>
@@ -904,5 +908,7 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
             </div>
         )}
     </div>
+    </DarkPage>
   );
 };
+

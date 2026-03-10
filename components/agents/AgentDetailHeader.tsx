@@ -94,28 +94,28 @@ export const AgentDetailHeader: React.FC<AgentDetailHeaderProps> = ({
   const showNavigation = true;
 
   return (
-    <div className={`flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b pb-4 border-gray-100`}>
+    <div className={`flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b pb-4 border-border`}>
         
         {/* Left: Back & Title */}
         <div className="flex items-center gap-4 min-w-0 flex-1">
           <button 
             onClick={onBack}
-            className={`group flex items-center justify-center w-8 h-8 rounded-full border transition-colors shrink-0 border-gray-200 hover:border-gray-400`}
+            className={`group flex items-center justify-center w-8 h-8 rounded-full border transition-colors shrink-0 border-border hover:border-ring/40`}
           >
-            <ArrowLeft className={`w-4 h-4 group-hover:text-black text-gray-500`} />
+            <ArrowLeft className={`w-4 h-4 group-hover:text-foreground text-muted-foreground`} />
           </button>
           
           <div className="flex items-center gap-4 min-w-0">
-             <div className={`w-10 h-10 border rounded-lg flex items-center justify-center shrink-0 relative border-gray-700 bg-gray-800 text-gray-100`}>
+             <div className={`w-10 h-10 border rounded-lg flex items-center justify-center shrink-0 relative border-border bg-muted text-foreground`}>
                <Bot className="w-5 h-5" />
              </div>
              <div className="min-w-0">
                <div className="flex items-center gap-2">
-                 <h1 className={`text-xl font-bold truncate text-gray-900`} title={agent.name}>{agent.name}</h1>
+                 <h1 className={`text-xl font-bold truncate text-foreground`} title={agent.name}>{agent.name}</h1>
                  {!isClientMode && onEdit && (
                    <button 
                       onClick={onEdit}
-                      className={`p-1 rounded transition-colors shrink-0 text-gray-400 hover:text-black hover:bg-gray-100`}
+                      className={`p-1 rounded transition-colors shrink-0 text-muted-foreground hover:text-foreground hover:bg-accent`}
                       title="Editar Dados e Workflow"
                     >
                       <Pencil className="w-3.5 h-3.5" />
@@ -125,25 +125,25 @@ export const AgentDetailHeader: React.FC<AgentDetailHeaderProps> = ({
                <div className="flex items-center gap-2 mt-1">
                   {isBlocked ? (
                       <>
-                        <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
-                        <span className="text-[10px] text-red-500 uppercase tracking-widest font-semibold">
+                        <span className="w-1.5 h-1.5 rounded-full bg-destructive" />
+                        <span className="text-[10px] text-destructive uppercase tracking-widest font-semibold">
                             Bloqueado
                         </span>
                       </>
                   ) : agent.maintenance ? (
                       <>
-                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                        <span className="text-[10px] text-amber-600 uppercase tracking-widest font-semibold">
+                        <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-pulse" />
+                        <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">
                             Manutenção
                         </span>
                       </>
                   ) : (
                       <div className="flex items-center gap-2">
-                        <span className={`w-1.5 h-1.5 rounded-full ${statusIndicatorActive ? 'bg-emerald-500' : 'bg-gray-300'}`} />
-                        <span className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">
+                        <span className={`w-1.5 h-1.5 rounded-full ${statusIndicatorActive ? 'bg-foreground' : 'bg-muted-foreground/70'}`} />
+                        <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">
                             {agent.active ? 'Ativado' : 'Desativado'}
                         </span>
-                        {isVerifying && <RefreshCw className="w-2.5 h-2.5 text-gray-300 animate-spin" />}
+                        {isVerifying && <RefreshCw className="w-2.5 h-2.5 text-muted-foreground/70 animate-spin" />}
                       </div>
                   )}
                </div>
@@ -156,13 +156,13 @@ export const AgentDetailHeader: React.FC<AgentDetailHeaderProps> = ({
           
           {/* Toggle View (Tabs) */}
           {showNavigation && (
-              <div className="bg-gray-100 p-1 rounded-lg flex items-center gap-2 shadow-inner w-full sm:w-auto h-[36px]">
+              <div className="bg-muted/60 p-1 rounded-lg flex items-center gap-2 shadow-inner w-full sm:w-auto h-[36px] border border-border">
                  {isLoading ? (
                      // Skeleton Loader para os Botões
                      <div className="flex items-center gap-2 w-full animate-pulse px-1">
-                        <div className="h-6 w-20 bg-gray-200 rounded-md"></div>
-                        <div className="h-6 w-24 bg-gray-200 rounded-md"></div>
-                        <div className="h-6 w-20 bg-gray-200 rounded-md"></div>
+                        <div className="h-6 w-20 bg-muted rounded-md"></div>
+                        <div className="h-6 w-24 bg-muted rounded-md"></div>
+                        <div className="h-6 w-20 bg-muted rounded-md"></div>
                      </div>
                  ) : (
                       <>
@@ -172,8 +172,8 @@ export const AgentDetailHeader: React.FC<AgentDetailHeaderProps> = ({
                             className={`
                                 flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wide transition-all duration-300 ease-out h-full
                                 ${viewMode === 'rag' 
-                                ? 'bg-gray-700 text-white transform scale-100 shadow-sm' 
-                                : 'text-gray-500 hover:text-black hover:bg-white/50'}
+                                ? 'bg-card text-foreground transform scale-100 shadow-sm' 
+                                : 'text-muted-foreground hover:text-foreground hover:bg-accent'}
                             `}
                             >
                                 <Database className="w-3.5 h-3.5" />
@@ -187,8 +187,8 @@ export const AgentDetailHeader: React.FC<AgentDetailHeaderProps> = ({
                             className={`
                                 flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wide transition-all duration-300 ease-out h-full
                                 ${viewMode === 'config' 
-                                ? 'bg-gray-700 text-white transform scale-100 shadow-sm' 
-                                : 'text-gray-500 hover:text-black hover:bg-white/50'}
+                                ? 'bg-card text-foreground transform scale-100 shadow-sm' 
+                                : 'text-muted-foreground hover:text-foreground hover:bg-accent'}
                             `}
                             >
                                 <Settings className="w-3.5 h-3.5" />
@@ -202,8 +202,8 @@ export const AgentDetailHeader: React.FC<AgentDetailHeaderProps> = ({
                             className={`
                                 flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wide transition-all duration-300 ease-out h-full
                                 ${viewMode === 'credentials' 
-                                ? 'bg-gray-700 text-white transform scale-100 shadow-sm' 
-                                : 'text-gray-500 hover:text-black hover:bg-white/50'}
+                                ? 'bg-card text-foreground transform scale-100 shadow-sm' 
+                                : 'text-muted-foreground hover:text-foreground hover:bg-accent'}
                             `}
                             >
                                 <Key className="w-3.5 h-3.5" />
@@ -216,8 +216,8 @@ export const AgentDetailHeader: React.FC<AgentDetailHeaderProps> = ({
                         className={`
                             flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wide transition-all duration-300 ease-out h-full
                             ${viewMode === 'executions' 
-                            ? 'bg-gray-700 text-white transform scale-100 shadow-sm' 
-                            : 'text-gray-500 hover:text-black hover:bg-white/50'}
+                            ? 'bg-card text-foreground transform scale-100 shadow-sm' 
+                            : 'text-muted-foreground hover:text-foreground hover:bg-accent'}
                         `}
                         >
                             <BarChart3 className="w-3.5 h-3.5" />
@@ -228,17 +228,17 @@ export const AgentDetailHeader: React.FC<AgentDetailHeaderProps> = ({
               </div>
           )}
 
-          {showNavigation && <div className="hidden lg:block h-6 w-[1px] bg-gray-200 mx-1.5"></div>}
+          {showNavigation && <div className="hidden lg:block h-6 w-[1px] bg-border mx-1.5"></div>}
 
           <div className="flex items-center gap-3 w-full sm:w-auto">
               
-              <div className={`flex w-full sm:w-auto sm:flex-none items-center justify-between sm:justify-start gap-2 px-4 py-2 bg-gray-100 rounded-lg border border-gray-100 shadow-inner h-[36px] ${isToggling || isBlocked || agent.maintenance ? 'opacity-50 cursor-not-allowed' : ''}`} title={isBlocked ? 'Agente bloqueado. Desbloqueie na lista principal.' : agent.maintenance ? 'Agente em manutenção.' : ''}>
-                <span className={`text-xs font-medium uppercase tracking-wide min-w-[80px] text-center ${agent.active ? 'text-gray-700' : 'text-gray-500'}`}>
+              <div className={`flex w-full sm:w-auto sm:flex-none items-center justify-between sm:justify-start gap-2 px-4 py-2 bg-muted/50 rounded-lg border border-border shadow-inner h-[36px] ${isToggling || isBlocked || agent.maintenance ? 'opacity-50 cursor-not-allowed' : ''}`} title={isBlocked ? 'Agente bloqueado. Desbloqueie na lista principal.' : agent.maintenance ? 'Agente em manutenção.' : ''}>
+                <span className={`text-xs font-medium uppercase tracking-wide min-w-[80px] text-center ${agent.active ? 'text-foreground' : 'text-muted-foreground'}`}>
                     {isToggling ? 'Aguarde...' : isBlocked ? 'Bloqueado' : agent.maintenance ? 'Manutenção' : 'Workflow'}
                 </span>
                 <div className={isToggling || isBlocked || agent.maintenance ? 'pointer-events-none' : ''}>
                     {isToggling ? (
-                        <Loader2 className="w-5 h-5 animate-spin text-black" />
+                        <Loader2 className="w-5 h-5 animate-spin text-foreground" />
                     ) : (
                         <Toggle checked={agent.active} onChange={onToggleGlobal} size="sm" />
                     )}
@@ -259,3 +259,6 @@ export const AgentDetailHeader: React.FC<AgentDetailHeaderProps> = ({
       </div>
   );
 };
+
+
+

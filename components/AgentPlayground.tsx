@@ -184,28 +184,28 @@ const AgentPlayground: React.FC<AgentPlaygroundProps> = ({ agent, onClose }) => 
   };
 
   const actionBtnBase = "w-[38px] h-[38px] rounded-lg flex items-center justify-center transition-all transform active:scale-95 shadow-sm";
-  const secondaryBtnStyle = `${actionBtnBase} bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-900`;
+  const secondaryBtnStyle = `${actionBtnBase} bg-muted text-muted-foreground hover:bg-accent hover:text-foreground`;
 
   return (
-    <div className={`fixed bottom-4 right-4 w-[360px] max-w-[calc(100vw-32px)] h-[550px] bg-white border border-gray-300 shadow-xl rounded-lg flex flex-col font-sans z-50 overflow-hidden animate-fade-in`}>
-      <div className={`px-4 py-3 border-b border-gray-200 bg-white flex justify-between items-center shrink-0`}>
+    <div className={`fixed bottom-4 right-4 w-[360px] max-w-[calc(100vw-32px)] h-[550px] bg-card border border-border shadow-xl rounded-lg flex flex-col font-sans z-50 overflow-hidden animate-fade-in`}>
+      <div className={`px-4 py-3 border-b border-border bg-card flex justify-between items-center shrink-0`}>
         <div className="flex items-center gap-2.5">
-          <div className={`w-7 h-7 border border-gray-200 bg-gray-100 text-gray-700 rounded flex items-center justify-center shrink-0`}>
+          <div className={`w-7 h-7 border border-border bg-muted text-muted-foreground rounded flex items-center justify-center shrink-0`}>
             <Bot className="w-4 h-4" />
           </div>
           <div className="flex flex-col">
-            <span className={`font-semibold text-sm truncate text-black`}>{agent.name}</span>
+            <span className={`font-semibold text-sm truncate text-foreground`}>{agent.name}</span>
             {agent.maintenance && (
-              <span className="text-[10px] text-amber-600 font-semibold uppercase tracking-wider">Em Manutenção</span>
+              <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Em Manutenção</span>
             )}
           </div>
         </div>
-        <button onClick={onClose} className={`transition-colors shrink-0 p-1 rounded text-gray-400 hover:text-black hover:bg-gray-50`}>
+        <button onClick={onClose} className={`transition-colors shrink-0 p-1 rounded text-muted-foreground hover:text-foreground hover:bg-muted`}>
           <X className="w-5 h-5" />
         </button>
       </div>
 
-      <div className={`flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50/50`}>
+      <div className={`flex-1 overflow-y-auto p-4 space-y-4 bg-background`}>
         {messages.map((msg, idx) => {
           const isUser = msg.role === 'user';
           
@@ -214,17 +214,17 @@ const AgentPlayground: React.FC<AgentPlaygroundProps> = ({ agent, onClose }) => 
               <div className={`max-w-[85%] text-sm leading-relaxed shadow-sm flex flex-col gap-2 overflow-hidden ${isUser ? 'items-end' : 'items-start'}`}>
                 {msg.parts.map((part, pIdx) => (
                     part.text ? (
-                        <div key={pIdx} className={`px-3 py-2 whitespace-pre-wrap ${isUser ? 'bg-primary text-primary-foreground rounded-2xl rounded-br-sm' : 'bg-white border border-gray-200 text-gray-800 rounded-2xl rounded-bl-sm'}`}>
+                        <div key={pIdx} className={`px-3 py-2 whitespace-pre-wrap ${isUser ? 'bg-primary text-primary-foreground rounded-2xl rounded-br-sm' : 'bg-card border border-border text-foreground rounded-2xl rounded-bl-sm'}`}>
                             {part.text.trim()}
                         </div>
                     ) : part.inlineData ? (
                         <div key={pIdx} className="max-w-full">
                             {part.inlineData.mimeType.startsWith('image/') ? (
-                                <img src={`data:${part.inlineData.mimeType};base64,${part.inlineData.data}`} className="max-w-full rounded-lg border border-gray-200 object-cover max-h-[200px]" />
+                                <img src={`data:${part.inlineData.mimeType};base64,${part.inlineData.data}`} className="max-w-full rounded-lg border border-border object-cover max-h-[200px]" />
                             ) : part.inlineData.mimeType.startsWith('audio/') ? (
                                 <audio controls src={`data:${part.inlineData.mimeType};base64,${part.inlineData.data}`} className="max-w-full h-10" />
                             ) : (
-                                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 text-gray-700">
+                                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted text-muted-foreground">
                                     <FileText className="w-4 h-4" /> <span className="text-xs truncate">Arquivo</span>
                                 </div>
                             )}
@@ -239,11 +239,11 @@ const AgentPlayground: React.FC<AgentPlaygroundProps> = ({ agent, onClose }) => 
         {currentTypingLength !== null && (
             <div className="flex justify-start items-end animate-fade-in">
                 <div 
-                    className="bg-white border border-gray-200 rounded-2xl rounded-bl-sm shadow-sm p-3 animate-pulse flex flex-col gap-2"
+                    className="bg-card border border-border rounded-2xl rounded-bl-sm shadow-sm p-3 animate-pulse flex flex-col gap-2"
                     style={{ width: `${Math.min(240, Math.max(100, currentTypingLength * 0.6))}px` }}
                 >
-                    <div className="h-1.5 bg-gray-100 rounded-full w-full"></div>
-                    {currentTypingLength > 50 && <div className="h-1.5 bg-gray-100 rounded-full w-[85%]"></div>}
+                    <div className="h-1.5 bg-muted rounded-full w-full"></div>
+                    {currentTypingLength > 50 && <div className="h-1.5 bg-muted rounded-full w-[85%]"></div>}
                 </div>
             </div>
         )}
@@ -251,15 +251,15 @@ const AgentPlayground: React.FC<AgentPlaygroundProps> = ({ agent, onClose }) => 
         <div ref={messagesEndRef} />
       </div>
 
-      <form onSubmit={handleSend} className="m-0 border-t border-gray-200 bg-white flex flex-col shrink-0">
+      <form onSubmit={handleSend} className="m-0 border-t border-border bg-card flex flex-col shrink-0">
         {attachments.length > 0 && (
-            <div className="flex flex-wrap gap-2 px-4 py-2 border-b border-gray-100 bg-gray-50/50 max-h-[100px] overflow-y-auto">
+            <div className="flex flex-wrap gap-2 px-4 py-2 border-b border-border bg-muted/40 max-h-[100px] overflow-y-auto">
                 {attachments.map((att, idx) => (
-                    <div key={idx} className="relative w-12 h-12 rounded-lg border border-gray-200 bg-white shadow-sm overflow-hidden group">
+                    <div key={idx} className="relative w-12 h-12 rounded-lg border border-border bg-card shadow-sm overflow-hidden group">
                         {att.type === 'image' ? <img src={att.url} className="w-full h-full object-cover" /> :
-                         att.type === 'audio' ? <div className="w-full h-full flex items-center justify-center bg-blue-50 text-blue-500"><Mic className="w-5 h-5"/></div> :
-                         <div className="w-full h-full flex items-center justify-center bg-gray-50 text-gray-500"><FileText className="w-5 h-5"/></div>}
-                        <button type="button" onClick={() => removeAttachment(idx)} className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                         att.type === 'audio' ? <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground"><Mic className="w-5 h-5"/></div> :
+                         <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground"><FileText className="w-5 h-5"/></div>}
+                        <button type="button" onClick={() => removeAttachment(idx)} className="absolute -top-1 -right-1 bg-foreground text-background rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
                             <X className="w-3 h-3" />
                         </button>
                     </div>
@@ -269,12 +269,12 @@ const AgentPlayground: React.FC<AgentPlaygroundProps> = ({ agent, onClose }) => 
 
         <div className="px-3 py-3 flex gap-2 items-end">
             {isRecording ? (
-                <div className="flex-1 h-[50px] bg-red-50 text-red-600 rounded-lg flex items-center justify-between px-4 border border-red-100 animate-fade-in">
+                <div className="flex-1 h-[50px] bg-muted/50 text-foreground rounded-lg flex items-center justify-between px-4 border border-border animate-fade-in">
                    <div className="flex items-center gap-2">
-                       <div className="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse"></div>
+                       <div className="w-2.5 h-2.5 rounded-full bg-foreground/70 animate-pulse"></div>
                        <span className="text-sm font-bold tracking-widest">{Math.floor(recordingTime/60).toString().padStart(2,'0')}:{(recordingTime%60).toString().padStart(2,'0')}</span>
                    </div>
-                   <button type="button" onClick={stopRecording} className="p-1 hover:bg-red-100 rounded text-red-700 transition-colors">
+                   <button type="button" onClick={stopRecording} className="p-1 hover:bg-accent rounded text-foreground transition-colors">
                        <Square className="w-4 h-4 fill-current" />
                    </button>
                 </div>
@@ -286,7 +286,7 @@ const AgentPlayground: React.FC<AgentPlaygroundProps> = ({ agent, onClose }) => 
                         onChange={(e) => setInputValue(e.target.value)}
                         onKeyDown={handleKeyDown}
                         rows={1}
-                        className="flex-1 border border-gray-200 rounded-lg px-3 py-3 text-sm focus:outline-none focus:border-gray-200 bg-gray-50 placeholder-gray-400 resize-none block min-h-[50px] scrollbar-hide"
+                        className="flex-1 border border-input rounded-lg px-3 py-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background bg-background text-foreground placeholder:text-muted-foreground resize-none block min-h-[50px] scrollbar-hide"
                         placeholder="Digite sua mensagem..."
                         style={{ height: '18px' }}
                         disabled={isLoading}
@@ -299,7 +299,7 @@ const AgentPlayground: React.FC<AgentPlaygroundProps> = ({ agent, onClose }) => 
                         <button type="button" onClick={startRecording} className={secondaryBtnStyle} title="Áudio">
                             <Mic className="w-4 h-4" />
                         </button>
-                        <button type="submit" disabled={isLoading || (!inputValue.trim() && attachments.length === 0)} className={`${actionBtnBase} bg-primary text-primary-foreground hover:bg-primary/90 disabled:bg-gray-200 disabled:cursor-not-allowed`} title="Enviar">
+                        <button type="submit" disabled={isLoading || (!inputValue.trim() && attachments.length === 0)} className={`${actionBtnBase} bg-primary text-primary-foreground hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed`} title="Enviar">
                             <Send className="w-4 h-4 ml-0.5" />
                         </button>
                     </div>
@@ -312,3 +312,5 @@ const AgentPlayground: React.FC<AgentPlaygroundProps> = ({ agent, onClose }) => 
 };
 
 export default AgentPlayground;
+
+

@@ -54,12 +54,12 @@ const Toggle: React.FC<ToggleProps> = ({ checked, onChange, label, size = 'md', 
         relative transition-all duration-300 ease-in-out rounded-full flex items-center
         ${s.w} ${s.h} ${s.p}
         ${checked 
-            ? (disabled ? 'bg-primary/50' : 'bg-primary') 
-            : (disabled ? 'bg-gray-200' : 'bg-gray-200 group-hover:bg-gray-300')}
+            ? (disabled ? 'bg-white/35' : 'bg-white/55') 
+            : (disabled ? 'bg-white/20' : 'bg-white/25 group-hover:bg-white/46')}
       `}>
         {/* Thumb (Bolinha) */}
         <div className={`
-          bg-white rounded-full transform transition-transform duration-300 cubic-bezier(0.4, 0.0, 0.2, 1)
+          bg-background border border-border rounded-full transform transition-transform duration-300 cubic-bezier(0.4, 0.0, 0.2, 1)
           ${s.thumb}
           ${checked ? s.translate : 'translate-x-0'}
           ${disabled ? 'shadow-none' : 'shadow-sm'}
@@ -67,7 +67,7 @@ const Toggle: React.FC<ToggleProps> = ({ checked, onChange, label, size = 'md', 
       </div>
 
       {label && (
-        <span className={`text-sm font-medium transition-colors ${checked ? 'text-gray-900' : 'text-gray-500'}`}>
+        <span className={`text-sm font-medium transition-colors ${checked ? 'text-foreground' : 'text-muted-foreground'}`}>
           {label}
         </span>
       )}

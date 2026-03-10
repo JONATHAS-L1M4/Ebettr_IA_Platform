@@ -1,11 +1,11 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { User, Mail, ShieldCheck, Save, Lock, Smartphone, QrCode, Loader2, CheckCircle2, ArrowLeft, X, Eye, EyeOff } from '../components/ui/Icons';
-import { inputBaseClass } from '../components/inputs/styles';
 import { useNotification } from '../context/NotificationContext';
 import { UserProfile } from '../types';
 import { authService } from '../services/authService';
 import Toggle from '../components/ui/Toggle';
+import DarkPage from '../components/layout/DarkPage';
 
 interface ProfilePageProps {
   user: UserProfile;
@@ -67,7 +67,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
   const strengthPercentage = Math.min((passedCount / 5) * 100, 100);
   const allValid = passedCount === 5;
 
-  let strengthColor = 'bg-gray-200';
+  let strengthColor = 'bg-muted';
   let strengthLabel = '';
   
   if (passwordForm.new.length > 0) {
@@ -244,40 +244,41 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
       }
   };
 
-  const inputClass = "w-full px-3 py-2 bg-white border border-gray-200 rounded-md focus:border-gray-200 focus:outline-none text-sm placeholder-gray-400 shadow-sm text-gray-900";
+  const inputClass = "w-full px-3 py-2 rounded-md border border-input bg-background text-foreground text-sm placeholder:text-muted-foreground shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
   return (
+    <DarkPage className="min-h-[calc(100vh-4rem)]">
     <div className="animate-fade-in max-w-3xl mx-auto pb-12 relative">
         {/* Header Style Match: CreateAgentForm */}
         <div className="flex items-center gap-4 mb-8">
            {onBack && (
                <button 
                  onClick={onBack}
-                 className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center hover:border-gray-400 hover:text-black text-gray-500 transition-colors bg-white"
+                 className="w-8 h-8 rounded-full border border-border flex items-center justify-center hover:border-border hover:text-foreground text-muted-foreground transition-colors bg-card"
                >
                  <ArrowLeft className="w-4 h-4" />
                </button>
            )}
            <div>
-             <h1 className="text-xl font-bold text-gray-900">Meu Perfil</h1>
-             <p className="text-sm text-gray-500 font-light">
+             <h1 className="text-xl font-bold text-foreground">Meu Perfil</h1>
+             <p className="text-sm text-muted-foreground font-light">
                 Gerencie suas informações pessoais e segurança.
              </p>
            </div>
         </div>
 
-        <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-visible flex flex-col">
+        <div className="bg-panel rounded-lg border border-border shadow-sm overflow-visible flex flex-col">
             <div className="p-8 flex flex-col gap-10">
                 
                 {/* Section 1: Identity */}
                 <div className="flex flex-col gap-4">
-                    <h3 className="text-xs font-bold text-gray-900 uppercase tracking-widest border-b border-gray-100 pb-2 flex items-center gap-2">
+                    <h3 className="text-xs font-bold text-foreground uppercase tracking-widest border-b border-border pb-2 flex items-center gap-2">
                         <User className="w-3 h-3" /> Identidade
                     </h3>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="flex flex-col gap-1">
-                            <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Nome Completo</label>
+                            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Nome Completo</label>
                             <input 
                                 type="text" 
                                 value={formData.name}
@@ -286,32 +287,32 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                             />
                         </div>
                         <div className="flex flex-col gap-1">
-                            <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Nível de Acesso</label>
+                            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Nível de Acesso</label>
                             <div className="relative">
-                                <div className="absolute left-3 top-2.5 text-gray-400">
+                                <div className="absolute left-3 top-2.5 text-muted-foreground">
                                     <ShieldCheck className="w-4 h-4" />
                                 </div>
                                 <input 
                                     type="text" 
                                     value={getRoleLabel(formData.role)}
                                     disabled
-                                    className={`${inputClass} pl-9 bg-gray-50 text-gray-500 cursor-not-allowed`}
+                                    className={`${inputClass} pl-9 bg-muted text-muted-foreground cursor-not-allowed`}
                                 />
                             </div>
                         </div>
                     </div>
 
                     <div className="flex flex-col gap-1">
-                        <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Email (Login)</label>
+                        <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Email (Login)</label>
                         <div className="relative">
-                            <div className="absolute left-3 top-2.5 text-gray-400">
+                            <div className="absolute left-3 top-2.5 text-muted-foreground">
                                 <Mail className="w-4 h-4" />
                             </div>
                             <input 
                                 type="email" 
                                 value={formData.email}
                                 disabled
-                                className={`${inputClass} pl-9 bg-gray-50 text-gray-500 cursor-not-allowed`}
+                                className={`${inputClass} pl-9 bg-muted text-muted-foreground cursor-not-allowed`}
                             />
                         </div>
                     </div>
@@ -319,13 +320,13 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
 
                 {/* Section 2: Security (Password) */}
                 <div className="flex flex-col gap-4">
-                    <h3 className="text-xs font-bold text-gray-900 uppercase tracking-widest border-b border-gray-100 pb-2 flex items-center gap-2">
+                    <h3 className="text-xs font-bold text-foreground uppercase tracking-widest border-b border-border pb-2 flex items-center gap-2">
                         <Lock className="w-3 h-3" /> Segurança da Conta
                     </h3>
 
                     <div className="flex flex-col gap-4">
                         <div className="flex flex-col gap-1">
-                            <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Senha Atual</label>
+                            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Senha Atual</label>
                             <div className="relative group">
                                 <input 
                                     type={showCurrentPassword ? "text" : "password"} 
@@ -337,7 +338,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                                 <button 
                                     type="button"
                                     onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                                    className="absolute right-3 top-3 text-gray-400 hover:text-black transition-colors"
+                                    className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
                                 >
                                     {showCurrentPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                 </button>
@@ -345,7 +346,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="flex flex-col gap-1">
-                                <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Nova Senha</label>
+                                <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Nova Senha</label>
                                 <div className="relative group">
                                     <input 
                                         type={showNewPassword ? "text" : "password"} 
@@ -357,7 +358,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                                     <button 
                                         type="button"
                                         onClick={() => setShowNewPassword(!showNewPassword)}
-                                        className="absolute right-3 top-3 text-gray-400 hover:text-black transition-colors"
+                                        className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
                                     >
                                         {showNewPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                     </button>
@@ -365,28 +366,28 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                                 {/* Barra de Força Simplificada */}
                                 <div className="px-1 mt-2">
                                     <div className="flex justify-between items-end mb-1.5">
-                                        <span className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Força da senha</span>
+                                        <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">Força da senha</span>
                                         <span className={`text-[10px] font-bold uppercase tracking-wider transition-colors ${
                                             passedCount <= 2 ? 'text-red-500' : passedCount <= 4 ? 'text-amber-500' : 'text-emerald-600'
                                         }`}>
                                             {strengthLabel}
                                         </span>
                                     </div>
-                                    <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+                                    <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
                                         <div 
                                             className={`h-full transition-all duration-500 ease-out ${strengthColor}`} 
                                             style={{ width: `${strengthPercentage}%` }}
                                         />
                                     </div>
                                     {!allValid && passwordForm.new.length > 0 && (
-                                        <p className="text-[10px] text-gray-400 mt-2 leading-relaxed">
+                                        <p className="text-[10px] text-muted-foreground mt-2 leading-relaxed">
                                             Use pelo menos 8 caracteres, incluindo letras maiúsculas, números e símbolos especiais.
                                         </p>
                                     )}
                                 </div>
                             </div>
                             <div className="flex flex-col gap-1">
-                                <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Confirmar Senha</label>
+                                <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Confirmar Senha</label>
                                 <div className="relative group">
                                     <input 
                                         type={showConfirmPassword ? "text" : "password"} 
@@ -398,7 +399,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                                     <button 
                                         type="button"
                                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                        className="absolute right-3 top-3 text-gray-400 hover:text-black transition-colors"
+                                        className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
                                     >
                                         {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                     </button>
@@ -410,7 +411,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                                 type="button" 
                                 onClick={handleSaveSecurity}
                                 disabled={!passwordForm.current || !passwordForm.new || (passwordForm.new.length > 0 && !allValid) || isSavingSecurity}
-                                className="px-4 py-2 bg-white border border-gray-300 text-gray-700 hover:border-gray-400 hover:text-black text-xs font-bold rounded-md transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm flex items-center gap-2"
+                                className="px-4 py-2 bg-card border border-border text-muted-foreground hover:border-border hover:text-foreground text-xs font-bold rounded-md transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm flex items-center gap-2"
                             >
                                 {isSavingSecurity ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
                                 Atualizar Senha
@@ -421,19 +422,19 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
 
                 {/* Section 3: 2FA */}
                 <div className="flex flex-col gap-4">
-                    <h3 className="text-xs font-bold text-gray-900 uppercase tracking-widest border-b border-gray-100 pb-2 flex items-center gap-2">
+                    <h3 className="text-xs font-bold text-foreground uppercase tracking-widest border-b border-border pb-2 flex items-center gap-2">
                         <Smartphone className="w-3 h-3" /> Autenticação de Dois Fatores
                     </h3>
 
                     <div className="flex items-start gap-4">
-                        <div className={`p-3 rounded-lg border ${is2FAEnabled ? 'bg-green-50 border-green-100 text-green-600' : 'bg-indigo-50 border-indigo-100 text-indigo-600'}`}>
+                        <div className={`p-3 rounded-lg border ${is2FAEnabled ? 'bg-emerald-950/40 border-emerald-900/50 text-emerald-300' : 'bg-muted border-border text-muted-foreground'}`}>
                             <ShieldCheck className="w-6 h-6" />
                         </div>
                         <div className="flex-1">
-                            <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                            <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
                                 Status do 2FA
                             </h3>
-                            <p className="text-xs text-gray-500 mt-1 leading-relaxed max-w-sm">
+                            <p className="text-xs text-muted-foreground mt-1 leading-relaxed max-w-sm">
                                 Proteja sua conta exigindo um código do Google Authenticator ou Authy ao fazer login.
                             </p>
                             
@@ -441,7 +442,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                                 {!is2FAEnabled ? (
                                     <button 
                                         onClick={handleStartSetup}
-                                        className="px-4 py-2 bg-black text-white hover:bg-gray-800 rounded-md text-xs font-bold transition-all shadow-sm flex items-center gap-2"
+                                        className="px-4 py-2 bg-primary text-primary-foreground hover:bg-primary rounded-md text-xs font-bold transition-all shadow-sm flex items-center gap-2"
                                     >
                                         <QrCode className="w-3 h-3" />
                                         Configurar 2FA
@@ -449,7 +450,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                                 ) : (
                                     <button 
                                         onClick={handleDisable2FA}
-                                        className="px-4 py-2 border border-red-200 text-red-600 hover:bg-red-50 rounded-md text-xs font-bold transition-all"
+                                        className="px-4 py-2 border border-red-900/50 text-red-400 hover:bg-red-950/40 rounded-md text-xs font-bold transition-all"
                                     >
                                         Desativar 2FA
                                     </button>
@@ -461,7 +462,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
             </div>
 
             {/* Footer Style Match: CreateAgentForm */}
-            <div className="p-6 bg-gray-50 border-t border-gray-200 flex items-center justify-end gap-3 rounded-b-lg">
+            <div className="p-6 bg-muted border-t border-border flex items-center justify-end gap-3 rounded-b-lg">
                 <button 
                     onClick={handleSaveGeneral}
                     className="px-6 py-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold rounded-md transition-all flex items-center gap-2"
@@ -474,23 +475,23 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
 
         {/* 2FA SETUP MODAL (POP-UP) */}
         {isSettingUp2FA && (
-            <div className="fixed inset-0 bg-white/90 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-fade-in">
-                <div className="bg-white rounded-xl shadow-2xl border border-gray-200 w-full max-w-2xl overflow-hidden animate-scale-in ring-1 ring-gray-100">
+            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-fade-in">
+                <div className="bg-card rounded-xl shadow-2xl border border-border w-full max-w-2xl overflow-hidden animate-scale-in ring-1 ring-border">
                     
                     {/* Modal Header */}
-                    <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+                    <div className="px-6 py-4 border-b border-border flex items-center justify-between bg-muted">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-white border border-gray-200 rounded-md">
-                                <QrCode className="w-5 h-5 text-black" />
+                            <div className="p-2 bg-card border border-border rounded-md">
+                                <QrCode className="w-5 h-5 text-foreground" />
                             </div>
                             <div>
-                                <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide">Configurar 2FA</h3>
-                                <p className="text-xs text-gray-500">Escaneie o código para vincular seu app.</p>
+                                <h3 className="text-sm font-bold text-foreground uppercase tracking-wide">Configurar 2FA</h3>
+                                <p className="text-xs text-muted-foreground">Escaneie o código para vincular seu app.</p>
                             </div>
                         </div>
                         <button 
                             onClick={() => setIsSettingUp2FA(false)}
-                            className="text-gray-400 hover:text-black transition-colors"
+                            className="text-muted-foreground hover:text-foreground transition-colors"
                         >
                             <X className="w-5 h-5" />
                         </button>
@@ -499,25 +500,25 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                     {/* Modal Body */}
                     {isLoadingSetup ? (
                         <div className="flex flex-col items-center justify-center h-64 w-full">
-                            <Loader2 className="w-8 h-8 animate-spin text-gray-400 mb-2" />
-                            <span className="text-xs text-gray-500 font-medium">Gerando chave de segurança...</span>
+                            <Loader2 className="w-8 h-8 animate-spin text-muted-foreground mb-2" />
+                            <span className="text-xs text-muted-foreground font-medium">Gerando chave de segurança...</span>
                         </div>
                     ) : (
                         <div className="p-8 flex flex-col md:flex-row gap-8 items-center">
                             
                             {/* Left: QR Code */}
-                            <div className="flex flex-col items-center gap-4 w-full md:w-auto md:shrink-0 md:border-r md:border-gray-100 md:pr-8">
-                                <div className="bg-white p-2 rounded-xl border border-gray-200 shadow-sm flex items-center justify-center w-40 h-40 aspect-square bg-white">
+                            <div className="flex flex-col items-center gap-4 w-full md:w-auto md:shrink-0 md:border-r md:border-border md:pr-8">
+                                <div className="bg-card p-2 rounded-xl border border-border shadow-sm flex items-center justify-center w-40 h-40 aspect-square bg-card">
                                     {setupData?.qr_base64 ? (
                                         <img src={setupData.qr_base64} alt="2FA QR Code" className="w-full h-full object-contain rounded-lg" />
                                     ) : (
-                                        <div className="text-xs text-gray-400">Carregando QR...</div>
+                                        <div className="text-xs text-muted-foreground">Carregando QR...</div>
                                     )}
                                 </div>
                                 {setupData?.secret && (
                                     <div className="flex flex-col items-center gap-1">
-                                        <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Chave Secreta</span>
-                                        <span className="text-xs font-mono text-gray-600 bg-gray-100 px-3 py-1.5 rounded border border-gray-200 select-all">
+                                        <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Chave Secreta</span>
+                                        <span className="text-xs font-mono text-muted-foreground bg-muted px-3 py-1.5 rounded border border-border select-all">
                                             {setupData.secret}
                                         </span>
                                     </div>
@@ -528,18 +529,18 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                             <div className="flex-1 flex flex-col justify-center items-center gap-6 w-full text-center">
                                 
                                 <div className="space-y-2 flex flex-col items-center">
-                                    <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2">
-                                        <span className="w-5 h-5 rounded-full bg-black text-white flex items-center justify-center text-[10px]">1</span>
+                                    <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                                        <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[10px]">1</span>
                                         Escaneie o código
                                     </h4>
-                                    <p className="text-xs text-gray-500 leading-relaxed max-w-[240px]">
+                                    <p className="text-xs text-muted-foreground leading-relaxed max-w-[240px]">
                                         Use um app como <strong>Google Authenticator</strong> ou <strong>Authy</strong> para escanear o QR code ao lado.
                                     </p>
                                 </div>
 
                                 <div className="space-y-3 flex flex-col items-center">
-                                    <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2">
-                                        <span className="w-5 h-5 rounded-full bg-black text-white flex items-center justify-center text-[10px]">2</span>
+                                    <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                                        <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[10px]">2</span>
                                         Digite o código
                                     </h4>
                                     <div className="flex gap-2 justify-center">
@@ -554,7 +555,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                                                 onKeyDown={(e) => handle2FAKeyDown(e, index)}
                                                 onPaste={handle2FAPaste}
                                                 onFocus={(e) => e.target.select()}
-                                                className="w-10 h-12 text-center text-xl font-bold bg-white border border-gray-200 rounded-lg focus:border-gray-200 focus:outline-none shadow-sm text-gray-900 placeholder-gray-200"
+                                                className="w-10 h-12 text-center text-xl font-bold bg-card border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background shadow-sm text-foreground placeholder:text-muted-foreground"
                                             />
                                         ))}
                                     </div>
@@ -565,17 +566,17 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                     )}
 
                     {/* Modal Footer */}
-                    <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3">
+                    <div className="px-6 py-4 bg-muted border-t border-border flex justify-end gap-3">
                         <button 
                             onClick={() => setIsSettingUp2FA(false)}
-                            className="px-4 py-2 text-xs font-bold text-gray-600 hover:text-black uppercase tracking-wide transition-colors"
+                            className="px-4 py-2 text-xs font-bold text-muted-foreground hover:text-foreground uppercase tracking-wide transition-colors"
                         >
                             Cancelar
                         </button>
                         <button 
                             onClick={handleVerify2FA}
                             disabled={verificationCode.length !== 6 || isVerifying || isLoadingSetup}
-                            className="bg-black text-white px-6 py-2 rounded-md text-xs font-bold hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 uppercase tracking-wide shadow-sm"
+                            className="bg-primary text-primary-foreground px-6 py-2 rounded-md text-xs font-bold hover:bg-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 uppercase tracking-wide shadow-sm"
                         >
                             {isVerifying ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle2 className="w-3 h-3" />}
                             Verificar e Ativar
@@ -587,18 +588,18 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
 
         {/* 2FA RESET CONFIRMATION MODAL */}
         {isResetting2FA && (
-            <div className="fixed inset-0 bg-white/90 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-fade-in">
-                <div className="bg-white rounded-xl shadow-2xl border border-gray-200 w-full max-w-md overflow-hidden animate-scale-in ring-1 ring-gray-100">
-                    <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50">
-                        <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide flex items-center gap-2">
+            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-fade-in">
+                <div className="bg-card rounded-xl shadow-2xl border border-border w-full max-w-md overflow-hidden animate-scale-in ring-1 ring-border">
+                    <div className="px-6 py-4 border-b border-border flex items-center justify-between bg-muted">
+                        <h3 className="text-sm font-bold text-foreground uppercase tracking-wide flex items-center gap-2">
                             <Lock className="w-4 h-4" /> Confirmar Desativação
                         </h3>
-                        <button onClick={() => setIsResetting2FA(false)} className="text-gray-400 hover:text-black"><X className="w-5 h-5" /></button>
+                        <button onClick={() => setIsResetting2FA(false)} className="text-muted-foreground hover:text-foreground"><X className="w-5 h-5" /></button>
                     </div>
                     <div className="p-6">
-                        <p className="text-sm text-gray-600 mb-4">Para sua segurança, confirme sua senha atual para desativar a autenticação de dois fatores.</p>
+                        <p className="text-sm text-muted-foreground mb-4">Para sua segurança, confirme sua senha atual para desativar a autenticação de dois fatores.</p>
                         <div className="space-y-1">
-                            <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Senha Atual</label>
+                            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Senha Atual</label>
                             <div className="relative group">
                                 <input 
                                     type={showResetPassword ? "text" : "password"}
@@ -611,17 +612,17 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                                 <button 
                                     type="button"
                                     onClick={() => setShowResetPassword(!showResetPassword)}
-                                    className="absolute right-3 top-3 text-gray-400 hover:text-black transition-colors"
+                                    className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
                                 >
                                     {showResetPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                 </button>
                             </div>
                         </div>
                     </div>
-                    <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3">
+                    <div className="px-6 py-4 bg-muted border-t border-border flex justify-end gap-3">
                         <button 
                             onClick={() => setIsResetting2FA(false)}
-                            className="px-4 py-2 text-xs font-bold text-gray-600 hover:text-black uppercase tracking-wide"
+                            className="px-4 py-2 text-xs font-bold text-muted-foreground hover:text-foreground uppercase tracking-wide"
                         >
                             Cancelar
                         </button>
@@ -638,5 +639,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
             </div>
         )}
     </div>
+    </DarkPage>
   );
 };
+

@@ -4,6 +4,7 @@ import { Send, Paperclip, Bot, FileText, X, Mic, Square, Loader2, Search, ArrowD
 import { motion, AnimatePresence } from 'framer-motion';
 import AudioPlayer from '../components/ui/AudioPlayer';
 import { UserProfile } from '../types';
+import DarkPage from '../components/layout/DarkPage';
 
 const MAX_FILE_SIZE = 64 * 1024 * 1024; // 64MB
 const MAX_RECORDING_TIME = 60; // 60 seconds
@@ -309,24 +310,25 @@ const SupportChat: React.FC = () => {
   };
 
   const actionBtnBase = "w-[38px] h-[38px] rounded-lg flex items-center justify-center transition-all transform active:scale-95 shadow-sm";
-  const secondaryBtnStyle = `${actionBtnBase} bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-900`;
+  const secondaryBtnStyle = `${actionBtnBase} bg-muted text-muted-foreground hover:bg-muted hover:text-foreground`;
 
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)] max-w-7xl mx-auto w-full font-sans">
+    <DarkPage className="min-h-[calc(100vh-4rem)]">
+    <div className="flex flex-col h-[calc(100vh-4rem)] max-w-7xl mx-auto w-full font-sans text-foreground">
       {/* System Header */}
-      <div className="flex flex-col gap-4 border-b border-gray-100 pb-4 pt-8 px-6 shrink-0">
+      <div className="flex flex-col gap-4 border-b border-border pb-4 pt-8 px-6 shrink-0">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 border border-gray-700 rounded-lg flex items-center justify-center text-gray-100 bg-gray-800 shadow-sm">
+            <div className="w-10 h-10 border border-border rounded-lg flex items-center justify-center text-foreground bg-muted shadow-sm">
                <Headset className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl font-semibold text-gray-900 tracking-tight">
+                <h1 className="text-xl font-semibold text-foreground tracking-tight">
                     Suporte ao Cliente
                 </h1>
               </div>
-              <p className="text-sm text-gray-500 mt-0.5 font-light">
+              <p className="text-sm text-muted-foreground mt-0.5 font-light">
                 Converse com nossa equipe para tirar dúvidas ou relatar problemas.
               </p>
             </div>
@@ -335,21 +337,21 @@ const SupportChat: React.FC = () => {
       </div>
 
       {/* Chat Container */}
-      <div className="flex-1 flex flex-col overflow-hidden bg-white border border-gray-200 rounded-xl shadow-sm m-6 mt-6 relative">
+      <div className="flex-1 flex flex-col overflow-hidden bg-panel border border-border rounded-xl shadow-sm m-6 mt-6 relative">
         {/* Messages Area */}
         <div 
             ref={messagesContainerRef}
             onScroll={handleScroll}
-            className="flex-1 overflow-y-auto p-6 space-y-6 bg-gray-50/30 scroll-smooth"
+            className="flex-1 overflow-y-auto p-6 space-y-6 bg-muted scroll-smooth"
         >
           {isLoading && messages.length === 0 ? (
             <div className="flex justify-center items-center h-full">
-              <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" />
+              <Loader2 className="w-8 h-8 text-primary animate-spin" />
             </div>
           ) : messages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-gray-400 space-y-4">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
-                <Bot className="w-8 h-8 text-gray-400" />
+            <div className="flex flex-col items-center justify-center h-full text-muted-foreground space-y-4">
+              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center">
+                <Bot className="w-8 h-8 text-muted-foreground" />
               </div>
               <p className="text-sm font-medium">Nenhuma mensagem ainda. Inicie a conversa!</p>
             </div>
@@ -370,12 +372,12 @@ const SupportChat: React.FC = () => {
                 >
                   <div className={`px-4 py-3 whitespace-pre-wrap ${
                       msg.isUser 
-                          ? 'bg-gray-900 text-white rounded-2xl rounded-br-sm border border-gray-800' 
-                          : 'bg-white border border-gray-200 text-gray-800 rounded-2xl rounded-bl-sm'
+                          ? 'bg-primary text-primary-foreground rounded-2xl rounded-br-sm border border-primary' 
+                          : 'bg-card border border-border text-foreground rounded-2xl rounded-bl-sm'
                   }`}>
                       {/* Author Name */}
                       {(msg.author || msg.isUser) && (
-                      <p className={`text-xs font-bold mb-1.5 ${msg.isUser ? 'text-white/70' : 'text-gray-500'}`}>
+                      <p className={`text-xs font-bold mb-1.5 ${msg.isUser ? 'text-white/70' : 'text-muted-foreground'}`}>
                           {msg.author || (msg.isUser ? (currentUser?.name || 'Cliente') : 'Suporte')}
                       </p>
                       )}
@@ -395,7 +397,7 @@ const SupportChat: React.FC = () => {
                                           className="max-w-full object-cover max-h-[280px] transition-transform duration-500 group-hover:scale-105" 
                                       />
                                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
-                                          <div className="bg-white/90 p-2 rounded-full shadow-sm backdrop-blur-sm text-gray-900">
+                                          <div className="bg-card p-2 rounded-full shadow-sm backdrop-blur-sm text-foreground">
                                               <Search className="w-4 h-4" />
                                           </div>
                                       </div>
@@ -412,15 +414,15 @@ const SupportChat: React.FC = () => {
                                       target="_blank" 
                                       rel="noopener noreferrer"
                                       className={`flex items-center gap-3 p-2.5 rounded-xl border transition-all ${
-                                      msg.isUser ? 'border-white/20 hover:bg-white/10 text-white' : 'border-gray-200 hover:bg-gray-100 text-gray-800'
+                                      msg.isUser ? 'border-white/20 hover:bg-white/10 text-white' : 'border-border hover:bg-muted text-foreground'
                                       } ${!att.url && !att.dataBase64 ? 'cursor-default pointer-events-none' : ''}`}
                                   >
-                                      <div className={`p-2 rounded-lg shrink-0 ${msg.isUser ? 'bg-white/10' : 'bg-gray-100 border border-gray-200'}`}>
+                                      <div className={`p-2 rounded-lg shrink-0 ${msg.isUser ? 'bg-white/10' : 'bg-muted border border-border'}`}>
                                           <FileText className="w-4 h-4" />
                                       </div>
                                       <div className="flex flex-col overflow-hidden">
                                           <span className="text-sm font-medium truncate">{att.filename}</span>
-                                          <span className={`text-[10px] uppercase tracking-wider font-bold mt-0.5 ${msg.isUser ? 'text-white/60' : 'text-gray-400'}`}>Documento</span>
+                                          <span className={`text-[10px] uppercase tracking-wider font-bold mt-0.5 ${msg.isUser ? 'text-white/60' : 'text-muted-foreground'}`}>Documento</span>
                                       </div>
                                   </a>
                               )}
@@ -431,7 +433,7 @@ const SupportChat: React.FC = () => {
 
                       {/* Timestamp */}
                       {msg.timestamp && (
-                      <p className={`text-[10px] mt-2 text-right font-medium ${msg.isUser ? 'text-white/50' : 'text-gray-400'}`}>
+                      <p className={`text-[10px] mt-2 text-right font-medium ${msg.isUser ? 'text-white/50' : 'text-muted-foreground'}`}>
                           {formatTime(msg.timestamp)}
                       </p>
                       )}
@@ -447,23 +449,23 @@ const SupportChat: React.FC = () => {
         {showScrollButton && (
             <button
                 onClick={() => scrollToBottom()}
-                className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 bg-white border border-gray-200 rounded-full px-4 py-1.5 flex items-center gap-1.5 hover:bg-gray-50 transition-none group"
+                className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 bg-card border border-border rounded-full px-4 py-1.5 flex items-center gap-1.5 hover:bg-muted transition-none group"
             >
                 {unreadCount > 0 && (
-                    <div className="w-1.5 h-1.5 rounded-full bg-gray-500" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-muted0" />
                 )}
-                <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-gray-500">
+                <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
                     {unreadCount > 0 
                         ? (unreadCount === 1 ? '1 Nova mensagem' : `${unreadCount} Novas mensagens`)
                         : 'Ver novas'
                     }
                 </span>
-                <ChevronDown className="w-3.5 h-3.5 text-gray-500 mb-0.4" />
+                <ChevronDown className="w-3.5 h-3.5 text-muted-foreground mb-0.4" />
             </button>
         )}
 
         {/* Input Area */}
-        <form onSubmit={handleSendMessage} className="m-0 border-t border-gray-200 bg-white flex flex-col shrink-0 rounded-b-xl">
+        <form onSubmit={handleSendMessage} className="m-0 border-t border-border bg-card flex flex-col shrink-0 rounded-b-xl">
           {/* Attachments Preview */}
           <AnimatePresence>
             {attachments.length > 0 && (
@@ -471,16 +473,16 @@ const SupportChat: React.FC = () => {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="flex flex-wrap gap-2 px-4 py-3 border-b border-gray-100 bg-gray-50/50 max-h-[120px] overflow-y-auto"
+                className="flex flex-wrap gap-2 px-4 py-3 border-b border-border bg-muted max-h-[120px] overflow-y-auto"
               >
                 {attachments.map((att, index) => (
-                  <div key={index} className="relative w-14 h-14 rounded-lg border border-gray-200 bg-white shadow-sm overflow-hidden group">
+                  <div key={index} className="relative w-14 h-14 rounded-lg border border-border bg-card shadow-sm overflow-hidden group">
                      {att.type === 'image' ? (
                          <img src={att.url} className="w-full h-full object-cover" alt="preview" />
                      ) : att.type === 'audio' ? (
-                         <div className="w-full h-full flex items-center justify-center bg-indigo-50 text-indigo-500"><Mic className="w-5 h-5"/></div>
+                         <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground"><Mic className="w-5 h-5"/></div>
                      ) : (
-                         <div className="w-full h-full flex items-center justify-center bg-gray-50 text-gray-500"><FileText className="w-5 h-5"/></div>
+                         <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground"><FileText className="w-5 h-5"/></div>
                      )}
                     <button
                       type="button"
@@ -497,7 +499,7 @@ const SupportChat: React.FC = () => {
 
           <div className="px-4 py-4 flex gap-3 items-end">
               {isRecording ? (
-                  <div className="flex-1 h-[50px] bg-red-50 text-red-600 rounded-lg flex items-center justify-between px-4 border border-red-100 animate-pulse">
+                  <div className="flex-1 h-[50px] bg-red-950/40 text-red-300 rounded-lg flex items-center justify-between px-4 border border-red-900/50 animate-pulse">
                      <div className="flex items-center gap-2">
                          <div className="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse"></div>
                          <span className="text-sm font-bold tracking-widest">{Math.floor(recordingTime/60).toString().padStart(2,'0')}:{(recordingTime%60).toString().padStart(2,'0')}</span>
@@ -514,7 +516,7 @@ const SupportChat: React.FC = () => {
                           onChange={(e) => setNewMessage(e.target.value)}
                           onKeyDown={handleKeyDown}
                           rows={1}
-                          className="flex-1 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-gray-300 focus:ring-1 focus:ring-gray-200 bg-gray-50 hover:bg-white transition-colors placeholder-gray-400 resize-none block min-h-[50px] scrollbar-hide shadow-sm"
+                          className="flex-1 border border-input rounded-lg px-4 py-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background bg-background hover:bg-background transition-colors placeholder:text-muted-foreground resize-none block min-h-[50px] scrollbar-hide shadow-sm text-foreground"
                           placeholder="Digite sua mensagem..."
                           style={{ height: '50px' }}
                       />
@@ -546,7 +548,7 @@ const SupportChat: React.FC = () => {
                           <button 
                               type="submit" 
                               disabled={isSending || (!newMessage.trim() && attachments.length === 0)} 
-                              className={`${actionBtnBase} bg-primary text-primary-foreground hover:bg-primary/90 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed`} 
+                          className={`${actionBtnBase} bg-primary text-primary-foreground hover:bg-primary disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed`} 
                               title="Enviar"
                           >
                               {isSending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4 ml-0.5" />}
@@ -558,7 +560,9 @@ const SupportChat: React.FC = () => {
         </form>
       </div>
     </div>
+    </DarkPage>
   );
 };
 
 export default SupportChat;
+

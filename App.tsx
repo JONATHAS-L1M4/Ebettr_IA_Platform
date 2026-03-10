@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { Sidebar } from './components/layout/Sidebar';
+import { SidebarInset, SidebarProvider } from './components/ui/sidebar';
 import { Header } from './components/layout/Header';
 import Login from './pages/Login';
 import AgentList from './pages/AgentList';
@@ -22,6 +23,7 @@ import { GoogleAnalytics } from './components/shared/GoogleAnalytics';
 import { SESSION_EXPIRED_EVENT } from './services/apiUtils';
 import { useNotification } from './context/NotificationContext';
 import { NotFound } from './pages/NotFound';
+import { darkTheme } from './design-tokens';
 
 
 const USER_CACHE_KEY = 'ebettr_user_cache';
@@ -100,6 +102,7 @@ const AgentDetailWrapper = ({ agents, currentUser, isLoading, onBack, onUpdateAg
 export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
+  const darkStyle = { ...(darkTheme as React.CSSProperties), colorScheme: 'dark' as const };
 
   // 1. Inicializa o currentUser lendo do LocalStorage para persistir no F5
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(() => {
@@ -112,8 +115,6 @@ export default function App() {
   });
 
   const [isAuthLoading, setIsAuthLoading] = useState(true);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   const { agents, isLoading, handleToggleAgent, handleUpdateAgent, handleCreateAgent, handleDeleteAgent, handleBlockAgent, handleMaintenanceAgent, refreshAgents } = useAppData();
@@ -233,24 +234,20 @@ export default function App() {
 
   if (isAuthLoading) {
       return (
-        <div className="flex h-screen bg-gray-50 overflow-hidden font-sans text-gray-900">
+        <SidebarProvider className="h-screen bg-background overflow-hidden font-sans text-foreground" style={darkStyle}>
           <Sidebar
-            isCollapsed={isSidebarCollapsed}
-            setIsCollapsed={setIsSidebarCollapsed}
-            isMobileOpen={isMobileMenuOpen}
-            closeMobile={() => setIsMobileMenuOpen(false)}
             userRole={null}
             currentUser={null}
             allAgents={[]}
             onLogout={handleLogout}
             isLoading={true}
           />
-          <div className={`flex-1 flex flex-col h-screen overflow-y-auto transition-all duration-300 ${isSidebarCollapsed ? 'md:ml-16' : 'md:ml-56'} relative w-full bg-gray-50`}>
+          <SidebarInset className="flex-1 flex flex-col h-screen overflow-y-auto relative w-full bg-background text-foreground">
               <div className="flex h-full items-center justify-center">
-                  <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+                  <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
               </div>
-          </div>
-        </div>
+          </SidebarInset>
+        </SidebarProvider>
       );
   }
 
@@ -270,13 +267,9 @@ export default function App() {
   const normalizedRole = currentUser?.role?.toLowerCase().trim();
 
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden font-sans text-gray-900">
+    <SidebarProvider className="h-screen bg-background overflow-hidden font-sans text-foreground" style={darkStyle}>
       <GoogleAnalytics />
       <Sidebar
-        isCollapsed={isSidebarCollapsed}
-        setIsCollapsed={setIsSidebarCollapsed}
-        isMobileOpen={isMobileMenuOpen}
-        closeMobile={() => setIsMobileMenuOpen(false)}
         userRole={normalizedRole as any}
         currentUser={currentUser}
         allAgents={agents}
@@ -284,13 +277,11 @@ export default function App() {
         isLoading={isLoading}
       />
 
-      <div className={`flex-1 flex flex-col h-screen overflow-y-auto transition-all duration-300 ${isSidebarCollapsed ? 'md:ml-16' : 'md:ml-56'} relative w-full bg-gray-50`}>
+      <SidebarInset className="flex-1 flex flex-col h-screen overflow-y-auto relative w-full bg-background text-foreground">
         <GlobalAlerts userRole={normalizedRole as any} />
-        <Header
-          onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
-        />
+        <Header />
 
-        <main className="flex-1 p-4 md:p-8 scroll-smooth">
+        <main className="flex-1 p-4 md:p-8 scroll-smooth bg-background text-foreground">
             <Routes>
                 <Route path="/" element={<Navigate to="/agents" replace />} />
                 
@@ -353,7 +344,7 @@ export default function App() {
                 <Route path="*" element={<Navigate to="/404" replace />} />
             </Routes>
         </main>
-      </div>
-    </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

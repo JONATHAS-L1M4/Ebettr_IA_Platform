@@ -99,16 +99,16 @@ export const FieldList: React.FC<FieldListProps> = ({
         case 'switch': return <SwitchField field={effectiveField} onChange={onChange} />;
         case 'upload': return <UploadField field={effectiveField} onChange={onChange} />;
         case 'uuid': return <UuidField field={effectiveField} onChange={onChange} />;
-        case 'annotation': return <div className="text-sm text-gray-500 italic border border-dashed border-gray-200 p-2 rounded bg-gray-50">Anotação: {field.defaultValue || '(Vazio)'}</div>;
+        case 'annotation': return <div className="text-sm text-muted-foreground italic border border-dashed border-border p-2 rounded bg-muted/40">Anotação: {field.defaultValue || '(Vazio)'}</div>;
         default: return <TextField field={effectiveField} onChange={onChange} />;
     }
   };
 
   return (
-    <div className="h-full bg-gray-50/30 p-8 overflow-y-auto">
+    <div className="h-full bg-muted/30 p-8 overflow-y-auto">
         <div className="max-w-2xl mx-auto flex flex-col gap-6">
-            <div className="flex items-center justify-between border-b border-gray-200 pb-4">
-                <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide flex items-center gap-2">
+            <div className="flex items-center justify-between border-b border-border pb-4">
+                <h3 className="text-sm font-bold text-foreground uppercase tracking-wide flex items-center gap-2">
                     <Activity className="w-4 h-4" /> Preview ({fields.length})
                 </h3>
                 <div className="flex items-center gap-2">
@@ -122,7 +122,7 @@ export const FieldList: React.FC<FieldListProps> = ({
                     {onImport && (
                         <button 
                             onClick={handleImportClick}
-                            className="p-1.5 text-gray-400 hover:text-black hover:bg-gray-100 rounded transition-colors"
+                            className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted rounded transition-colors"
                             title="Importar Formulário"
                         >
                             <Upload className="w-4 h-4" />
@@ -131,20 +131,20 @@ export const FieldList: React.FC<FieldListProps> = ({
                     <button 
                         onClick={handleExport}
                         disabled={fields.length === 0}
-                        className="p-1.5 text-gray-400 hover:text-black hover:bg-gray-100 rounded transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
+                        className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted rounded transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
                         title="Exportar Formulário"
                     >
                         <Download className="w-4 h-4" />
                     </button>
-                    {fields.length > 0 && <span className="text-[10px] font-bold text-green-700 bg-green-50 border border-green-100 px-2 py-0.5 rounded-full uppercase tracking-wider ml-2">Live Preview</span>}
+                    {fields.length > 0 && <span className="text-[10px] font-bold text-foreground bg-muted/60 border border-border px-2 py-0.5 rounded-full uppercase tracking-wider ml-2">Live Preview</span>}
                 </div>
             </div>
 
             {fields.length === 0 ? (
-                <div className="border-2 border-dashed border-gray-200 rounded-xl h-64 flex flex-col items-center justify-center text-gray-400 gap-3 bg-white">
+                <div className="border-2 border-dashed border-border rounded-xl h-64 flex flex-col items-center justify-center text-muted-foreground gap-3 bg-card">
                         <Box className="w-10 h-10 opacity-20" />
                         <div className="text-center">
-                        <p className="text-sm font-medium text-gray-500">Nenhum campo configurado</p>
+                        <p className="text-sm font-medium text-muted-foreground">Nenhum campo configurado</p>
                         <p className="text-xs mt-1">Utilize o editor ao lado para adicionar campos.</p>
                         </div>
                 </div>
@@ -161,8 +161,8 @@ export const FieldList: React.FC<FieldListProps> = ({
                             key={field.id}
                             onClick={() => onEdit(field)}
                             className={`
-                                group relative p-4 rounded-lg bg-white border transition-all cursor-pointer shadow-sm ${colSpanClass}
-                                ${editingFieldId === field.id ? 'border-gray-200 ring-1 ring-gray-600 shadow-sm' : 'border-gray-200 hover:border-gray-300 hover:shadow-md'}
+                                group relative p-4 rounded-lg bg-card border transition-all cursor-pointer shadow-sm ${colSpanClass}
+                                ${editingFieldId === field.id ? 'border-border ring-1 ring-ring/40 shadow-sm' : 'border-border hover:border-border/80 hover:shadow-md'}
                             `}
                         >
                             {/* Actions (Delete + Reorder) */}
@@ -170,7 +170,7 @@ export const FieldList: React.FC<FieldListProps> = ({
                                 <button 
                                     onClick={(e) => { e.stopPropagation(); onReorder(index, 'up'); }} 
                                     disabled={index === 0}
-                                    className="p-1.5 text-gray-400 hover:text-black hover:bg-gray-100 rounded transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
+                                    className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted rounded transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
                                     title="Mover para Cima"
                                 >
                                     <ChevronUp className="w-3.5 h-3.5" />
@@ -178,15 +178,15 @@ export const FieldList: React.FC<FieldListProps> = ({
                                 <button 
                                     onClick={(e) => { e.stopPropagation(); onReorder(index, 'down'); }} 
                                     disabled={index === fields.length - 1}
-                                    className="p-1.5 text-gray-400 hover:text-black hover:bg-gray-100 rounded transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
+                                    className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted rounded transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
                                     title="Mover para Baixo"
                                 >
                                     <ChevronDown className="w-3.5 h-3.5" />
                                 </button>
-                                <div className="w-[1px] h-4 bg-gray-200 mx-1"></div>
+                                <div className="w-[1px] h-4 bg-border mx-1"></div>
                                 <button 
                                     onClick={(e) => { e.stopPropagation(); onRemove(field.id); }} 
-                                    className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                                    className="p-1.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded transition-colors"
                                     title="Excluir"
                                 >
                                     <Trash2 className="w-3.5 h-3.5" />
@@ -194,13 +194,13 @@ export const FieldList: React.FC<FieldListProps> = ({
                             </div>
 
                             <div className="flex items-center gap-2 mb-2 pr-20">
-                                <label className="text-xs font-bold text-gray-700 uppercase tracking-wide flex items-center gap-1">
+                                <label className="text-xs font-bold text-foreground uppercase tracking-wide flex items-center gap-1">
                                     {field.label}
-                                    {field.secret && <Lock className="w-2.5 h-2.5 text-gray-400" />}
+                                    {field.secret && <Lock className="w-2.5 h-2.5 text-muted-foreground" />}
                                 </label>
-                                {field.required && <span className="text-red-500 font-bold">*</span>}
+                                {field.required && <span className="text-destructive font-bold">*</span>}
                                 {field.helpText && (
-                                    <div className="text-gray-300" title={field.helpText}>
+                                    <div className="text-muted-foreground/70" title={field.helpText}>
                                         <CircleHelp className="w-3.5 h-3.5" />
                                     </div>
                                 )}
@@ -215,14 +215,14 @@ export const FieldList: React.FC<FieldListProps> = ({
                             
                             <div className="mt-2 flex items-center justify-between">
                                 <div className="flex items-center gap-2">
-                                    <span className="text-[9px] text-gray-400 uppercase tracking-wider bg-gray-50 px-1 rounded">
+                                    <span className="text-[9px] text-muted-foreground uppercase tracking-wider bg-muted/40 px-1 rounded">
                                         {field.layoutWidth || '100%'}
                                     </span>
-                                    <span className="text-[9px] text-gray-400 uppercase tracking-wider">
+                                    <span className="text-[9px] text-muted-foreground uppercase tracking-wider">
                                         {field.type}
                                     </span>
                                 </div>
-                                <span className="text-[9px] font-mono text-gray-300" title="Field ID">
+                                <span className="text-[9px] font-mono text-muted-foreground/70" title="Field ID">
                                     {field.id.substring(0, 8)}...
                                 </span>
                             </div>
@@ -234,3 +234,4 @@ export const FieldList: React.FC<FieldListProps> = ({
     </div>
   );
 };
+

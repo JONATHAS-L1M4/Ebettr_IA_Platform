@@ -7,6 +7,7 @@ import { Company } from '../types';
 import { companyService } from '../services/companyService';
 import { userService } from '../services/userService';
 import { ConfirmationModal } from '../components/shared/ConfirmationModal';
+import DarkPage from '../components/layout/DarkPage';
 
 interface ClientUser {
   id?: string;
@@ -19,21 +20,21 @@ interface ClientUser {
 }
 
 const TableSkeleton = () => (
-    <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden animate-pulse">
-        <div className="h-12 bg-gray-50 border-b border-gray-100 flex items-center px-6">
-             <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+    <div className="bg-panel border border-border rounded-xl shadow-sm overflow-hidden animate-pulse">
+        <div className="h-12 bg-muted border-b border-border flex items-center px-6">
+             <div className="h-4 bg-muted rounded w-1/4"></div>
         </div>
-        <div className="divide-y divide-gray-50">
+        <div className="divide-y divide-border">
             {[1, 2, 3, 4, 5].map(i => (
                 <div key={i} className="p-4 flex items-center justify-between">
                     <div className="flex items-center gap-3 w-full">
-                        <div className="w-8 h-8 rounded-full bg-gray-100 shrink-0"></div>
+                        <div className="w-8 h-8 rounded-full bg-muted shrink-0"></div>
                         <div className="space-y-2 w-full">
-                            <div className="h-3 bg-gray-100 rounded w-1/3"></div>
-                            <div className="h-2 bg-gray-50 rounded w-1/4"></div>
+                            <div className="h-3 bg-muted rounded w-1/3"></div>
+                            <div className="h-2 bg-muted rounded w-1/4"></div>
                         </div>
                     </div>
-                    <div className="w-20 h-4 bg-gray-50 rounded shrink-0"></div>
+                    <div className="w-20 h-4 bg-muted rounded shrink-0"></div>
                 </div>
             ))}
         </div>
@@ -217,25 +218,26 @@ export const ClientUsers: React.FC = () => {
   );
 
   return (
+    <DarkPage className="min-h-[calc(100vh-4rem)]">
     <div className="animate-fade-in max-w-7xl mx-auto pb-12">
-        <div className="flex flex-col gap-4 border-b border-gray-100 pb-4 mb-8">
+        <div className="flex flex-col gap-4 border-b border-border pb-4 mb-8">
             <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 border border-gray-700 rounded-lg flex items-center justify-center text-gray-100 bg-gray-800">
+                    <div className="w-10 h-10 border border-border rounded-lg flex items-center justify-center text-foreground bg-muted">
                         <User className="w-5 h-5" />
                     </div>
                     <div>
-                        <h1 className="text-xl font-semibold text-gray-900 tracking-tight">Usuários Clientes</h1>
-                        <p className="text-sm text-gray-500 mt-0.5 font-light">Gestão de contas e associação com empresas/grupos.</p>
+                        <h1 className="text-xl font-semibold text-foreground tracking-tight">Usuários Clientes</h1>
+                        <p className="text-sm text-muted-foreground mt-0.5 font-light">Gestão de contas e associação com empresas/grupos.</p>
                     </div>
                 </div>
                 <div className="relative group w-full max-w-xs hidden sm:block">
-                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400 group-focus-within:text-black">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground group-focus-within:text-foreground">
                         <Search className="w-4 h-4" />
                     </div>
                     <input 
                         type="text" 
-                        className="bg-white border border-gray-200 text-gray-900 text-sm rounded-md focus:border-gray-400 focus:outline-none block w-full pl-10 h-9 placeholder-gray-400 shadow-sm" 
+                        className="bg-background border border-input text-foreground text-sm rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background block w-full pl-10 h-9 placeholder:text-muted-foreground shadow-sm" 
                         placeholder="Buscar usuário..." 
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -243,12 +245,12 @@ export const ClientUsers: React.FC = () => {
                 </div>
             </div>
             <div className="relative group w-full sm:hidden">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400 group-focus-within:text-black">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground group-focus-within:text-foreground">
                     <Search className="w-4 h-4" />
                 </div>
                 <input 
                     type="text" 
-                    className="bg-white border border-gray-200 text-gray-900 text-sm rounded-md focus:border-gray-400 focus:outline-none block w-full pl-10 h-9 placeholder-gray-400 shadow-sm" 
+                    className="bg-background border border-input text-foreground text-sm rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background block w-full pl-10 h-9 placeholder:text-muted-foreground shadow-sm" 
                     placeholder="Buscar usuário..." 
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -261,48 +263,48 @@ export const ClientUsers: React.FC = () => {
                 {isLoading ? (
                     <TableSkeleton />
                 ) : (
-                    <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden min-h-[300px]">
+                    <div className="bg-panel border border-border rounded-xl shadow-sm overflow-hidden min-h-[300px]">
                         <div className="overflow-x-auto">
                             <table className="w-full text-left border-collapse">
                                 <thead>
-                                    <tr className="bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                    <tr className="bg-muted border-b border-border text-xs font-bold text-muted-foreground uppercase tracking-wider">
                                         <th className="px-6 py-4">Usuário</th>
                                         <th className="px-6 py-4">Empresa / Grupo</th>
                                         <th className="px-6 py-4 text-right">Ações</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-100 text-sm">
+                                <tbody className="divide-y divide-border text-sm">
                                     {filteredClients.map((client) => {
                                         const isBlocked = client.status === 'blocked';
                                         return (
-                                            <tr key={client.id || client.email} className={`hover:bg-gray-50/80 transition-colors group ${isBlocked ? 'bg-red-50/30' : ''}`}>
+                                            <tr key={client.id || client.email} className={`hover:bg-muted transition-colors group ${isBlocked ? 'bg-red-950/40' : ''}`}>
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center gap-3">
                                                         <div className="flex flex-col">
                                                             <div className="flex items-center gap-2">
-                                                                <span className={`font-semibold leading-tight ${isBlocked ? 'text-gray-500 line-through' : 'text-gray-900'}`}>
+                                                                <span className={`font-semibold leading-tight ${isBlocked ? 'text-muted-foreground line-through' : 'text-foreground'}`}>
                                                                     {client.name || client.email}
                                                                 </span>
-                                                                {isBlocked && <span className="text-[9px] bg-red-100 text-red-600 border border-red-200 px-1.5 rounded font-bold uppercase">Bloqueado</span>}
+                                                                {isBlocked && <span className="text-[9px] bg-red-950/40 text-red-300 border border-red-900/50 px-1.5 rounded font-bold uppercase">Bloqueado</span>}
                                                             </div>
-                                                            <span className="text-[10px] text-gray-400">{client.email}</span>
+                                                            <span className="text-[10px] text-muted-foreground">{client.email}</span>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center gap-2">
-                                                        <Building2 className={`w-4 h-4 ${client.company ? (isBlocked ? 'text-gray-300' : 'text-gray-500') : 'text-gray-300'}`} />
-                                                        <span className={`text-xs font-medium ${client.company ? (isBlocked ? 'text-gray-400' : 'text-gray-700') : 'text-gray-400 italic'}`}>
+                                                        <Building2 className="w-4 h-4 text-muted-foreground" />
+                                                        <span className={`text-xs font-medium text-muted-foreground ${client.company ? '' : 'italic'}`}>
                                                             {client.company || 'Não informada'}
                                                         </span>
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4 text-right">
                                                     <div className="flex items-center justify-end gap-1">
-                                                        <button type="button" onClick={(e) => { e.stopPropagation(); handleToggleBlock(client); }} className={`p-2 rounded-lg transition-colors inline-flex z-10 relative cursor-pointer ${isBlocked ? 'text-green-600 hover:bg-green-50' : 'text-gray-400 hover:text-amber-600 hover:bg-amber-50'}`} title={isBlocked ? "Desbloquear" : "Bloquear"}>
+                                                        <button type="button" onClick={(e) => { e.stopPropagation(); handleToggleBlock(client); }} className={`p-2 rounded-lg transition-colors inline-flex z-10 relative cursor-pointer ${isBlocked ? 'text-green-400 hover:bg-green-950/40' : 'text-muted-foreground hover:text-amber-300 hover:bg-amber-950/40'}`} title={isBlocked ? "Desbloquear" : "Bloquear"}>
                                                             {isBlocked ? <LockOpen className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
                                                         </button>
-                                                        <button type="button" onClick={(e) => { e.stopPropagation(); handleClickRemove(client); }} className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors inline-flex z-10 relative cursor-pointer" title="Remover">
+                                                        <button type="button" onClick={(e) => { e.stopPropagation(); handleClickRemove(client); }} className="p-2 text-muted-foreground hover:text-red-400 hover:bg-red-950/40 rounded-lg transition-colors inline-flex z-10 relative cursor-pointer" title="Remover">
                                                             <Trash2 className="w-4 h-4" />
                                                         </button>
                                                     </div>
@@ -313,61 +315,61 @@ export const ClientUsers: React.FC = () => {
                                 </tbody>
                             </table>
                         </div>
-                    {!isLoading && filteredClients.length === 0 && (<div className="p-8 text-center text-gray-400 text-sm mt-4">Nenhum cliente cadastrado.</div>)}
+                    {!isLoading && filteredClients.length === 0 && (<div className="p-8 text-center text-muted-foreground text-sm mt-4">Nenhum cliente cadastrado.</div>)}
                     </div>
                 )}
             </div>
 
             <div className="lg:col-span-1">
-                <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm sticky top-6">
-                    <h3 className="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2"><Plus className="w-4 h-4" /> Cadastrar Cliente</h3>
+                <div className="bg-panel border border-border rounded-xl p-6 shadow-sm sticky top-6">
+                    <h3 className="text-sm font-bold text-foreground mb-4 flex items-center gap-2"><Plus className="w-4 h-4" /> Cadastrar Cliente</h3>
                     <form onSubmit={handleAddClient} className="space-y-4">
                         <div className="space-y-1">
-                            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Nome Completo</label>
+                            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Nome Completo</label>
                             <div className="relative">
-                                <div className="absolute left-3 top-2.5 text-gray-400"><User className="w-4 h-4" /></div>
+                                <div className="absolute left-3 top-2.5 text-muted-foreground"><User className="w-4 h-4" /></div>
                                 <input type="text" value={newName} onChange={e => setNewName(e.target.value)} className={`${inputBaseClass} pl-9 pr-8`} placeholder="Ex: Maria Souza" disabled={isSubmitting} />
                             </div>
                         </div>
                         <div className="space-y-1">
-                            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email</label>
+                            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Email</label>
                             <div className="relative">
-                                <div className="absolute left-3 top-2.5 text-gray-400"><Mail className="w-4 h-4" /></div>
+                                <div className="absolute left-3 top-2.5 text-muted-foreground"><Mail className="w-4 h-4" /></div>
                                 <input type="email" value={newEmail} onChange={e => setNewEmail(e.target.value)} className={`${inputBaseClass} pl-9 pr-8`} placeholder="cliente@empresa.com" disabled={isSubmitting} />
                             </div>
                         </div>
                         <div className="space-y-1 relative" ref={dropdownRef}>
-                            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Empresa / Grupo <span className="text-red-500">*</span></label>
+                            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Empresa / Grupo <span className="text-red-400">*</span></label>
                             <div className="relative">
-                                <div className="absolute left-3 top-2.5 text-gray-400 pointer-events-none"><Building2 className="w-4 h-4" /></div>
+                                <div className="absolute left-3 top-2.5 text-muted-foreground pointer-events-none"><Building2 className="w-4 h-4" /></div>
                                 <input type="text" value={newCompany} onChange={e => { setNewCompany(e.target.value); setIsCompanyDropdownOpen(true); }} onFocus={() => setIsCompanyDropdownOpen(true)} className={`${inputBaseClass} pl-9 pr-8 cursor-text`} placeholder="Selecione..." disabled={isSubmitting} />
-                                <div className="absolute right-3 top-2.5 text-gray-400 pointer-events-none"><ChevronDown className={`w-4 h-4 transition-transform ${isCompanyDropdownOpen ? 'rotate-180' : ''}`} /></div>
+                                <div className="absolute right-3 top-2.5 text-muted-foreground pointer-events-none"><ChevronDown className={`w-4 h-4 transition-transform ${isCompanyDropdownOpen ? 'rotate-180' : ''}`} /></div>
                             </div>
                             {isCompanyDropdownOpen && (
-                                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-100 rounded-lg shadow-xl z-50 overflow-hidden animate-scale-in origin-top">
+                                <div className="absolute top-full left-0 right-0 mt-1 bg-popover border border-border rounded-lg shadow-xl z-50 overflow-hidden animate-scale-in origin-top">
                                     <div className="max-h-48 overflow-y-auto scrollbar-hide py-1">
                                         {filteredCompanies.length > 0 ? (
                                             filteredCompanies.map(comp => (
-                                                <button key={comp.id} type="button" onClick={() => handleSelectCompany(comp.name)} className="w-full text-left px-4 py-2 hover:bg-gray-50 text-sm text-gray-700 flex items-center gap-2 transition-colors group">
-                                                    <Building2 className="w-3.5 h-3.5 text-gray-300 group-hover:text-gray-500" /><span className="truncate">{comp.name}</span>{comp.name === newCompany && <CheckCircle2 className="w-3 h-3 text-green-500 ml-auto" />}
+                                                <button key={comp.id} type="button" onClick={() => handleSelectCompany(comp.name)} className="w-full text-left px-4 py-2 hover:bg-muted text-sm text-muted-foreground flex items-center gap-2 transition-colors group">
+                                                    <Building2 className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground" /><span className="truncate">{comp.name}</span>{comp.name === newCompany && <CheckCircle2 className="w-3 h-3 text-green-500 ml-auto" />}
                                                 </button>
                                             ))
-                                        ) : <div className="px-4 py-3 text-center"><span className="text-xs text-gray-400">Nenhuma empresa encontrada.</span></div>}
+                                        ) : <div className="px-4 py-3 text-center"><span className="text-xs text-muted-foreground">Nenhuma empresa encontrada.</span></div>}
                                     </div>
-                                    <div className="bg-gray-50 px-3 py-1.5 border-t border-gray-100"><p className="text-[9px] text-gray-400 text-center">Gerencie detalhes na aba "Empresas"</p></div>
+                                    <div className="bg-muted px-3 py-1.5 border-t border-border"><p className="text-[9px] text-muted-foreground text-center">Gerencie detalhes na aba "Empresas"</p></div>
                                 </div>
                             )}
                         </div>
-                        <button type="submit" disabled={!newEmail || !newName || !newCompany || isSubmitting} className="w-full py-2.5 bg-black text-white text-xs font-bold rounded-md hover:bg-gray-800 transition-colors uppercase tracking-wide disabled:opacity-50 disabled:cursor-not-allowed shadow-sm mt-2 flex items-center justify-center gap-2">
+                        <button type="submit" disabled={!newEmail || !newName || !newCompany || isSubmitting} className="w-full py-2 bg-primary text-primary-foreground text-xs font-bold rounded-md hover:bg-primary transition-colors uppercase tracking-wide disabled:opacity-50 disabled:cursor-not-allowed mt-2 flex items-center justify-center gap-2">
                             {isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
                             {isSubmitting ? 'Salvando...' : 'Salvar Cadastro'}
                         </button>
-                        <p className="text-[10px] text-gray-400 text-center">Uma senha segura será gerada automaticamente.</p>
+                        <p className="text-[10px] text-muted-foreground text-center">Uma senha segura será gerada automaticamente.</p>
                     </form>
-                    <div className="mt-6 p-4 bg-gray-50 border border-gray-100 rounded-lg">
+                    <div className="mt-6 p-4 bg-muted border border-border rounded-lg">
                         <div className="flex items-start gap-2">
-                            <Shield className="w-4 h-4 text-gray-400 mt-0.5" />
-                            <div><p className="text-xs font-bold text-gray-700">Permissão de Visualização</p><p className="text-[10px] text-gray-500 mt-1 leading-relaxed">Ao vincular uma empresa, você poderá filtrar dashboards e agentes específicos para este grupo no futuro.</p></div>
+                            <Shield className="w-4 h-4 text-muted-foreground mt-0.5" />
+                            <div><p className="text-xs font-bold text-foreground">Permissão de Visualização</p><p className="text-[10px] text-muted-foreground mt-1 leading-relaxed">Ao vincular uma empresa, você poderá filtrar dashboards e agentes específicos para este grupo no futuro.</p></div>
                         </div>
                     </div>
                 </div>
@@ -384,5 +386,7 @@ export const ClientUsers: React.FC = () => {
             confirmLabel="Excluir"
         />
     </div>
+    </DarkPage>
   );
 };
+

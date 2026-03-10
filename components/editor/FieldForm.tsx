@@ -336,7 +336,7 @@ export const FieldForm: React.FC<FieldFormProps> = ({
     { value: 'annotation', label: 'Anotação (Markdown)' },
   ];
 
-  const labelClass = "text-xs font-semibold text-gray-700 uppercase tracking-wide flex items-center gap-1";
+  const labelClass = "text-xs font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-1";
   const isLengthType = ['text', 'textarea', 'email', 'url'].includes(type);
   const isValueType = ['number_int', 'number_dec'].includes(type);
 
@@ -344,26 +344,26 @@ export const FieldForm: React.FC<FieldFormProps> = ({
 
   return (
     <div className="space-y-4 pt-2">
-        <div className="flex items-center justify-between pb-2 border-b border-gray-100">
+        <div className="flex items-center justify-between pb-2 border-b border-border">
             <div className="flex items-center gap-2">
-                <Code className="w-4 h-4 text-gray-900" />
-                <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+                <Code className="w-4 h-4 text-foreground" />
+                <h3 className="text-sm font-bold text-foreground uppercase tracking-wide">
                     {initialField ? 'Editar Campo' : 'Novo Campo'}
                 </h3>
             </div>
             {initialField && (
-                <button onClick={onCancelEdit} className="text-xs font-medium text-red-500 hover:text-red-700 hover:underline">
+                <button onClick={onCancelEdit} className="text-xs font-medium text-destructive hover:text-destructive/80 hover:underline">
                     Cancelar Edição
                 </button>
             )}
         </div>
 
-        <div className="space-y-5 p-5 rounded-lg border bg-gray-50 border-gray-200">
+        <div className="space-y-5 p-5 rounded-lg border bg-muted/40 border-border">
             
             {/* Identity Row */}
             <div className="space-y-1">
                     <label className={labelClass}>
-                    Rótulo (Display Name) <span className="text-red-500">*</span>
+                    Rótulo (Display Name) <span className="text-destructive">*</span>
                     </label>
                     <input 
                     value={label} onChange={e => setLabel(e.target.value)}
@@ -377,7 +377,7 @@ export const FieldForm: React.FC<FieldFormProps> = ({
                 <label className={labelClass}>
                     <LayoutGrid className="w-3 h-3" /> Proporção do Campo
                 </label>
-                <div className="bg-gray-100 p-1 rounded-lg flex items-center gap-1 shadow-inner w-full">
+                <div className="bg-muted/60 p-1 rounded-lg flex items-center gap-1 shadow-inner w-full border border-border">
                     {availableWidths.map((opt) => (
                         <button 
                             key={opt.val}
@@ -386,8 +386,8 @@ export const FieldForm: React.FC<FieldFormProps> = ({
                             className={`
                                 flex-1 flex items-center justify-center px-3 py-1.5 rounded-md text-[10px] sm:text-xs font-semibold uppercase tracking-wide transition-all duration-300 ease-out
                                 ${layoutWidth === opt.val 
-                                    ? 'bg-gray-700 text-white shadow-sm transform scale-100' 
-                                    : 'text-gray-500 hover:text-black hover:bg-white/50'}
+                                    ? 'bg-card border border-border text-foreground shadow-sm transform scale-100' 
+                                    : 'text-muted-foreground hover:text-foreground hover:bg-accent'}
                             `}
                         >
                             {opt.label}
@@ -395,7 +395,7 @@ export const FieldForm: React.FC<FieldFormProps> = ({
                     ))}
                 </div>
                 {parentWidth !== '100%' && (
-                    <p className="text-[10px] text-gray-400 mt-1">
+                    <p className="text-[10px] text-muted-foreground mt-1">
                         Opções limitadas pela largura do card ({parentWidth}).
                     </p>
                 )}
@@ -408,18 +408,18 @@ export const FieldForm: React.FC<FieldFormProps> = ({
                         Caminho Mapeamento JSON
                     </label>
                     <div className="relative">
-                        <div className="absolute left-3 top-2.5 text-gray-400">
+                        <div className="absolute left-3 top-2.5 text-muted-foreground">
                             <FileJson className="w-4 h-4" />
                         </div>
                         <input 
                             value={displayRawPath}
                             readOnly
-                            className={`${inputBaseClass} pl-9 font-mono text-xs bg-gray-50 text-gray-700 cursor-not-allowed focus:ring-0 focus:border-gray-200 shadow-inner ${jsonPathError ? 'border-red-300 bg-red-50' : ''}`} 
+                            className={`${inputBaseClass} pl-9 font-mono text-xs bg-muted/40 text-muted-foreground cursor-not-allowed focus:ring-0 focus:border-border shadow-inner ${jsonPathError ? 'border-destructive/40 bg-destructive/10' : ''}`} 
                             placeholder="Selecione no payload ao lado..."
                         />
                     </div>
                     {jsonPathError && (
-                        <p className="text-[10px] text-red-500 font-medium mt-1 animate-pulse">
+                        <p className="text-[10px] text-destructive font-medium mt-1 animate-pulse">
                             {jsonPathError}
                         </p>
                     )}
@@ -433,17 +433,17 @@ export const FieldForm: React.FC<FieldFormProps> = ({
                         ID Interno (Gerado)
                     </label>
                     <div className="relative">
-                        <div className="absolute left-3 top-2.5 text-gray-400">
+                        <div className="absolute left-3 top-2.5 text-muted-foreground">
                             <Shield className="w-4 h-4" />
                         </div>
                         <input 
                             value={jsonPath}
                             readOnly
-                            className={`${inputBaseClass} pl-9 font-mono text-xs bg-gray-50 text-gray-400 cursor-not-allowed focus:ring-0 focus:border-gray-200 shadow-inner`} 
+                            className={`${inputBaseClass} pl-9 font-mono text-xs bg-muted/40 text-muted-foreground cursor-not-allowed focus:ring-0 focus:border-border shadow-inner`} 
                             placeholder="Gerado automaticamente"
                         />
                     </div>
-                    <p className="text-[10px] text-gray-400">Identificador único criptografado.</p>
+                    <p className="text-[10px] text-muted-foreground">Identificador único criptografado.</p>
                 </div>
             )}
 
@@ -451,10 +451,10 @@ export const FieldForm: React.FC<FieldFormProps> = ({
             {isUploadType && (
                 <div className="space-y-1 animate-fade-in">
                     <label className={labelClass}>
-                        Webhook URL (Upload) <span className="text-red-500">*</span>
+                        Webhook URL (Upload) <span className="text-destructive">*</span>
                     </label>
                     <div className="relative">
-                        <div className="absolute left-3 top-2.5 text-gray-400">
+                        <div className="absolute left-3 top-2.5 text-muted-foreground">
                             <Globe className="w-4 h-4" />
                         </div>
                         <input 
@@ -463,7 +463,7 @@ export const FieldForm: React.FC<FieldFormProps> = ({
                             placeholder="https://webhook.n8n.io/..."
                         />
                     </div>
-                    <p className="text-[10px] text-gray-400">URL para onde os arquivos serão enviados via POST.</p>
+                    <p className="text-[10px] text-muted-foreground">URL para onde os arquivos serão enviados via POST.</p>
                 </div>
             )}
 
@@ -471,10 +471,10 @@ export const FieldForm: React.FC<FieldFormProps> = ({
             {isUuidType && (
                 <div className="space-y-1 animate-fade-in">
                     <label className={labelClass}>
-                        URL do Webhook <span className="text-red-500">*</span>
+                        URL do Webhook <span className="text-destructive">*</span>
                     </label>
                     <div className="relative">
-                        <div className="absolute left-3 top-2.5 text-gray-400">
+                        <div className="absolute left-3 top-2.5 text-muted-foreground">
                             <Globe className="w-4 h-4" />
                         </div>
                         <input 
@@ -485,7 +485,7 @@ export const FieldForm: React.FC<FieldFormProps> = ({
                             placeholder="https://n8n.ebettr.com/webhook/..."
                         />
                     </div>
-                    <p className="text-[10px] text-gray-500 mt-1">
+                    <p className="text-[10px] text-muted-foreground mt-1">
                         Este link será exibido para o usuário copiar.
                     </p>
                 </div>
@@ -501,8 +501,8 @@ export const FieldForm: React.FC<FieldFormProps> = ({
                 </div>
                 <div className="space-y-1">
                     <label className={labelClass}>Obrigatório</label>
-                    <div className={`h-[32px] px-3 bg-white border rounded-md flex items-center justify-between border-gray-200 ${isAnnotationType ? 'opacity-50 pointer-events-none' : ''}`}>
-                        <span className="text-xs text-gray-500">{required ? 'Sim' : 'Opcional'}</span>
+                    <div className={`h-[32px] px-3 bg-card border rounded-md flex items-center justify-between border-border ${isAnnotationType ? 'opacity-50 pointer-events-none' : ''}`}>
+                        <span className="text-xs text-muted-foreground">{required ? 'Sim' : 'Opcional'}</span>
                         <Toggle checked={required} onChange={setRequired} size="sm" />
                     </div>
                 </div>
@@ -521,7 +521,7 @@ export const FieldForm: React.FC<FieldFormProps> = ({
                         min={2}
                         max={20}
                     />
-                    <p className="text-[10px] text-gray-400">Define a altura inicial do campo de texto.</p>
+                    <p className="text-[10px] text-muted-foreground">Define a altura inicial do campo de texto.</p>
                 </div>
             )}
 
@@ -541,7 +541,7 @@ export const FieldForm: React.FC<FieldFormProps> = ({
                 <div className="space-y-4 animate-fade-in">
                    <div className="space-y-1">
                        <div className="flex items-center gap-1">
-                           <Upload className="w-3 h-3 text-gray-500" />
+                           <Upload className="w-3 h-3 text-muted-foreground" />
                            <label className={labelClass}>Tipos de Arquivo Permitidos</label>
                        </div>
                        <input 
@@ -550,7 +550,7 @@ export const FieldForm: React.FC<FieldFormProps> = ({
                          className={inputBaseClass} 
                          placeholder="Ex: .pdf, .jpg, .png, image/*" 
                        />
-                       <p className="text-[10px] text-gray-400">Deixe vazio para permitir qualquer.</p>
+                       <p className="text-[10px] text-muted-foreground">Deixe vazio para permitir qualquer.</p>
                    </div>
                    
                    <div className="space-y-1">
@@ -562,7 +562,7 @@ export const FieldForm: React.FC<FieldFormProps> = ({
                          className={inputBaseClass} 
                          placeholder="Ex: 5" 
                        />
-                       <p className="text-[10px] text-gray-400">Deixe vazio para ilimitado (ou default).</p>
+                       <p className="text-[10px] text-muted-foreground">Deixe vazio para ilimitado (ou default).</p>
                    </div>
                 </div>
             )}
@@ -578,7 +578,7 @@ export const FieldForm: React.FC<FieldFormProps> = ({
                         rows={6}
                         placeholder="Digite sua anotação aqui... Suporta **Markdown**."
                     />
-                    <p className="text-[10px] text-gray-400">
+                    <p className="text-[10px] text-muted-foreground">
                         Use Markdown para formatar o texto. Ex: **Negrito**, *Itálico*, [Link](url).
                     </p>
                 </div>
@@ -589,7 +589,7 @@ export const FieldForm: React.FC<FieldFormProps> = ({
                 <div className="space-y-1">
                     <label className={labelClass}>Valor Padrão (Default)</label>
                     {needsOptions && options.trim().length === 0 ? (
-                        <div className="text-xs text-gray-400 italic p-2 rounded border border-dashed text-center bg-gray-50 border-gray-200">
+                        <div className="text-xs text-muted-foreground italic p-2 rounded border border-dashed text-center bg-muted/40 border-border">
                             Defina as <strong>Opções</strong> acima para selecionar um valor padrão.
                         </div>
                     ) : (
@@ -638,16 +638,16 @@ export const FieldForm: React.FC<FieldFormProps> = ({
                     className={`${inputBaseClass} min-h-[80px]`} 
                     placeholder="Notas para uso interno do administrador..." 
                 />
-                <p className="text-[10px] text-gray-400">Estas notas não são visíveis para o cliente.</p>
+                <p className="text-[10px] text-muted-foreground">Estas notas não são visíveis para o cliente.</p>
             </div>
             )}
 
             {/* 8. VALIDATION RULES */}
             {!isAnnotationType && (isLengthType || isValueType) && (
-                <div className="pt-2 border-t mt-2 border-gray-200">
+                <div className="pt-2 border-t mt-2 border-border">
                     <div className="flex items-center gap-2 mb-3">
-                        <Shield className="w-3.5 h-3.5 text-gray-500" />
-                        <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wide">Regras de Validação</h4>
+                        <Shield className="w-3.5 h-3.5 text-muted-foreground" />
+                        <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Regras de Validação</h4>
                     </div>
                     
                     <div className="grid grid-cols-2 gap-4">
@@ -677,7 +677,7 @@ export const FieldForm: React.FC<FieldFormProps> = ({
                         </div>
                     </div>
                     {isLengthType && (minLen !== '' || maxLen !== '') && (
-                        <div className="mt-2 flex items-center gap-2 text-[10px] text-blue-600 font-medium">
+                        <div className="mt-2 flex items-center gap-2 text-[10px] text-muted-foreground font-medium">
                             <CircleHelp className="w-3 h-3" />
                             <span className="cursor-help hover:underline">
                                 Requisito visível: "O campo deve ter entre {minLen || '0'} e {maxLen || '∞'} caracteres."
@@ -702,3 +702,5 @@ export const FieldForm: React.FC<FieldFormProps> = ({
     </div>
   );
 };
+
+

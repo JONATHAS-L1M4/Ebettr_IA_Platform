@@ -6,6 +6,7 @@ import { fetchExecutionMetrics, ExecutionMetric } from '../services/n8n/workflow
 import { useAppData } from '../hooks/useAppData';
 import { Agent } from '../types';
 import { KPICards } from '../components/dashboard/KPICards';
+import DarkPage from '../components/layout/DarkPage';
 
 export const AdminExecutionMetrics: React.FC = () => {
   const navigate = useNavigate();
@@ -136,23 +137,26 @@ export const AdminExecutionMetrics: React.FC = () => {
 
   if (isLoading || isLoadingAgents) {
     return (
-      <div className="flex flex-col items-center justify-center h-[60vh]">
-        <Loader2 className="w-8 h-8 animate-spin text-gray-300" />
-      </div>
+      <DarkPage className="min-h-[calc(100vh-4rem)]">
+        <div className="flex flex-col items-center justify-center h-[60vh]">
+          <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+        </div>
+      </DarkPage>
     );
   }
 
   return (
+    <DarkPage className="min-h-[calc(100vh-4rem)]">
     <div className="flex flex-col gap-6 animate-fade-in max-w-6xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center shadow-sm">
+            <div className="w-10 h-10 bg-muted rounded-xl flex items-center justify-center shadow-sm">
               <BarChart3 className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Métricas de Execução</h1>
-              <p className="text-sm text-gray-500 mt-1">Visão global de performance dos workflows.</p>
+              <h1 className="text-2xl font-bold text-foreground tracking-tight">Métricas de Execução</h1>
+              <p className="text-sm text-muted-foreground mt-1">Visão global de performance dos workflows.</p>
             </div>
           </div>
         </div>
@@ -164,8 +168,8 @@ export const AdminExecutionMetrics: React.FC = () => {
             className={`
               flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-all shadow-sm border
               ${isSyncing 
-                ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed' 
-                : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400 hover:text-black hover:bg-gray-50'}
+                ? 'bg-muted text-muted-foreground border-border cursor-not-allowed' 
+                : 'bg-card text-muted-foreground border-border hover:border-border hover:text-foreground hover:bg-muted'}
             `}
             title="Sincronizar"
           >
@@ -180,28 +184,28 @@ export const AdminExecutionMetrics: React.FC = () => {
         avgDuration={kpiStats.avgDuration}
       />
 
-      <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden flex flex-col">
-        <div className="p-4 border-b border-gray-100 bg-gray-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-panel border border-border rounded-xl shadow-sm overflow-hidden flex flex-col">
+        <div className="p-4 border-b border-border bg-muted flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="relative flex-1 max-w-md">
             <input 
               type="text"
               placeholder="Buscar por Agente ou Workflow ID..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-4 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-shadow"
+              className="w-full pl-4 pr-4 py-2 bg-background border border-input rounded-lg text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-shadow"
             />
           </div>
-          <div className="text-sm text-gray-500 font-medium">
+          <div className="text-sm text-muted-foreground font-medium">
             {filteredMetrics.length} {filteredMetrics.length === 1 ? 'workflow' : 'workflows'}
           </div>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="bg-gray-50/50 text-gray-500 font-semibold border-b border-gray-100">
+            <thead className="bg-muted text-muted-foreground font-semibold border-b border-border">
               <tr>
                 <th 
-                  className="px-6 py-4 cursor-pointer hover:text-gray-900 transition-colors"
+                  className="px-6 py-4 cursor-pointer hover:text-foreground transition-colors"
                   onClick={() => handleSort('agent')}
                 >
                   <div className="flex items-center gap-1">
@@ -210,7 +214,7 @@ export const AdminExecutionMetrics: React.FC = () => {
                   </div>
                 </th>
                 <th 
-                  className="px-6 py-4 text-center cursor-pointer hover:text-gray-900 transition-colors"
+                  className="px-6 py-4 text-center cursor-pointer hover:text-foreground transition-colors"
                   onClick={() => handleSort('success_rate')}
                 >
                   <div className="flex items-center justify-center gap-1">
@@ -219,7 +223,7 @@ export const AdminExecutionMetrics: React.FC = () => {
                   </div>
                 </th>
                 <th 
-                  className="px-6 py-4 text-right cursor-pointer hover:text-gray-900 transition-colors"
+                  className="px-6 py-4 text-right cursor-pointer hover:text-foreground transition-colors"
                   onClick={() => handleSort('average_duration')}
                 >
                   <div className="flex items-center justify-end gap-1">
@@ -230,10 +234,10 @@ export const AdminExecutionMetrics: React.FC = () => {
                 <th className="px-6 py-4 text-right">Ações</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody className="divide-y divide-border">
               {filteredMetrics.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-gray-400">
+                  <td colSpan={4} className="px-6 py-12 text-center text-muted-foreground">
                     Nenhuma métrica encontrada.
                   </td>
                 </tr>
@@ -242,17 +246,17 @@ export const AdminExecutionMetrics: React.FC = () => {
                   const agent = getAgentByWorkflowId(metric.workflowId);
                   
                   return (
-                    <tr key={metric.workflowId} className="hover:bg-gray-50/50 transition-colors">
+                    <tr key={metric.workflowId} className="hover:bg-muted transition-colors">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center shrink-0">
-                            {agent ? <Bot className="w-4 h-4 text-gray-600" /> : <AlertTriangle className="w-4 h-4 text-amber-500" />}
+                          <div className="w-8 h-8 rounded-lg bg-muted border border-border flex items-center justify-center shrink-0">
+                            {agent ? <Bot className="w-4 h-4 text-muted-foreground" /> : <AlertTriangle className="w-4 h-4 text-amber-500" />}
                           </div>
                           <div>
-                            <div className="font-bold text-gray-900">
+                            <div className="font-bold text-foreground">
                               {agent ? agent.name : 'Agente Desconhecido'}
                             </div>
-                            <div className="text-xs text-gray-500 font-mono mt-0.5">
+                            <div className="text-xs text-muted-foreground font-mono mt-0.5">
                               {metric.workflowId}
                             </div>
                           </div>
@@ -260,19 +264,19 @@ export const AdminExecutionMetrics: React.FC = () => {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-center gap-2">
-                          <div className="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
+                          <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
                             <div 
                               className={`h-full rounded-full ${metric.success_rate >= 90 ? 'bg-emerald-500' : metric.success_rate >= 70 ? 'bg-amber-500' : 'bg-red-500'}`}
                               style={{ width: `${metric.success_rate}%` }}
                             />
                           </div>
-                          <span className="font-bold text-gray-700 w-12 text-right">
+                          <span className="font-bold text-muted-foreground w-12 text-right">
                             {metric.success_rate.toFixed(1)}%
                           </span>
                         </div>
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <span className="font-mono text-gray-600 bg-gray-100 px-2.5 py-1 rounded-md text-xs border border-gray-200">
+                        <span className="font-mono text-muted-foreground bg-muted px-2.5 py-1 rounded-md text-xs border border-border">
                           {metric.average_duration !== null 
                             ? metric.average_duration < 1 
                               ? `${Math.round(metric.average_duration * 1000)}ms` 
@@ -283,7 +287,7 @@ export const AdminExecutionMetrics: React.FC = () => {
                       <td className="px-6 py-4 text-right">
                         <button
                           onClick={() => window.open(`/agents/${metric.workflowId}`, '_blank')}
-                          className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors inline-flex"
+                          className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors inline-flex"
                           title="Ver Agente"
                         >
                           <ExternalLink className="w-4 h-4" />
@@ -298,5 +302,7 @@ export const AdminExecutionMetrics: React.FC = () => {
         </div>
       </div>
     </div>
+    </DarkPage>
   );
 };
+

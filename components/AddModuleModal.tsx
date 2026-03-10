@@ -149,26 +149,26 @@ export const ModuleEditor: React.FC<ModuleEditorProps> = ({ onClose, onSave, ini
 
   return (
     // FULL SCREEN MODE: Fixed inset-0 z-100 para cobrir Sidebar/Header
-    <div className="fixed inset-0 z-[100] bg-white flex flex-col animate-fade-in font-sans">
+    <div className="fixed inset-0 z-[100] bg-background text-foreground flex flex-col animate-fade-in font-sans">
       
-      <div className="h-16 border-b flex justify-between items-center px-6 shrink-0 bg-white border-gray-200 shadow-sm z-10">
+      <div className="h-16 border-b border-border flex justify-between items-center px-6 shrink-0 bg-card shadow-sm z-10">
         <div className="flex items-center gap-4">
-           <button onClick={onClose} className="group flex items-center justify-center w-8 h-8 rounded-full border transition-colors border-gray-200 hover:border-gray-400">
-              <ArrowLeft className="w-4 h-4 text-gray-500 group-hover:text-black" />
+           <button onClick={onClose} className="group flex items-center justify-center w-8 h-8 rounded-full border border-border transition-colors hover:border-muted-foreground/50">
+              <ArrowLeft className="w-4 h-4 text-muted-foreground group-hover:text-foreground" />
            </button>
            <div className="flex flex-col">
              <div className="flex items-center gap-2">
-                <h2 className="text-lg font-bold text-gray-900 leading-none">{initialData ? 'Editar Módulo' : 'Novo Módulo'}</h2>
+                <h2 className="text-lg font-bold text-foreground leading-none">{initialData ? 'Editar Módulo' : 'Novo Módulo'}</h2>
              </div>
-             <p className="text-xs text-gray-500 mt-1 font-light">Configure a estrutura de dados, mapeamento JSON e campos de entrada.</p>
+             <p className="text-xs text-muted-foreground mt-1 font-light">Configure a estrutura de dados, mapeamento JSON e campos de entrada.</p>
            </div>
         </div>
         <div className="flex gap-3">
-            <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-gray-500 hover:text-black transition-colors hover:bg-gray-50 rounded-md">Cancelar</button>
+            <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors hover:bg-muted rounded-md">Cancelar</button>
             <button 
               onClick={executeSave}
               disabled={!title || fields.length === 0}
-              className="px-6 py-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold rounded-md disabled:bg-[#e0caff] disabled:cursor-not-allowed flex items-center gap-2 transition-all transform active:scale-95"
+              className="px-6 py-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold rounded-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-all transform active:scale-95"
             >
               <Save className="w-4 h-4" /> Salvar Módulo
             </button>
@@ -177,13 +177,13 @@ export const ModuleEditor: React.FC<ModuleEditorProps> = ({ onClose, onSave, ini
 
       <div className="grid grid-cols-[1.2fr_1fr_1fr] flex-1 overflow-hidden h-full">
         {/* Coluna 1: JSON Source (Mais largo para visualizar payload complexo) */}
-        <div className="h-full overflow-hidden border-r border-gray-200 flex flex-col bg-gray-50/50">
-            <div className="px-4 py-3 bg-white border-b border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wider shadow-sm z-10 flex justify-between items-center">
+        <div className="h-full overflow-hidden border-r border-border flex flex-col bg-muted/30">
+            <div className="px-4 py-3 bg-card border-b border-border text-xs font-bold text-muted-foreground uppercase tracking-wider shadow-sm z-10 flex justify-between items-center">
                 <span>Origem de Dados (Payload)</span>
                 <button 
                     onClick={handleSyncWorkflow}
                     disabled={isJsonLoading || !agentWorkflowId}
-                    className="bg-white border border-gray-200 p-1.5 rounded hover:bg-gray-50 hover:border-gray-300 transition-all text-gray-500 hover:text-black disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                    className="bg-card border border-border p-1.5 rounded hover:bg-muted hover:border-muted-foreground/50 transition-all text-muted-foreground hover:text-foreground disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                     title="Sincronizar Workflow"
                 >
                     {isJsonLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
@@ -199,7 +199,7 @@ export const ModuleEditor: React.FC<ModuleEditorProps> = ({ onClose, onSave, ini
         </div>
 
         {/* Coluna 2: Configuração */}
-        <div className="flex flex-col bg-white border-r border-gray-200 overflow-y-auto h-full scrollbar-hide shadow-[5px_0_15px_-5px_rgba(0,0,0,0.05)] z-20">
+        <div className="flex flex-col bg-card border-r border-border overflow-y-auto h-full scrollbar-hide shadow-[5px_0_15px_-5px_rgba(0,0,0,0.15)] z-20">
           <div className="px-8 py-10 space-y-8 pb-20">
             <ModuleSettings 
                 title={title} setTitle={setTitle}
@@ -207,9 +207,9 @@ export const ModuleEditor: React.FC<ModuleEditorProps> = ({ onClose, onSave, ini
                 icon={icon} setIcon={setIcon}
                 width={width} setWidth={setWidth}
             />
-            <div className="border-t border-gray-100 pt-6">
+            <div className="border-t border-border pt-6">
                 <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide">Editor de Campos</h3>
+                    <h3 className="text-sm font-bold text-foreground uppercase tracking-wide">Editor de Campos</h3>
                 </div>
                 <FieldForm 
                     initialField={currentEditingField}
@@ -225,8 +225,8 @@ export const ModuleEditor: React.FC<ModuleEditorProps> = ({ onClose, onSave, ini
         </div>
 
         {/* Coluna 3: Preview */}
-        <div className="h-full overflow-hidden relative flex flex-col bg-gray-50">
-            <div className="px-4 py-3 bg-white border-b border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wider shadow-sm z-10">
+        <div className="h-full overflow-hidden relative flex flex-col bg-muted/30">
+            <div className="px-4 py-3 bg-card border-b border-border text-xs font-bold text-muted-foreground uppercase tracking-wider shadow-sm z-10">
                 Visualização do Usuário
             </div>
             <FieldList 
@@ -277,3 +277,4 @@ export const ModuleEditor: React.FC<ModuleEditorProps> = ({ onClose, onSave, ini
     </div>
   );
 };
+

@@ -14,8 +14,8 @@ interface SpotlightCardProps extends React.HTMLAttributes<HTMLDivElement> {
 const SpotlightCard: React.FC<SpotlightCardProps> = ({
   children,
   className = '',
-  // Cor cinza muito sutil para o tema light
-  spotlightColor = 'rgba(0, 0, 0, 0.04)', 
+  // Cor sutil que funciona em tema escuro e claro
+  spotlightColor = 'rgba(255, 255, 255, 0.06)', 
   enableOverflow = false,
   ...props
 }) => {
@@ -48,7 +48,7 @@ const SpotlightCard: React.FC<SpotlightCardProps> = ({
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`relative rounded-xl border bg-white transition-all duration-300 ${enableOverflow ? '' : 'overflow-hidden'} ${className}`}
+      className={`relative rounded-xl border border-border bg-card text-card-foreground transition-all duration-300 ${enableOverflow ? '' : 'overflow-hidden'} ${className}`}
       {...props}
     >
       <div

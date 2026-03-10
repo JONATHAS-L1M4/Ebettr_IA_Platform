@@ -9,6 +9,7 @@ import { fetchSessions, revokeSession, revokeSessionsBulk, blockUserSessions, un
 import { ChartDataPoint, DashboardFiltersState } from '../components/dashboard/types';
 import { ShieldCheck, AlertOctagon, Users, Globe, Lock, Clock, LogOut, Loader2, X, Zap, Trash2, RefreshCw } from '../components/ui/Icons';
 import { ConfirmationModal } from '../components/shared/ConfirmationModal';
+import DarkPage from '../components/layout/DarkPage';
 
 interface AdminSessionsProps {
     onLogout?: () => void;
@@ -17,12 +18,12 @@ interface AdminSessionsProps {
 const AdminSessionsSkeleton = () => (
     <div className="flex flex-col gap-6 animate-pulse pb-12 max-w-7xl mx-auto">
         {/* Header Skeleton */}
-        <div className="flex flex-col gap-4 border-b border-gray-100 pb-4">
+        <div className="flex flex-col gap-4 border-b border-border pb-4">
             <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-gray-200 rounded-lg"></div>
+                <div className="w-10 h-10 bg-muted rounded-lg"></div>
                 <div className="space-y-2">
-                    <div className="h-4 bg-gray-200 rounded w-32"></div>
-                    <div className="h-3 bg-gray-100 rounded w-48"></div>
+                    <div className="h-4 bg-muted rounded w-32"></div>
+                    <div className="h-3 bg-muted rounded w-48"></div>
                 </div>
             </div>
         </div>
@@ -30,78 +31,78 @@ const AdminSessionsSkeleton = () => (
         {/* KPI Cards Skeleton */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[1, 2, 3].map(i => (
-                <div key={i} className="bg-white border border-gray-200 rounded-xl p-6 h-32 flex flex-col justify-between shadow-sm">
+                <div key={i} className="bg-panel border border-border rounded-xl p-6 h-32 flex flex-col justify-between shadow-sm">
                     <div className="flex justify-between">
-                        <div className="h-3 bg-gray-100 rounded-full w-24"></div>
-                        <div className="w-5 h-5 bg-gray-100 rounded-lg"></div>
+                        <div className="h-3 bg-muted rounded-full w-24"></div>
+                        <div className="w-5 h-5 bg-muted rounded-lg"></div>
                     </div>
                     <div>
-                        <div className="h-8 bg-gray-100 rounded-lg w-16 mb-2"></div>
-                        <div className="h-2.5 bg-gray-50 rounded-full w-32"></div>
+                        <div className="h-8 bg-muted rounded-lg w-16 mb-2"></div>
+                        <div className="h-2.5 bg-muted rounded-full w-32"></div>
                     </div>
                 </div>
             ))}
         </div>
 
         {/* Filter Bar Skeleton */}
-        <div className="bg-white p-4 rounded-xl border border-gray-200 h-16 flex items-center justify-between gap-4 shadow-sm">
+        <div className="bg-card p-4 rounded-xl border border-border h-16 flex items-center justify-between gap-4 shadow-sm">
             <div className="flex items-center gap-3 flex-1">
-                <div className="h-9 bg-gray-100 rounded-lg w-full max-w-xs"></div>
-                <div className="h-9 bg-gray-100 rounded-lg w-32 hidden sm:block"></div>
-                <div className="h-9 bg-gray-100 rounded-lg w-32 hidden md:block"></div>
+                <div className="h-9 bg-muted rounded-lg w-full max-w-xs"></div>
+                <div className="h-9 bg-muted rounded-lg w-32 hidden sm:block"></div>
+                <div className="h-9 bg-muted rounded-lg w-32 hidden md:block"></div>
             </div>
             <div className="flex items-center gap-2">
-                <div className="h-9 bg-gray-100 rounded-lg w-9"></div>
-                <div className="h-9 bg-gray-100 rounded-lg w-9"></div>
+                <div className="h-9 bg-muted rounded-lg w-9"></div>
+                <div className="h-9 bg-muted rounded-lg w-9"></div>
             </div>
         </div>
 
         {/* Chart Skeleton */}
-        <div className="bg-white border border-gray-200 rounded-xl p-6 h-[300px] shadow-sm flex flex-col">
+        <div className="bg-panel border border-border rounded-xl p-6 h-[300px] shadow-sm flex flex-col">
             <div className="flex justify-between items-center mb-6">
-                <div className="h-4 bg-gray-100 rounded-full w-48"></div>
-                <div className="h-4 bg-gray-100 rounded-full w-24"></div>
+                <div className="h-4 bg-muted rounded-full w-48"></div>
+                <div className="h-4 bg-muted rounded-full w-24"></div>
             </div>
             <div className="flex-1 flex items-end gap-2 px-2">
                 {[...Array(14)].map((_, i) => (
                     <div 
                         key={i} 
-                        className="flex-1 bg-gray-50 rounded-t-md" 
+                        className="flex-1 bg-muted rounded-t-md" 
                         style={{ height: `${Math.random() * 60 + 20}%` }}
                     ></div>
                 ))}
             </div>
-            <div className="h-px bg-gray-100 w-full mt-4"></div>
+            <div className="h-px bg-muted w-full mt-4"></div>
             <div className="flex justify-between mt-4">
                 {[...Array(7)].map((_, i) => (
-                    <div key={i} className="h-2 bg-gray-50 rounded-full w-10"></div>
+                    <div key={i} className="h-2 bg-muted rounded-full w-10"></div>
                 ))}
             </div>
         </div>
 
         {/* Table Skeleton */}
-        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
-             <div className="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-white">
-                <div className="h-5 bg-gray-100 rounded-full w-48"></div>
-                <div className="h-4 bg-gray-50 rounded-full w-32"></div>
+        <div className="bg-panel border border-border rounded-xl overflow-hidden shadow-sm">
+             <div className="px-6 py-5 border-b border-border flex justify-between items-center bg-card">
+                <div className="h-5 bg-muted rounded-full w-48"></div>
+                <div className="h-4 bg-muted rounded-full w-32"></div>
              </div>
-             <div className="h-10 bg-gray-50/50 border-b border-gray-100 px-6 flex items-center gap-4">
+             <div className="h-10 bg-muted border-b border-border px-6 flex items-center gap-4">
                 {[1, 2, 3, 4, 5, 6].map(i => (
-                    <div key={i} className={`h-2.5 bg-gray-200/50 rounded-full ${i === 1 ? 'w-8' : 'w-24'} hidden sm:block`}></div>
+                    <div key={i} className={`h-2.5 bg-muted rounded-full ${i === 1 ? 'w-8' : 'w-24'} hidden sm:block`}></div>
                 ))}
              </div>
-             <div className="divide-y divide-gray-50">
+             <div className="divide-y divide-border">
                 {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
-                    <div key={i} className="px-6 py-4 flex items-center gap-4 bg-white">
-                        <div className="w-4 h-4 bg-gray-100 rounded"></div>
-                        <div className="w-8 h-8 bg-gray-100 rounded-full shrink-0"></div>
+                    <div key={i} className="px-6 py-4 flex items-center gap-4 bg-card">
+                        <div className="w-4 h-4 bg-muted rounded"></div>
+                        <div className="w-8 h-8 bg-muted rounded-full shrink-0"></div>
                         <div className="flex-1 space-y-2">
-                            <div className="h-3 bg-gray-100 rounded-full w-1/4"></div>
-                            <div className="h-2 bg-gray-50 rounded-full w-1/3"></div>
+                            <div className="h-3 bg-muted rounded-full w-1/4"></div>
+                            <div className="h-2 bg-muted rounded-full w-1/3"></div>
                         </div>
-                        <div className="h-3 bg-gray-100 rounded-full w-24 hidden md:block"></div>
-                        <div className="h-3 bg-gray-100 rounded-full w-24 hidden lg:block"></div>
-                        <div className="w-16 h-6 bg-gray-100 rounded-full"></div>
+                        <div className="h-3 bg-muted rounded-full w-24 hidden md:block"></div>
+                        <div className="h-3 bg-muted rounded-full w-24 hidden lg:block"></div>
+                        <div className="w-16 h-6 bg-muted rounded-full"></div>
                     </div>
                 ))}
              </div>
@@ -375,32 +376,37 @@ export const AdminSessions: React.FC<AdminSessionsProps> = ({ onLogout }) => {
   }, [filteredSessions, filters.dateRange]);
 
   if (loading) {
-      return <AdminSessionsSkeleton />;
+      return (
+        <DarkPage className="min-h-[calc(100vh-4rem)]">
+          <AdminSessionsSkeleton />
+        </DarkPage>
+      );
   }
 
   return (
+    <DarkPage className="min-h-[calc(100vh-4rem)]">
     <div className="flex flex-col gap-6 animate-fade-in relative pb-12 max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col gap-4 border-b border-gray-100 pb-4">
+        <div className="flex flex-col gap-4 border-b border-border pb-4">
             <div className="flex items-center gap-4">
-                <div className="w-10 h-10 border border-gray-700 rounded-lg flex items-center justify-center text-gray-100 bg-gray-800">
+                <div className="w-10 h-10 border border-border rounded-lg flex items-center justify-center text-foreground bg-muted">
                     <ShieldCheck className="w-5 h-5" />
                 </div>
                 <div>
-                    <h1 className="text-xl font-semibold text-gray-900 tracking-tight">Sessões & Logins</h1>
-                    <p className="text-sm text-gray-500 mt-0.5 font-light">Monitoramento de acessos e segurança em tempo real.</p>
+                    <h1 className="text-xl font-semibold text-foreground tracking-tight">Sessões & Logins</h1>
+                    <p className="text-sm text-muted-foreground mt-0.5 font-light">Monitoramento de acessos e segurança em tempo real.</p>
                 </div>
             </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white border border-gray-200 rounded-xl p-6 flex flex-col justify-between shadow-sm group">
+            <div className="bg-panel border border-border rounded-xl p-6 flex flex-col justify-between shadow-sm group">
                 <div className="flex justify-between items-start mb-4">
                     <div className="flex items-center gap-2">
-                        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Online Agora</h3>
+                        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Online Agora</h3>
                         <button 
                             onClick={() => loadData(true)}
-                            className="p-1 text-gray-400 hover:text-emerald-500 hover:bg-emerald-50 rounded transition-all opacity-0 group-hover:opacity-100"
+                        className="p-1 text-muted-foreground hover:text-emerald-300 hover:bg-emerald-950/40 rounded transition-all opacity-0 group-hover:opacity-100"
                             title="Atualizar"
                         >
                             <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
@@ -409,48 +415,48 @@ export const AdminSessions: React.FC<AdminSessionsProps> = ({ onLogout }) => {
                     <Globe className="w-4 h-4 text-emerald-500" />
                 </div>
                 <div>
-                    <span className="text-3xl font-bold text-gray-900 tracking-tight block mb-1">{kpiStats.online}</span>
-                    <div className="text-[10px] font-medium text-gray-400 flex items-center gap-1">
+                    <span className="text-3xl font-bold text-foreground tracking-tight block mb-1">{kpiStats.online}</span>
+                    <div className="text-[10px] font-medium text-muted-foreground flex items-center gap-1">
                         <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Usuários ativos
                     </div>
                 </div>
             </div>
-            <div className="bg-white border border-gray-200 rounded-xl p-6 flex flex-col justify-between shadow-sm group">
+            <div className="bg-panel border border-border rounded-xl p-6 flex flex-col justify-between shadow-sm group">
                 <div className="flex justify-between items-start mb-4">
                     <div className="flex items-center gap-2">
-                        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Risco Elevado</h3>
+                        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Risco Elevado</h3>
                         <button 
                             onClick={() => loadData(true)}
-                            className="p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-all opacity-0 group-hover:opacity-100"
+                        className="p-1 text-muted-foreground hover:text-red-400 hover:bg-red-950/40 rounded transition-all opacity-0 group-hover:opacity-100"
                             title="Atualizar"
                         >
                             <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
                         </button>
                     </div>
-                    <AlertOctagon className={`w-4 h-4 ${kpiStats.highRisk > 0 ? 'text-red-500' : 'text-gray-400'}`} />
+                    <AlertOctagon className={`w-4 h-4 ${kpiStats.highRisk > 0 ? 'text-red-500' : 'text-muted-foreground'}`} />
                 </div>
                 <div>
-                    <span className="text-3xl font-bold text-gray-900 tracking-tight block mb-1">{kpiStats.highRisk}</span>
-                    <div className="text-[10px] font-medium text-gray-400">Logins suspeitos (Últimos 14d)</div>
+                    <span className="text-3xl font-bold text-foreground tracking-tight block mb-1">{kpiStats.highRisk}</span>
+                    <div className="text-[10px] font-medium text-muted-foreground">Logins suspeitos (Últimos 14d)</div>
                 </div>
             </div>
-            <div className="bg-white border border-gray-200 rounded-xl p-6 flex flex-col justify-between shadow-sm group">
+            <div className="bg-panel border border-border rounded-xl p-6 flex flex-col justify-between shadow-sm group">
                 <div className="flex justify-between items-start mb-4">
                     <div className="flex items-center gap-2">
-                        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Tempo Médio</h3>
+                        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Tempo Médio</h3>
                         <button 
                             onClick={() => loadData(true)}
-                            className="p-1 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded transition-all opacity-0 group-hover:opacity-100"
-                            title="Atualizar"
-                        >
+                        className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted rounded transition-all opacity-0 group-hover:opacity-100"
+                        title="Atualizar"
+                    >
                             <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
                         </button>
                     </div>
-                    <Clock className="w-4 h-4 text-blue-500" />
+                    <Clock className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div>
-                    <span className="text-3xl font-bold text-gray-900 tracking-tight block mb-1">{kpiStats.avgTime}</span>
-                    <div className="text-[10px] font-medium text-gray-400">Duração da sessão</div>
+                    <span className="text-3xl font-bold text-foreground tracking-tight block mb-1">{kpiStats.avgTime}</span>
+                    <div className="text-[10px] font-medium text-muted-foreground">Duração da sessão</div>
                 </div>
             </div>
         </div>
@@ -473,21 +479,21 @@ export const AdminSessions: React.FC<AdminSessionsProps> = ({ onLogout }) => {
 
         {/* Bulk Action Bar - Standardized Flat System Style (Positioned Above Table) */}
         {selectedSessionIds.length > 0 && (
-            <div className="bg-white border border-gray-200 p-4 rounded-lg animate-fade-in flex flex-col sm:flex-row items-center justify-between gap-4 -mb-4 z-10 mx-1">
+            <div className="bg-card border border-border p-4 rounded-lg animate-fade-in flex flex-col sm:flex-row items-center justify-between gap-4 -mb-4 z-10 mx-1">
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gray-50 border border-gray-100 rounded-lg flex items-center justify-center">
-                        <Users className="w-5 h-5 text-gray-600" />
+                    <div className="w-10 h-10 bg-muted border border-border rounded-lg flex items-center justify-center">
+                        <Users className="w-5 h-5 text-muted-foreground" />
                     </div>
                     <div>
-                        <p className="text-sm font-bold text-gray-900">{selectedSessionIds.length} sessões selecionadas</p>
-                        <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Ações em Massa Disponíveis</p>
+                        <p className="text-sm font-bold text-foreground">{selectedSessionIds.length} sessões selecionadas</p>
+                        <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">Ações em Massa Disponíveis</p>
                     </div>
                 </div>
                 
                 <div className="flex items-center gap-2 w-full sm:w-auto">
                     <button 
                         onClick={() => setSelectedSessionIds([])}
-                        className="flex-1 sm:flex-none px-4 py-2 text-xs font-bold text-gray-500 hover:text-black transition-colors flex items-center justify-center gap-2"
+                        className="flex-1 sm:flex-none px-4 py-2 text-xs font-bold text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center gap-2"
                     >
                         <X className="w-4 h-4" /> Limpar Seleção
                     </button>
@@ -495,7 +501,7 @@ export const AdminSessions: React.FC<AdminSessionsProps> = ({ onLogout }) => {
                     <button 
                         onClick={handleRevokeAllFiltered}
                         disabled={isBulkProcessing}
-                        className="flex-1 sm:flex-none px-4 py-2 text-xs font-bold text-amber-600 hover:bg-amber-50 rounded-md transition-all flex items-center justify-center gap-2 border border-amber-200"
+                        className="flex-1 sm:flex-none px-4 py-2 text-xs font-bold text-amber-300 hover:bg-amber-950/40 rounded-md transition-all flex items-center justify-center gap-2 border border-amber-900/50"
                         title="Derrubar todas as sessões que batem com o filtro atual usando API bulk"
                     >
                         <Zap className="w-4 h-4" /> Revogar Tudo (Filtro)
@@ -535,5 +541,7 @@ export const AdminSessions: React.FC<AdminSessionsProps> = ({ onLogout }) => {
             confirmLabel={modalConfig.confirmLabel}
         />
     </div>
+    </DarkPage>
   );
 };
+

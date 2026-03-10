@@ -165,7 +165,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
               <button
                 type="button"
                 onClick={() => setShowPassword((current) => !current)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 transition hover:text-white"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
                 aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
               >
                 {showPassword ? (
@@ -191,7 +191,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword((current) => !current)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 transition hover:text-white"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
                 aria-label={
                   showConfirmPassword ? 'Ocultar confirmacao' : 'Mostrar confirmacao'
                 }
@@ -264,7 +264,7 @@ export const RecoveryForm: React.FC<RecoveryFormProps> = ({
       <button
         type="button"
         onClick={onCancel}
-        className="mb-5 inline-flex items-center gap-2 text-sm font-medium text-zinc-400 transition hover:text-white"
+        className="mb-5 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
       >
         <ArrowLeft className="h-4 w-4" />
         Voltar ao login
@@ -389,7 +389,7 @@ export const RecoveryCodeForm: React.FC<RecoveryCodeFormProps> = ({
       <button
         type="button"
         onClick={onCancel}
-        className="mb-5 inline-flex items-center gap-2 text-sm font-medium text-zinc-400 transition hover:text-white"
+        className="mb-5 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
       >
         <ArrowLeft className="h-4 w-4" />
         Cancelar
@@ -469,18 +469,18 @@ export const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
   const strengthPercentage = Math.min((passedCount / validations.length) * 100, 100);
   const allValid = passedCount === validations.length;
 
-  let strengthColor = 'bg-white/10';
+  let strengthColor = 'bg-muted';
   let strengthLabel = 'Aguardando';
 
   if (password.length > 0) {
     if (passedCount <= 2) {
-      strengthColor = 'bg-red-500';
+      strengthColor = 'bg-muted-foreground/35';
       strengthLabel = 'Fraca';
     } else if (passedCount <= 4) {
-      strengthColor = 'bg-amber-500';
+      strengthColor = 'bg-muted-foreground/55';
       strengthLabel = 'Media';
     } else {
-      strengthColor = 'bg-emerald-500';
+      strengthColor = 'bg-foreground/70';
       strengthLabel = 'Forte';
     }
   }
@@ -532,7 +532,7 @@ export const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             <button
               type="button"
               onClick={() => setShowPassword((current) => !current)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 transition hover:text-white"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
               aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
             >
               {showPassword ? (
@@ -556,7 +556,7 @@ export const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             <button
               type="button"
               onClick={() => setShowConfirmPassword((current) => !current)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 transition hover:text-white"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
               aria-label={
                 showConfirmPassword ? 'Ocultar confirmacao' : 'Mostrar confirmacao'
               }
@@ -570,23 +570,23 @@ export const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
           }
         />
 
-        <div className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-4">
+        <div className="rounded-2xl border border-border bg-muted/50 px-4 py-4">
           <div className="mb-3 flex items-center justify-between gap-4">
-            <span className="text-xs font-semibold uppercase tracking-[0.22em] text-zinc-400">
+            <span className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
               Forca da senha
             </span>
-            <span className="text-xs font-semibold uppercase tracking-[0.22em] text-zinc-300">
+            <span className="text-xs font-semibold uppercase tracking-[0.22em] text-foreground">
               {strengthLabel}
             </span>
           </div>
 
-          <div className="h-2 overflow-hidden rounded-full bg-white/10">
+          <div className="h-2 overflow-hidden rounded-full bg-muted">
             <div
               className={cn('h-full rounded-full transition-all duration-300', strengthColor)}
               style={{ width: `${strengthPercentage}%` }}
             />
           </div>
-          <p className="mt-3 text-xs leading-5 text-zinc-400">
+          <p className="mt-3 text-xs leading-5 text-muted-foreground">
             Use pelo menos 8 caracteres com letras, numero e simbolo.
           </p>
         </div>

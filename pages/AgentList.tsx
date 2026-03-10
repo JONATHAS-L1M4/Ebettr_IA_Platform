@@ -7,6 +7,7 @@ import { toggleN8nWorkflow } from '../services/n8nService';
 import { CreateAgentForm } from '../components/agents/CreateAgentForm';
 import { AgentCard } from '../components/agents/AgentCard';
 import { CreateAgentCard } from '../components/agents/CreateAgentCard';
+import DarkPage from '../components/layout/DarkPage';
 
 interface AgentListProps {
   agents: Agent[];
@@ -22,18 +23,18 @@ interface AgentListProps {
 }
 
 const AgentCardSkeleton = () => (
-  <div className="h-full min-h-[200px] border border-gray-200 rounded-xl bg-white p-6 flex flex-col justify-between animate-pulse">
+  <div className="h-full min-h-[200px] border border-border rounded-xl bg-card p-6 flex flex-col justify-between animate-pulse">
     <div className="flex justify-between items-start mb-3">
-        <div className="w-10 h-10 bg-gray-100 rounded-lg"></div>
-        <div className="w-8 h-5 bg-gray-100 rounded-full"></div>
+        <div className="w-10 h-10 bg-muted rounded-lg"></div>
+        <div className="w-8 h-5 bg-muted rounded-full"></div>
     </div>
     <div className="flex-1 flex flex-col justify-start mt-2 space-y-3">
-        <div className="h-4 bg-gray-100 rounded w-1/2"></div>
-        <div className="h-3 bg-gray-50 rounded w-3/4"></div>
-        <div className="h-3 bg-gray-50 rounded w-2/3"></div>
+        <div className="h-4 bg-muted rounded w-1/2"></div>
+        <div className="h-3 bg-muted rounded w-3/4"></div>
+        <div className="h-3 bg-muted rounded w-2/3"></div>
     </div>
-    <div className="mt-3 pt-3 border-t border-gray-50 flex justify-between">
-        <div className="h-3 bg-gray-100 rounded w-20"></div>
+    <div className="mt-3 pt-3 border-t border-border flex justify-between">
+        <div className="h-3 bg-muted rounded w-20"></div>
     </div>
   </div>
 );
@@ -155,33 +156,36 @@ const AgentList: React.FC<AgentListProps> = ({
   // --- VIEW: CREATE FORM ---
   if (isFormOpen && canCreate) {
     return (
+        <DarkPage className="min-h-[calc(100vh-4rem)]">
         <CreateAgentForm 
             existingAgents={agents}
             onCreate={handleCreateAgent}
             onCancel={() => setIsFormOpen(false)}
         />
+        </DarkPage>
     );
   }
 
   // --- VIEW: LIST ---
   return (
+    <DarkPage className="min-h-[calc(100vh-4rem)]">
     <div className="flex flex-col gap-8 max-w-7xl mx-auto pb-12">
       
       {/* Header */}
-      <div className="flex flex-col gap-4 border-b border-gray-100 pb-4">
+      <div className="flex flex-col gap-4 border-b border-border pb-4">
         
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 border border-gray-700 rounded-lg flex items-center justify-center text-gray-100 bg-gray-800">
+            <div className="w-10 h-10 border border-border rounded-lg flex items-center justify-center text-foreground bg-muted">
                <Bot className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl font-semibold text-gray-900 tracking-tight">
+                <h1 className="text-xl font-semibold text-foreground tracking-tight">
                     Agentes de Inteligência
                 </h1>
               </div>
-              <p className="text-sm text-gray-500 mt-0.5 font-light">
+              <p className="text-sm text-muted-foreground mt-0.5 font-light">
                 Gerencie seus assistentes virtuais e automações.
               </p>
             </div>
@@ -191,12 +195,12 @@ const AgentList: React.FC<AgentListProps> = ({
             
             {/* Search Bar - Igual às outras abas */}
             <div className="relative group flex-1 md:w-64">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400 group-focus-within:text-black">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground group-focus-within:text-foreground">
                     <Search className="w-4 h-4" />
                 </div>
                 <input 
                     type="text" 
-                    className="bg-white border border-gray-200 text-gray-900 text-sm rounded-md focus:border-gray-400 focus:outline-none block w-full pl-10 h-9 placeholder-gray-400 shadow-sm" 
+                    className="bg-background border border-border text-foreground text-sm rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background block w-full pl-10 h-9 placeholder:text-muted-foreground shadow-sm" 
                     placeholder="Buscar agente..." 
                     value={searchQuery}
                     onChange={(e) => onSearchChange(e.target.value)}
@@ -250,7 +254,9 @@ const AgentList: React.FC<AgentListProps> = ({
         )}
       </div>
     </div>
+    </DarkPage>
   );
 };
 
 export default AgentList;
+

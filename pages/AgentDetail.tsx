@@ -19,6 +19,7 @@ import { ragService } from '../services/ragService';
 import { RagDocumentsTable } from '../components/rag/RagDocumentsTable';
 import { DocumentViewerModal } from '../components/rag/DocumentViewerModal';
 import { RagDocument, RagUsage } from '../types';
+import DarkPage from '../components/layout/DarkPage';
 
 const API_BASE = process.env.API_BASE;
 
@@ -38,35 +39,35 @@ type DetailViewMode = 'config' | 'credentials' | 'executions' | 'rag' | 'editor'
 
 // Componente de Skeleton Premium para os Cards de Configuração
 const ConfigCardSkeleton = ({ span = 'md:col-span-1' }: { span?: string }) => (
-    <div className={`${span} border border-gray-200 rounded-xl bg-white p-6 h-full min-h-[320px] animate-pulse flex flex-col`}>
+    <div className={`${span} border border-border rounded-xl bg-card p-6 h-full min-h-[320px] animate-pulse flex flex-col`}>
         {/* Header: Icon + Title */}
-        <div className="flex items-start gap-4 mb-6 border-b border-gray-50 pb-4">
-            <div className="w-10 h-10 bg-gray-100 rounded-lg shrink-0"></div>
+        <div className="flex items-start gap-4 mb-6 border-b border-border pb-4">
+            <div className="w-10 h-10 bg-muted rounded-lg shrink-0"></div>
             <div className="space-y-2 w-full pt-1">
-                <div className="h-4 bg-gray-100 rounded w-1/3"></div>
-                <div className="h-3 bg-gray-50 rounded w-2/3"></div>
+                <div className="h-4 bg-muted rounded w-1/3"></div>
+                <div className="h-3 bg-muted rounded w-2/3"></div>
             </div>
         </div>
         
         {/* Body: Inputs */}
         <div className="flex-1 space-y-5">
             <div className="space-y-2">
-                <div className="h-3 bg-gray-100 rounded w-24"></div>
-                <div className="h-10 bg-gray-50 rounded w-full"></div>
+                <div className="h-3 bg-muted rounded w-24"></div>
+                <div className="h-10 bg-muted rounded w-full"></div>
             </div>
             <div className="space-y-2">
-                <div className="h-3 bg-gray-100 rounded w-32"></div>
-                <div className="h-20 bg-gray-50 rounded w-full"></div>
+                <div className="h-3 bg-muted rounded w-32"></div>
+                <div className="h-20 bg-muted rounded w-full"></div>
             </div>
              <div className="space-y-2">
-                <div className="h-3 bg-gray-100 rounded w-20"></div>
-                <div className="h-10 bg-gray-50 rounded w-full"></div>
+                <div className="h-3 bg-muted rounded w-20"></div>
+                <div className="h-10 bg-muted rounded w-full"></div>
             </div>
         </div>
 
         {/* Footer: Button */}
-        <div className="flex justify-end pt-4 mt-2 border-t border-gray-50">
-            <div className="h-9 bg-gray-100 rounded w-24"></div>
+        <div className="flex justify-end pt-4 mt-2 border-t border-border">
+            <div className="h-9 bg-muted rounded w-24"></div>
         </div>
     </div>
 );
@@ -733,7 +734,7 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
 
   if (isEditing && canEditAgent) {
     return (
-        <>
+        <DarkPage className="min-h-[calc(100vh-4rem)]">
             <EditAgentForm 
                 agent={agent}
                 existingAgents={allAgents}
@@ -749,22 +750,25 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
                 onClose={() => setIsDeleteAgentModalOpen(false)}
                 onConfirm={confirmDeleteAgent}
             />
-        </>
+        </DarkPage>
     );
   }
 
   if (viewMode === 'editor' && canEditConfigStructure) {
       return (
+          <DarkPage className="min-h-[calc(100vh-4rem)]">
           <ModuleEditor
             onClose={handleCancelEditor}
             onSave={handleSaveModule}
             initialData={editingSection}
             agentWorkflowId={getWorkflowId() || ''}
           />
+          </DarkPage>
       );
   }
 
   return (
+    <DarkPage className="min-h-[calc(100vh-4rem)]">
     <div className="flex flex-col gap-8 pb-12 w-full max-w-7xl mx-auto">
       
       <AgentDetailHeader 
@@ -790,12 +794,12 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
     <div className="mb-8 flex items-end justify-between">
       <div>
         <div className="flex items-center gap-3">
-          <div className="w-1 h-6 bg-emerald-600 rounded-full"></div>
-          <h2 className="text-lg font-bold text-gray-900 tracking-tight">
+          <div className="w-1 h-6 bg-primary rounded-full"></div>
+          <h2 className="text-lg font-bold text-foreground tracking-tight">
             Base de Conhecimento (RAG)
           </h2>
         </div>
-        <p className="text-sm text-gray-500 mt-1 pl-4 flex items-center gap-2">
+        <p className="text-sm text-muted-foreground mt-1 pl-4 flex items-center gap-2">
           Gerencie os documentos e informações que o agente utiliza para responder.
         </p>
       </div>
@@ -804,41 +808,41 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
         <div className="flex items-center gap-3">
           {ragUsage && (
             <div
-              className={`flex flex-col justify-center px-4 py-2.5 rounded-lg shadow-sm border bg-white border-gray-200 min-w-[180px] transition-all duration-300 ${
+              className={`flex flex-col justify-center px-4 py-2.5 rounded-lg shadow-sm border bg-card border-border min-w-[180px] transition-all duration-300 ${
                 isLoadingRag ? 'opacity-60' : 'opacity-100'
               }`}
             >
-              <div className="h-1 w-full bg-gray-100 rounded-full overflow-hidden">
+              <div className="h-1 w-full bg-muted rounded-full overflow-hidden">
                 <div
                   className={`h-full transition-all duration-700 ease-out rounded-full ${
                     isLoadingRag
-                      ? 'bg-gray-300'
+                      ? 'bg-muted-foreground'
                       : ragUsage.is_over_limit
                       ? 'bg-red-500'
                       : ragUsage.usage_percent > 80
                       ? 'bg-amber-500'
-                      : 'bg-emerald-500'
+                      : 'bg-primary'
                   }`}
                   style={{ width: `${Math.min(ragUsage.usage_percent, 100)}%` }}
                 />
               </div>
 
               <div className="flex items-center justify-between mt-1">
-                <span className="text-[8px] text-gray-400 font-medium tracking-tight leading-none">
+                <span className="text-[8px] text-muted-foreground font-medium tracking-tight leading-none">
                   {(ragUsage.total_bytes / 1024 / 1024).toFixed(2)} / {ragUsage.storage_limit_mb} MB
                 </span>
 
                 <div className="flex items-center gap-2">
                   <span
                     className={`text-[9px] font-bold tabular-nums leading-none ${
-                      ragUsage.is_over_limit ? 'text-red-600' : 'text-gray-700'
+                      ragUsage.is_over_limit ? 'text-red-400' : 'text-foreground'
                     }`}
                   >
                     {ragUsage.usage_percent}%
                   </span>
 
                   {ragUsage.is_over_limit && !isLoadingRag && (
-                    <span className="text-[8px] text-red-600 font-bold flex items-center gap-0.5 uppercase tracking-wider leading-none animate-pulse">
+                    <span className="text-[8px] text-red-400 font-bold flex items-center gap-0.5 uppercase tracking-wider leading-none animate-pulse">
                       <AlertTriangle className="w-2 h-2" /> Limite
                     </span>
                   )}
@@ -862,8 +866,8 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
                 className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-all shadow-sm border 
                   ${
                     isUploadingRagFile
-                      ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
-                      : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400 hover:text-black hover:bg-gray-50'
+                      ? 'bg-muted text-muted-foreground border-border cursor-not-allowed'
+                      : 'bg-card text-muted-foreground border-border hover:bg-muted hover:text-foreground'
                   }`}
               >
                 {isUploadingRagFile ? (
@@ -883,8 +887,8 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
               flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-all shadow-sm border
               ${
                 isLoadingRag || ragSyncCooldown > 0
-                  ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
-                  : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400 hover:text-black hover:bg-gray-50'
+                  ? 'bg-muted text-muted-foreground border-border cursor-not-allowed'
+                  : 'bg-card text-muted-foreground border-border hover:bg-muted hover:text-foreground'
               }
             `}
             title={ragSyncCooldown > 0 ? `Aguarde ${ragSyncCooldown}s` : 'Atualizar lista de documentos'}
@@ -940,10 +944,10 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
           <div className="mb-8 flex items-end justify-between">
              <div>
                  <div className="flex items-center gap-3">
-                    <div className="w-1 h-6 bg-[#5600c2] rounded-full"></div>
-                    <h2 className="text-lg font-bold text-gray-900 tracking-tight">Módulos de Configuração</h2>
+                    <div className="w-1 h-6 bg-primary rounded-full"></div>
+                    <h2 className="text-lg font-bold text-foreground tracking-tight">Módulos de Configuração</h2>
                  </div>
-                 <p className="text-sm text-gray-500 mt-1 pl-4">Gerencie os parâmetros de comportamento do agente.</p>
+                 <p className="text-sm text-muted-foreground mt-1 pl-4">Gerencie os parâmetros de comportamento do agente.</p>
              </div>
              
              {pendingChanges.length > 0 && (
@@ -964,8 +968,8 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
                     className={`
                         flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-all shadow-sm border
                         ${isSyncing || syncCooldown > 0 
-                            ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed' 
-                            : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400 hover:text-black hover:bg-gray-50'}
+                            ? 'bg-muted text-muted-foreground border-border cursor-not-allowed' 
+                            : 'bg-card text-muted-foreground border-border hover:bg-muted hover:text-foreground'}
                     `}
                     title={syncCooldown > 0 ? `Aguarde ${syncCooldown}s` : 'Sincronizar com n8n'}
                  >
@@ -1051,28 +1055,28 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
       )}
 
       {deletingSectionId && (
-        <div className="fixed inset-0 bg-white/90 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg shadow-2xl border border-gray-200 max-w-sm w-full p-6 animate-scale-in">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+            <div className="bg-card rounded-lg shadow-2xl border border-border max-w-sm w-full p-6 animate-scale-in">
                 <div className="flex flex-col items-center text-center gap-4">
-                    <div className="w-12 h-12 bg-red-50 text-red-500 rounded-full flex items-center justify-center">
+                    <div className="w-12 h-12 bg-red-950/40 text-red-400 rounded-full flex items-center justify-center">
                         <Trash2 className="w-6 h-6" />
                     </div>
                     <div>
-                        <h3 className="text-lg font-bold text-gray-900">Excluir Módulo?</h3>
-                        <p className="text-sm text-gray-500 mt-2">
+                        <h3 className="text-lg font-bold text-foreground">Excluir Módulo?</h3>
+                        <p className="text-sm text-muted-foreground mt-2">
                             Esta ação removerá permanentemente este módulo de configuração do agente.
                         </p>
                     </div>
                     <div className="flex gap-3 w-full pt-2">
                         <button 
                             onClick={() => setDeletingSectionId(null)}
-                            className="flex-1 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md transition-colors"
+                            className="flex-1 py-2.5 text-sm font-medium text-muted-foreground hover:bg-muted rounded-md transition-colors"
                         >
                             Cancelar
                         </button>
                         <button 
                             onClick={confirmDeleteModule}
-                            className="flex-1 py-2.5 text-sm font-bold text-white bg-red-600 hover:bg-red-700 rounded-md transition-colors shadow-sm"
+                            className="flex-1 py-2.5 text-sm font-bold text-red-50 bg-red-700 hover:bg-red-600 rounded-md transition-colors shadow-sm"
                         >
                             Excluir
                         </button>
@@ -1091,7 +1095,9 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
       />
 
     </div>
+    </DarkPage>
   );
 };
 
 export default AgentDetail;
+
