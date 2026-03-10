@@ -1,0 +1,202 @@
+
+import React from 'react';
+import { Search, Filter, RefreshCw, Download, Calendar, ChevronDown } from '../ui/Icons';
+import { DashboardFiltersState } from './types';
+
+interface FilterBarProps {
+  filters: DashboardFiltersState;
+  onFilterChange: (newFilters: DashboardFiltersState) => void;
+  onRefresh: () => void;
+  onExport: () => void;
+  totalResults: number;
+  availableStatuses?: string[];
+  availableModes?: string[];
+  limit?: number;
+  onLimitChange?: (limit: number) => void;
+  hideDateRange?: boolean;
+}
+
+// Mapas de tradução para exibição amigável
+const STATUS_LABELS: Record<string, string> = {
+    // Execuções
+    success: 'Sucesso',
+    error: 'Erro',
+    canceled: 'Cancelado',
+    waiting: 'Aguardando',
+    running: 'Rodando',
+    new: 'Novo',
+    // Sessões
+    active: 'Ativa',
+    revoked: 'Encerrada',
+    blocked: 'Bloqueada'
+};
+
+const MODE_LABELS: Record<string, string> = {
+    // Execuções
+    webhook: 'Webhook',
+    trigger: 'Gatilho (Trigger)',
+    manual: 'Manual',
+    test: 'Teste',
+    error: 'Erro',
+    integrated: 'Integrado',
+    // Sessões (Risco)
+    high_risk: 'Risco Crítico (>80)',
+    medium_risk: 'Risco Médio (50-79)',
+    low_risk: 'Risco Baixo (<50)'
+};
+
+export const FilterBar: React.FC<FilterBarProps> = ({ 
+    filters, 
+    onFilterChange, 
+    onRefresh, 
+    onExport, 
+    totalResults,
+    availableStatuses = [],
+    availableModes = [],
+    limit,
+    onLimitChange,
+    hideDateRange = false
+}) => {
+  
+  const handleChange = (key: keyof DashboardFiltersState, value: any) => {
+    onFilterChange({ ...filters, [key]: value });
+  };
+
+  const selectClass = "bg-white border border-gray-200 text-gray-700 text-sm rounded-md focus:border-gray-200 focus:outline-none block p-2 hover:border-gray-300 transition-colors cursor-pointer w-full";
+
+  return (
+    <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-4">
+      
+      {/* Left Group: Search & Selects */}
+      <div className="flex flex-col md:flex-row gap-2 flex-1">
+        
+        {/* Search - Largura ajustada para não empurrar os filtros */}
+        <div className="relative group w-full md:w-60 shrink-0">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400 group-focus-within:text-black">
+            <Search className="w-4 h-4" />
+          </div>
+          <input 
+            type="text" 
+            className="bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-md focus:border-gray-200 focus:outline-none block w-full pl-10 p-2 placeholder-gray-400" 
+            placeholder="Buscar por ID..." 
+            value={filters.search}
+            onChange={(e) => handleChange('search', e.target.value)}
+          />
+        </div>
+
+        {/* Filters Group with reduced gap (gap-2) to prevent overlap */}
+        <div className="grid grid-cols-2 gap-2 w-full md:w-auto flex-1 md:flex-none">
+            {/* Status Filter */}
+            <div className="relative w-full">
+                <div className="absolute left-2.5 top-2.5 pointer-events-none">
+                    <Filter className="w-3.5 h-3.5 text-gray-500" />
+                </div>
+                <select 
+                    value={filters.status}
+                    onChange={(e) => handleChange('status', e.target.value)}
+                    className={`${selectClass} pl-8 appearance-none`}
+                >
+                    <option value="all">Todos Status</option>
+                    {availableStatuses.map(status => (
+                        <option key={status} value={status}>
+                            {STATUS_LABELS[status] || status.charAt(0).toUpperCase() + status.slice(1)}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            {/* Mode Filter */}
+            <div className="relative w-full">
+                <select 
+                    value={filters.mode}
+                    onChange={(e) => handleChange('mode', e.target.value)}
+                    className={`${selectClass}`}
+                >
+                    <option value="all">Todos Níveis</option>
+                    {availableModes.map(mode => (
+                        <option key={mode} value={mode}>
+                            {MODE_LABELS[mode] || mode.charAt(0).toUpperCase() + mode.slice(1)}
+                        </option>
+                    ))}
+                </select>
+            </div>
+        </div>
+      </div>
+
+      {/* Right Group: Date Range & Actions */}
+      <div className="flex flex-wrap md:flex-nowrap items-center gap-2 border-t xl:border-t-0 border-gray-100 pt-3 xl:pt-0">
+         
+         {/* Limit Selector (Optional) */}
+         {onLimitChange && limit && (
+             <div className="relative hidden md:block">
+                <select
+                    value={limit}
+                    onChange={(e) => onLimitChange(Number(e.target.value))}
+                    className="bg-gray-100 text-gray-600 text-xs font-bold py-1.5 pl-3 pr-8 rounded-md border-transparent hover:bg-gray-200 cursor-pointer appearance-none outline-none focus:ring-0 transition-all h-[34px]"
+                    title="Itens por página"
+                >
+                    <option value={15}>15 / pág</option>
+                    <option value={25}>25 / pág</option>
+                    <option value={50}>50 / pág</option>
+                    <option value={100}>100 / pág</option>
+                </select>
+                <div className="absolute right-2 top-2.5 pointer-events-none text-gray-500">
+                    <ChevronDown className="w-3 h-3" />
+                </div>
+             </div>
+         )}
+
+         {/* Date Range Selector */}
+         {!hideDateRange && (
+             <div className="bg-gray-100 p-1 rounded-lg flex items-center gap-1 shadow-inner w-full md:w-auto justify-center">
+                <button 
+                    onClick={() => handleChange('dateRange', '7d')}
+                    className={`
+                        flex-1 md:flex-none flex items-center justify-center px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wide transition-all duration-300 ease-out
+                        ${filters.dateRange === '7d' 
+                            ? 'bg-gray-700 text-white shadow-md transform scale-100' 
+                            : 'text-gray-500 hover:text-black hover:bg-white/50'}
+                    `}
+                >
+                    7d
+                </button>
+                <button 
+                    onClick={() => handleChange('dateRange', '14d')}
+                    className={`
+                        flex-1 md:flex-none flex items-center justify-center px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wide transition-all duration-300 ease-out
+                        ${filters.dateRange === '14d' 
+                            ? 'bg-gray-700 text-white shadow-md transform scale-100' 
+                            : 'text-gray-500 hover:text-black hover:bg-white/50'}
+                    `}
+                >
+                    14d
+                </button>
+                <button 
+                    onClick={() => handleChange('dateRange', '30d')}
+                    className={`
+                        flex-1 md:flex-none flex items-center justify-center px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wide transition-all duration-300 ease-out
+                        ${filters.dateRange === '30d' 
+                            ? 'bg-gray-700 text-white shadow-md transform scale-100' 
+                            : 'text-gray-500 hover:text-black hover:bg-white/50'}
+                    `}
+                >
+                    30d
+                </button>
+             </div>
+         )}
+
+         <div className="hidden md:block w-[1px] h-6 bg-gray-200 mx-1"></div>
+
+         <div className="flex gap-2 w-full md:w-auto">
+             <button 
+                onClick={onExport}
+                className="flex-1 md:flex-none flex items-center justify-center p-2 text-gray-500 hover:text-black hover:bg-gray-100 rounded-md transition-colors border border-gray-200 md:border-transparent"
+                title="Exportar CSV"
+             >
+                <Download className="w-4 h-4" />
+             </button>
+         </div>
+      </div>
+    </div>
+  );
+};

@@ -1,0 +1,45 @@
+{
+  "name": "ebettr-ia-manager---v1.3.0",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@google/genai": "^1.39.0",
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-tooltip": "^1.2.8",
+    "apexcharts": "3.49.0",
+    "axios": "^1.13.6",
+    "express": "^5.2.1",
+    "fast-glob": "^3.3.3",
+    "framer-motion": "^12.34.5",
+    "fs": "^0.0.1-security",
+    "lucide-react": "^0.563.0",
+    "module": "^2.0.0",
+    "path": "^0.12.7",
+    "qrcode": "1.5.3",
+    "react": "^19.2.4",
+    "react-apexcharts": "1.4.1",
+    "react-dom": "^19.2.4",
+    "react-markdown": "^10.1.0",
+    "react-router-dom": "^7.13.0",
+    "remark-breaks": "^4.0.0",
+    "remark-gfm": "^4.0.1",
+    "typescript": "^5.9.3",
+    "url": "^0.11.4",
+    "vm": "^0.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^22.14.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0"
+  }
+}

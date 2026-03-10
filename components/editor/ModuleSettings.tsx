@@ -1,0 +1,164 @@
+4
+import React, { useState, useRef, useEffect } from 'react';
+import { ConfigSection } from '../../types';
+import { Settings, Brain, MessageSquare, Shield, Database, Cpu, Code, Cloud, Zap, Globe, Activity, Terminal, Key, Lock, Layers, Box, User, Mail, LayoutGrid } from '../ui/Icons';
+import { inputBaseClass } from '../inputs/styles';
+
+interface ModuleSettingsProps {
+  title: string;
+  setTitle: (val: string) => void;
+  description: string;
+  setDescription: (val: string) => void;
+  icon: ConfigSection['icon'];
+  setIcon: (val: ConfigSection['icon']) => void;
+  width?: '33%' | '66%' | '100%';
+  setWidth?: (val: '33%' | '66%' | '100%') => void;
+}
+
+const ICON_MAP = {
+    settings: Settings, brain: Brain, message: MessageSquare, database: Database, 
+    shield: Shield, cpu: Cpu, code: Code, cloud: Cloud, zap: Zap, 
+    globe: Globe, activity: Activity, terminal: Terminal, key: Key, lock: Lock,
+    layers: Layers, box: Box, user: User, mail: Mail
+};
+
+export const ModuleSettings: React.FC<ModuleSettingsProps> = ({ 
+  title, setTitle, description, setDescription, icon, setIcon, width = '33%', setWidth
+}) => {
+  const [isIconPickerOpen, setIsIconPickerOpen] = useState(false);
+  const iconPickerRef = useRef<HTMLDivElement>(null);
+  const descriptionRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (iconPickerRef.current && !iconPickerRef.current.contains(event.target as Node)) {
+        setIsIconPickerOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // Auto-resize textarea
+  useEffect(() => {
+    if (descriptionRef.current) {
+        descriptionRef.current.style.height = 'auto';
+        descriptionRef.current.style.height = `${descriptionRef.current.scrollHeight}px`;
+    }
+  }, [description]);
+
+  const labelClass = "text-xs font-semibold text-gray-700 uppercase tracking-wide flex items-center gap-1";
+
+  return (
+    <div className="space-y-4">
+        <div className="flex items-center gap-2 pb-2 border-b border-gray-100">
+            <Settings className="w-4 h-4 text-gray-900" />
+            <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide">Detalhes do Módulo</h3>
+        </div>
+        
+        <div className="grid grid-cols-[1fr_auto] gap-4 items-start">
+            <div className="space-y-1">
+                <div className="flex justify-between items-center">
+                    <label className={labelClass}>Título</label>
+                    <span className="text-[10px] text-gray-400 font-mono">{title.length}/60</span>
+                </div>
+                <input 
+                    value={title} 
+                    onChange={e => setTitle(e.target.value)} 
+                    maxLength={60}
+                    className={inputBaseClass} 
+                    placeholder="Ex: Dados do Lead" 
+                />
+            </div>
+            
+            <div className="space-y-1 relative" ref={iconPickerRef}>
+                <label className={labelClass}>Ícone</label>
+                <button 
+                    onClick={() => setIsIconPickerOpen(!isIconPickerOpen)}
+                    className="w-10 h-[34px] border border-gray-200 rounded-md flex items-center justify-center hover:border-gray-400 hover:bg-gray-50 transition-all"
+                >
+                    {React.createElement(ICON_MAP[icon], { className: "w-5 h-5 text-gray-700" })}
+                </button>
+                
+                {isIconPickerOpen && (
+                    <div className="absolute top-full right-0 mt-2 bg-white border border-gray-200 shadow-xl rounded-lg p-3 z-50 w-64 grid grid-cols-6 gap-2 animate-scale-in">
+                        {Object.entries(ICON_MAP).map(([key, IconComp]) => (
+                            <button 
+                                key={key} 
+                                onClick={() => { setIcon(key as any); setIsIconPickerOpen(false); }} 
+                                className={`w-8 h-8 flex items-center justify-center rounded hover:bg-gray-100 transition-colors ${icon === key ? 'bg-black text-white hover:bg-gray-800' : 'text-gray-600'}`}
+                            >
+                                <IconComp className="w-4 h-4" />
+                            </button>
+                        ))}
+                    </div>
+                )}
+            </div>
+        </div>
+
+        <div className="space-y-1">
+            <div className="flex justify-between items-center">
+                <label className={labelClass}>Descrição</label>
+                <span className="text-[10px] text-gray-400 font-mono">{description.length}/300</span>
+            </div>
+            <textarea 
+                ref={descriptionRef}
+                value={description} 
+                onChange={e => setDescription(e.target.value)} 
+                maxLength={300}
+                rows={2} 
+                className={`${inputBaseClass} resize-none overflow-hidden`} 
+                placeholder="Breve descrição do propósito deste módulo..." 
+            />
+        </div>
+
+        {setWidth && (
+            <div className="space-y-1">
+                <label className={labelClass}>
+                    <LayoutGrid className="w-3 h-3" /> Largura Padrão
+                </label>
+                <div className="bg-gray-100 p-1 rounded-lg flex items-center gap-1 shadow-inner w-full">
+                    <button 
+                        type="button"
+                        onClick={() => setWidth('33%')}
+                        className={`
+                            flex-1 flex items-center justify-center px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wide transition-all duration-300 ease-out
+                            ${width === '33%' 
+                                ? 'bg-gray-700 text-white shadow-sm transform scale-100' 
+                                : 'text-gray-500 hover:text-black hover:bg-white/50'}
+                        `}
+                    >
+                        33% (1/3)
+                    </button>
+                    <button 
+                        type="button"
+                        onClick={() => setWidth('66%')}
+                        className={`
+                            flex-1 flex items-center justify-center px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wide transition-all duration-300 ease-out
+                            ${width === '66%' 
+                                ? 'bg-gray-700 text-white shadow-sm transform scale-100' 
+                                : 'text-gray-500 hover:text-black hover:bg-white/50'}
+                        `}
+                    >
+                        66% (2/3)
+                    </button>
+                    <button 
+                        type="button"
+                        onClick={() => setWidth('100%')}
+                        className={`
+                            flex-1 flex items-center justify-center px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wide transition-all duration-300 ease-out
+                            ${width === '100%' 
+                                ? 'bg-gray-700 text-white shadow-sm transform scale-100' 
+                                : 'text-gray-500 hover:text-black hover:bg-white/50'}
+                        `}
+                    >
+                        100% (Full)
+                    </button>
+                </div>
+            </div>
+        )}
+    </div>
+  );
+};
