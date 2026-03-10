@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import { NotificationProvider } from './context/NotificationContext';
 import { lightTheme, darkTheme } from './design-tokens';
+import './index.css';
 
 // Inject Theme Tokens from design-tokens.ts directly into root styles
 const rootEl = document.documentElement;
