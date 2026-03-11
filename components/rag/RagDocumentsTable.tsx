@@ -173,7 +173,7 @@ export const RagDocumentsTable: React.FC<RagDocumentsTableProps> = ({
  <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:justify-end">
  {usage && (
  <div
- className={`flex min-w-[180px] flex-col justify-center rounded-lg border border-border bg-card px-4 py-2.5 shadow-sm ${
+ className={`flex min-w-[180px] flex-col justify-center rounded-lg border border-border bg-[#1f1f1f] px-4 py-2.5 shadow-sm ${
  isLoading ? 'opacity-60' : 'opacity-100'
  }`}
  >
