@@ -20,6 +20,7 @@ import {
   Info,
   X,
 } from '../components/ui/Icons';
+import { darkTheme } from '../design-tokens';
 
 export type NotificationType = 'success' | 'error' | 'info' | 'warning';
 
@@ -189,6 +190,10 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isMounted, setIsMounted] = useState(false);
+  const portalThemeStyle = {
+    ...(darkTheme as React.CSSProperties),
+    colorScheme: 'dark' as const,
+  };
 
   useEffect(() => {
     setIsMounted(true);
@@ -218,7 +223,8 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
       {isMounted &&
         createPortal(
           <div
-            className="pointer-events-none fixed inset-x-4 bottom-3 z-[2147483647] flex flex-col gap-2 sm:left-auto sm:right-4 sm:w-full sm:max-w-xs"
+            className="dark pointer-events-none fixed inset-x-4 bottom-3 z-[2147483647] flex flex-col gap-2 font-sans sm:left-auto sm:right-4 sm:w-full sm:max-w-xs"
+            style={portalThemeStyle}
             aria-live="polite"
             aria-atomic="true"
           >
