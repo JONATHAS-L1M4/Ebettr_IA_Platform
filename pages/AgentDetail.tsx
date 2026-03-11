@@ -942,7 +942,7 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
                     className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
                  >
                     {isSavingAll ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                    {isSavingAll ? 'Salvando...' : `Salvar AlteraÃ§Ãµes (${pendingChanges.length})`}
+                    {isSavingAll ? 'Salvando...' : `Salvar Alterações (${pendingChanges.length})`}
                  </button>
              )}
              
