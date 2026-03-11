@@ -337,8 +337,8 @@ export const CredentialForm: React.FC<CredentialFormProps> = ({
         <div className="flex flex-col sm:flex-row justify-between items-center px-6 py-4 border-t border-border bg-muted shrink-0 gap-4">
           <div className="w-full sm:w-auto">{renderTestButton()}</div>
           <div className="flex gap-3 w-full sm:w-auto">
-            <button type="button" onClick={onCancel} className="flex h-10 flex-1 items-center justify-center rounded-md px-4 py-2 text-xs text-muted-foreground hover:text-foreground hover:bg-background font-bold uppercase tracking-wider transition-colors sm:flex-none">Cancelar</button>
-            <button type="submit" form="credential-form" className="flex h-10 flex-1 items-center justify-center gap-2 px-6 py-2 bg-primary text-primary-foreground text-xs font-bold rounded-md hover:bg-primary/90 transition-colors uppercase tracking-wider sm:flex-none"><Save className="w-3.5 h-3.5" /> Salvar</button>
+            <button type="button" onClick={onCancel} className="flex h-10 flex-1 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground sm:flex-none">Cancelar</button>
+            <button type="submit" form="credential-form" className="flex h-10 flex-1 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground sm:flex-none"><Save className="w-3.5 h-3.5" /> Salvar</button>
           </div>
         </div>
       </div>
@@ -355,7 +355,7 @@ export const CredentialForm: React.FC<CredentialFormProps> = ({
                 <div className="text-sm text-foreground leading-relaxed" dangerouslySetInnerHTML={{ __html: activeHelp.text }} />
              </div>
              <div className="p-4 border-t border-border bg-muted">
-                <button onClick={() => setActiveHelp(null)} className="w-full py-2 bg-primary text-primary-foreground text-[10px] font-bold rounded-md uppercase tracking-widest hover:bg-primary/90 transition-colors">Entendi</button>
+                <button onClick={() => setActiveHelp(null)} className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground">Entendi</button>
              </div>
           </div>
         </div>

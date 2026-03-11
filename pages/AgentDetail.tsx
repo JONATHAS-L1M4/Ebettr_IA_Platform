@@ -983,7 +983,7 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
                  <button 
                     onClick={handleSaveAll}
                     disabled={isSavingAll}
-                    className="flex h-10 items-center gap-2 px-6 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg shadow-md transition-all transform active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed font-bold uppercase tracking-wide text-xs"
+                    className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
                  >
                     {isSavingAll ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
                     {isSavingAll ? 'Salvando...' : `Salvar AlteraÃ§Ãµes (${pendingChanges.length})`}

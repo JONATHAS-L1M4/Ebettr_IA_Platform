@@ -6,7 +6,9 @@ import { DashedAddCard } from '../components/ui/DashedAddCard';
 import SpotlightCard from '../components/ui/SpotlightCard';
 import Toggle from '../components/ui/Toggle';
 import { useNotification } from '../context/NotificationContext';
-import { inputBaseClass } from '../components/inputs/styles';
+
+const inputBaseClass =
+  'w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground disabled:cursor-not-allowed disabled:opacity-50';
 import { serverManagementService } from '../services/serverManagementService';
 import { supabaseServerService } from '../services/supabaseServerService';
 import { DeleteWithCodeModal } from '../components/shared/DeleteWithCodeModal';
@@ -425,7 +427,7 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                                    type="button"
                                    onClick={handleProcessCurl}
                                    disabled={!curlInput}
-                                   className="px-3 py-1.5 bg-primary text-primary-foreground text-xs font-bold rounded hover:bg-primary transition-colors disabled:opacity-50 flex items-center gap-2"
+                                   className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
                                >
                                    <Code className="w-3 h-3" /> Processar Dados
                                </button>
@@ -616,14 +618,14 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                  type="button"
                  onClick={resetForm}
                  disabled={isSubmitting}
-                 className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground font-medium transition-colors disabled:opacity-50"
+                 className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
                >
                  Cancelar
                </button>
                <button 
                  type="submit"
                  disabled={isSubmitting}
-                 className="h-10 px-6 py-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold rounded-md transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                 className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
                >
                  {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                  {isSubmitting ? 'Salvando...' : 'Salvar Servidor'}
@@ -699,7 +701,7 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                     {(activeTab === 'n8n' || activeTab === 'supabase') && (
                         <button 
                             onClick={() => setIsFormOpen(true)}
-                            className="flex h-10 items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-4 rounded-md text-xs font-bold uppercase tracking-wide transition-all border border-transparent whitespace-nowrap shadow-sm"
+                            className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground"
                         >
                             <Plus className="w-4 h-4" />
                             <span className="hidden sm:inline">Novo Servidor</span>

@@ -3,7 +3,9 @@ import { AccessRule } from '../../types';
 import { Mail, Plus, User, X } from '../ui/Icons';
 import { companyService } from '../../services/companyService';
 import { userService } from '../../services/userService';
-import { inputBaseClass } from './styles';
+
+const inputBaseClass =
+  'w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground disabled:cursor-not-allowed disabled:opacity-50';
 
 interface AccessManagerProps {
   rules: AccessRule[];
@@ -198,10 +200,10 @@ export const AccessManager: React.FC<AccessManagerProps> = ({
             type="button"
             onClick={handleAdd}
             disabled={isDisabled}
-            className={`flex h-10 w-full items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-bold transition-colors md:w-auto ${
+            className={`flex h-10 w-full items-center justify-center gap-2 rounded-lg border px-4 py-2 text-xs font-bold uppercase tracking-wide shadow-sm transition-all md:w-auto ${
               isDisabled
-                ? 'cursor-not-allowed bg-muted text-muted-foreground'
-                : 'bg-primary text-primary-foreground hover:bg-primary/90'
+                ? 'cursor-not-allowed border-border bg-muted text-muted-foreground'
+                : 'border-border bg-card text-muted-foreground hover:border-border hover:bg-muted hover:text-foreground'
             }`}
           >
             <Plus className="h-3.5 w-3.5" />

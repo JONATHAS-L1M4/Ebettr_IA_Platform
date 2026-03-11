@@ -12,6 +12,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from '../components/ui/Alert';
+import { cn } from '../utils/cn';
 import {
   AlertCircle,
   AlertTriangle,
@@ -38,6 +39,73 @@ interface NotificationContextData {
   removeNotification: (id: string) => void;
 }
 
+const fixMojibake = (text: string) => {
+  if (!/[ÃÂ]/.test(text)) {
+    return text;
+  }
+
+  try {
+    const bytes = Uint8Array.from(text, (char) => char.charCodeAt(0));
+    const decoded = new TextDecoder('utf-8').decode(bytes);
+    return decoded.includes('\uFFFD') ? text : decoded;
+  } catch {
+    return text;
+  }
+};
+
+const portugueseReplacements: Array<[RegExp, string]> = [
+  [/\bNao\b/g, 'Não'],
+  [/\bnao\b/g, 'não'],
+  [/\bJa\b/g, 'Já'],
+  [/\bja\b/g, 'já'],
+  [/\bEsta\b/g, 'Está'],
+  [/\besta\b/g, 'está'],
+  [/\bEstao\b/g, 'Estão'],
+  [/\bestao\b/g, 'estão'],
+  [/\bCodigo\b/g, 'Código'],
+  [/\bcodigo\b/g, 'código'],
+  [/\bInvalido\b/g, 'Inválido'],
+  [/\binvalido\b/g, 'inválido'],
+  [/\bObrigatorios\b/g, 'Obrigatórios'],
+  [/\bobrigatorios\b/g, 'obrigatórios'],
+  [/\bConfiguracao\b/g, 'Configuração'],
+  [/\bconfiguracao\b/g, 'configuração'],
+  [/\bConfiguracoes\b/g, 'Configurações'],
+  [/\bconfiguracoes\b/g, 'configurações'],
+  [/\bConexao\b/g, 'Conexão'],
+  [/\bconexao\b/g, 'conexão'],
+  [/\bPossivel\b/g, 'Possível'],
+  [/\bpossivel\b/g, 'possível'],
+  [/\bSincronizacao\b/g, 'Sincronização'],
+  [/\bsincronizacao\b/g, 'sincronização'],
+  [/\bAlteracoes\b/g, 'Alterações'],
+  [/\balteracoes\b/g, 'alterações'],
+  [/\bConcluido\b/g, 'Concluído'],
+  [/\bconcluido\b/g, 'concluído'],
+  [/\bConcluida\b/g, 'Concluída'],
+  [/\bconcluida\b/g, 'concluída'],
+  [/\bExcluido\b/g, 'Excluído'],
+  [/\bexcluido\b/g, 'excluído'],
+  [/\bModulo\b/g, 'Módulo'],
+  [/\bmodulo\b/g, 'módulo'],
+  [/\bRecuperacao\b/g, 'Recuperação'],
+  [/\brecuperacao\b/g, 'recuperação'],
+  [/Area de transferencia/g, 'Área de transferência'],
+  [/area de transferencia/g, 'área de transferência'],
+];
+
+const normalizeNotificationText = (text?: string) => {
+  if (!text) {
+    return undefined;
+  }
+
+  return portugueseReplacements.reduce(
+    (currentText, [pattern, replacement]) =>
+      currentText.replace(pattern, replacement),
+    fixMojibake(text).trim()
+  );
+};
+
 const NotificationContext = createContext<NotificationContextData | null>(null);
 
 export const useNotification = () => {
@@ -59,55 +127,57 @@ const NotificationItem: React.FC<{
 
   const toneMap: Record<
     NotificationType,
-    { icon: React.ReactNode; iconClassName: string }
+    { icon: React.ComponentType<{ className?: string }>; iconClassName: string; alertClassName: string }
   > = {
     success: {
-      icon: <CheckCircle2 className="h-4 w-4" />,
-      iconClassName:
-        'border border-emerald-500/20 bg-emerald-500/10 text-emerald-400',
+      icon: CheckCircle2,
+      iconClassName: 'text-foreground',
+      alertClassName: 'border-border bg-card text-foreground',
     },
     error: {
-      icon: <AlertCircle className="h-4 w-4" />,
-      iconClassName:
-        'border border-destructive/20 bg-destructive/10 text-destructive',
+      icon: AlertCircle,
+      iconClassName: 'text-destructive',
+      alertClassName: 'border-destructive/40 bg-card text-foreground',
     },
     warning: {
-      icon: <AlertTriangle className="h-4 w-4" />,
-      iconClassName: 'border border-amber-500/20 bg-amber-500/10 text-amber-300',
+      icon: AlertTriangle,
+      iconClassName: 'text-foreground',
+      alertClassName: 'border-border bg-card text-foreground',
     },
     info: {
-      icon: <Info className="h-4 w-4" />,
-      iconClassName: 'border border-border bg-muted/60 text-foreground',
+      icon: Info,
+      iconClassName: 'text-muted-foreground',
+      alertClassName: 'border-border bg-card text-foreground',
     },
   };
 
   const currentTone = toneMap[notification.type];
+  const Icon = currentTone.icon;
+  const normalizedTitle = normalizeNotificationText(notification.title) ?? notification.title;
+  const normalizedMessage = normalizeNotificationText(notification.message);
 
   return (
-    <Alert className="animate-scale-in">
-      <div className="flex items-start gap-3">
-        <div
-          className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${currentTone.iconClassName}`}
-        >
-          {currentTone.icon}
-        </div>
-        <div className="min-w-0">
-          <AlertTitle>{notification.title}</AlertTitle>
-          {notification.message && (
-            <AlertDescription className="mt-1">
-              {notification.message}
-            </AlertDescription>
-          )}
-        </div>
-      </div>
-      <AlertAction>
+    <Alert
+      className={cn(
+        'animate-scale-in rounded-lg p-3 pr-8 shadow-lg [&>svg~*]:pl-6 [&>svg+div]:translate-y-0 [&>svg]:left-3 [&>svg]:top-3',
+        currentTone.alertClassName
+      )}
+    >
+      <Icon className={cn('h-3.5 w-3.5', currentTone.iconClassName)} />
+      <AlertTitle className="pr-3 text-sm leading-tight">{normalizedTitle}</AlertTitle>
+      {normalizedMessage && (
+        <AlertDescription className="pr-3 text-[11px] leading-4 text-muted-foreground">
+          {normalizedMessage}
+        </AlertDescription>
+      )}
+      <AlertAction className="right-2.5 top-2.5">
         <button
           type="button"
           onClick={onClose}
-          className="flex h-7 w-7 items-center justify-center rounded-md border border-border bg-background text-muted-foreground transition hover:bg-muted hover:text-foreground"
-          aria-label="Fechar notificacao"
+          className="flex h-5 w-5 items-center justify-center rounded-sm bg-transparent p-0 text-muted-foreground/70 transition hover:bg-transparent hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          aria-label="Fechar notificação"
         >
-          <X className="h-4 w-4" />
+          <X className="h-3.5 w-3.5" />
         </button>
       </AlertAction>
     </Alert>
@@ -148,7 +218,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
       {isMounted &&
         createPortal(
           <div
-            className="pointer-events-none fixed inset-x-4 bottom-4 z-[2147483647] flex flex-col gap-3 sm:left-auto sm:right-4 sm:w-full sm:max-w-sm"
+            className="pointer-events-none fixed inset-x-4 bottom-3 z-[2147483647] flex flex-col gap-2 sm:left-auto sm:right-4 sm:w-full sm:max-w-xs"
             aria-live="polite"
             aria-atomic="true"
           >

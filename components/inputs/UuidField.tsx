@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { ConfigField } from '../../types';
-import { inputBaseClass } from './styles';
+
+const inputBaseClass =
+  'w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground disabled:cursor-not-allowed disabled:opacity-50';
 import { Link, Copy, CheckCircle2 } from '../ui/Icons';
 import { useNotification } from '../../context/NotificationContext';
 

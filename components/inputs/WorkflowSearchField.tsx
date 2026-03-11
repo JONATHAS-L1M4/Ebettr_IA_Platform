@@ -2,7 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ConfigField } from '../../types';
 import { fetchN8nWorkflows, N8nWorkflow } from '../../services/n8nService';
 import { Search, Loader2, AlertCircle, X, Zap, RefreshCw } from '../ui/Icons';
-import { inputBaseClass } from './styles';
+
+const inputBaseClass =
+  'w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground disabled:cursor-not-allowed disabled:opacity-50';
 
 interface WorkflowSearchFieldProps {
   field: ConfigField;

@@ -2,6 +2,14 @@ import React from 'react';
 import { ExecutionLog, SortConfig } from './types';
 import { XCircle, AlertOctagon, Eye, Loader2, Clock, ChevronUp, ChevronDown, Check } from '../ui/Icons';
 import { formatDate, getDuration } from './utils';
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '../ui/table';
 
 interface LogsTableProps {
   logs: ExecutionLog[];
@@ -76,68 +84,68 @@ export const LogsTable: React.FC<LogsTableProps> = ({
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="bg-muted/40 border-b border-border text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-              <th
+        <Table className="w-full text-left border-collapse">
+          <TableHeader>
+            <TableRow className="bg-muted/40 border-b border-border text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+              <TableHead
                 className="px-5 py-3 cursor-pointer hover:bg-accent transition-colors"
                 onClick={() => onSort?.('status')}
               >
                 <div className="flex items-center">
                   Status {renderSortIcon('status')}
                 </div>
-              </th>
-              <th
+              </TableHead>
+              <TableHead
                 className="px-5 py-3 cursor-pointer hover:bg-accent transition-colors"
                 onClick={() => onSort?.('id')}
               >
                 <div className="flex items-center">
                   ID {renderSortIcon('id')}
                 </div>
-              </th>
-              <th
+              </TableHead>
+              <TableHead
                 className="px-5 py-3 hidden md:table-cell cursor-pointer hover:bg-accent transition-colors"
                 onClick={() => onSort?.('mode')}
               >
                 <div className="flex items-center">
                   Modo {renderSortIcon('mode')}
                 </div>
-              </th>
-              <th
+              </TableHead>
+              <TableHead
                 className="px-5 py-3 hidden sm:table-cell cursor-pointer hover:bg-accent transition-colors"
                 onClick={() => onSort?.('startedAt')}
               >
                 <div className="flex items-center">
                   Inicio {renderSortIcon('startedAt')}
                 </div>
-              </th>
-              <th
+              </TableHead>
+              <TableHead
                 className="px-5 py-3 hidden lg:table-cell cursor-pointer hover:bg-accent transition-colors"
                 onClick={() => onSort?.('duration')}
               >
                 <div className="flex items-center">
                   Duracao {renderSortIcon('duration')}
                 </div>
-              </th>
-              <th className="px-5 py-3 text-center">Acoes</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border text-sm">
+              </TableHead>
+              <TableHead className="px-5 py-3 text-center">Acoes</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody className="divide-y divide-border text-sm">
             {isLoadingMore ? (
               [...Array(10)].map((_, i) => (
-                <tr key={`skeleton-${i}`} className="animate-pulse">
-                  <td className="px-5 py-4"><div className="h-3 bg-muted rounded w-16" /></td>
-                  <td className="px-5 py-4"><div className="h-3 bg-muted rounded w-12" /></td>
-                  <td className="px-5 py-4 hidden md:table-cell"><div className="h-3 bg-muted/70 rounded w-14" /></td>
-                  <td className="px-5 py-4 hidden sm:table-cell"><div className="h-3 bg-muted/70 rounded w-24" /></td>
-                  <td className="px-5 py-4 hidden lg:table-cell"><div className="h-3 bg-muted/70 rounded w-16" /></td>
-                  <td className="px-5 py-4 text-center"><div className="h-6 w-6 bg-muted rounded mx-auto" /></td>
-                </tr>
+                <TableRow key={`skeleton-${i}`} className="animate-pulse">
+                  <TableCell className="px-5 py-4"><div className="h-3 bg-muted rounded w-16" /></TableCell>
+                  <TableCell className="px-5 py-4"><div className="h-3 bg-muted rounded w-12" /></TableCell>
+                  <TableCell className="px-5 py-4 hidden md:table-cell"><div className="h-3 bg-muted/70 rounded w-14" /></TableCell>
+                  <TableCell className="px-5 py-4 hidden sm:table-cell"><div className="h-3 bg-muted/70 rounded w-24" /></TableCell>
+                  <TableCell className="px-5 py-4 hidden lg:table-cell"><div className="h-3 bg-muted/70 rounded w-16" /></TableCell>
+                  <TableCell className="px-5 py-4 text-center"><div className="h-6 w-6 bg-muted rounded mx-auto" /></TableCell>
+                </TableRow>
               ))
             ) : (
               logs.map(log => (
-                <tr key={log.id} className="hover:bg-accent/40 transition-colors group">
-                  <td className="px-5 py-3 whitespace-nowrap">
+                <TableRow key={log.id} className="hover:bg-accent/40 transition-colors group">
+                  <TableCell className="px-5 py-3 whitespace-nowrap">
                     {log.status === 'success' && (
                       <div className="flex items-center gap-2">
                         <Check className="w-4 h-4 text-foreground" />
@@ -162,25 +170,25 @@ export const LogsTable: React.FC<LogsTableProps> = ({
                         <span className="text-xs font-medium text-muted-foreground">Rodando</span>
                       </div>
                     )}
-                  </td>
-                  <td className="px-5 py-3 whitespace-nowrap font-mono text-[11px] text-muted-foreground">
+                  </TableCell>
+                  <TableCell className="px-5 py-3 whitespace-nowrap font-mono text-[11px] text-muted-foreground">
                     <span className="bg-muted/40 px-1.5 py-0.5 rounded text-foreground border border-border">
                       #{log.id}
                     </span>
-                  </td>
-                  <td className="px-5 py-3 whitespace-nowrap text-muted-foreground hidden md:table-cell">
+                  </TableCell>
+                  <TableCell className="px-5 py-3 whitespace-nowrap text-muted-foreground hidden md:table-cell">
                     <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">{log.mode}</span>
-                  </td>
-                  <td className="px-5 py-3 whitespace-nowrap text-muted-foreground font-mono text-[11px] hidden sm:table-cell">
+                  </TableCell>
+                  <TableCell className="px-5 py-3 whitespace-nowrap text-muted-foreground font-mono text-[11px] hidden sm:table-cell">
                     {formatDate(log.startedAt)}
-                  </td>
-                  <td className="px-5 py-3 whitespace-nowrap text-muted-foreground hidden lg:table-cell">
+                  </TableCell>
+                  <TableCell className="px-5 py-3 whitespace-nowrap text-muted-foreground hidden lg:table-cell">
                     <div className="flex items-center gap-1.5 font-mono text-[11px]">
                       <Clock className="w-3 h-3 text-muted-foreground" />
                       {getDuration(log.startedAt, log.stoppedAt)}
                     </div>
-                  </td>
-                  <td className="px-5 py-3 whitespace-nowrap text-center">
+                  </TableCell>
+                  <TableCell className="px-5 py-3 whitespace-nowrap text-center">
                     <button
                       onClick={() => onViewDetails(log)}
                       className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-all inline-flex items-center justify-center group/btn"
@@ -188,13 +196,14 @@ export const LogsTable: React.FC<LogsTableProps> = ({
                     >
                       <Eye className="w-4 h-4" />
                     </button>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))
             )}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
     </div>
   );
 };
+

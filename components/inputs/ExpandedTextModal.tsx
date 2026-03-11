@@ -75,13 +75,13 @@ export const ExpandedTextModal: React.FC<ExpandedTextModalProps> = ({
         <div className="flex shrink-0 justify-end gap-3 border-t border-border bg-muted/35 px-6 py-4">
           <button 
             onClick={onClose}
-            className="flex h-10 items-center justify-center rounded-md px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground"
           >
             Cancelar
           </button>
           <button 
             onClick={() => onSave(localValue)}
-            className="flex h-10 items-center gap-2 bg-primary text-primary-foreground px-6 py-2 rounded-md text-xs font-bold hover:bg-primary/90 transition-all uppercase tracking-wide"
+            className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground"
           >
             <Check className="w-4 h-4" />
             Salvar

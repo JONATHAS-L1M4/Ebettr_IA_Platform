@@ -258,7 +258,7 @@ export const AgentDetailHeader: React.FC<AgentDetailHeaderProps> = ({
           {hasTestMode && !isBlocked && (
             <button
               onClick={onPlayground}
-              className="flex h-[32px] flex-1 items-center justify-center gap-2 rounded-md bg-primary px-5 py-2 text-xs font-bold uppercase tracking-wide text-primary-foreground transition-all hover:bg-primary/90 sm:flex-none"
+              className="flex h-[32px] flex-1 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground sm:flex-none"
             >
               <Play className="h-3 w-3" />
               Testar

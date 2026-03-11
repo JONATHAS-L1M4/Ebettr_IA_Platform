@@ -373,7 +373,7 @@ export const ExecutionsDashboard: React.FC<ExecutionsDashboardProps> = ({ agent 
                 disabled={isSyncing}
                 variant="outline"
                 size="sm"
-                className="h-10 rounded-lg border-border bg-card px-4 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm hover:border-ring/40 hover:bg-accent hover:text-foreground"
+                className="h-10 rounded-lg px-4"
                 title="Sincronizar com n8n"
             >
                 <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
@@ -435,4 +435,3 @@ export const ExecutionsDashboard: React.FC<ExecutionsDashboardProps> = ({ agent 
     </div>
   );
 };
-

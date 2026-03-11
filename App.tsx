@@ -24,7 +24,6 @@ import { SESSION_EXPIRED_EVENT } from './services/apiUtils';
 import { useNotification } from './context/NotificationContext';
 import { NotFound } from './pages/NotFound';
 import { darkTheme } from './design-tokens';
-import AppBackground from './components/layout/AppBackground';
 
 
 const USER_CACHE_KEY = 'ebettr_user_cache';
@@ -112,7 +111,6 @@ export default function App() {
       }`}
       style={darkStyle}
     >
-      {!isLoginRoute && <AppBackground />}
       <div className="relative z-10">{content}</div>
     </div>
   );

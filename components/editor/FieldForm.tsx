@@ -3,7 +3,13 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { ConfigField, FieldType } from '../../types';
 import { Code, RotateCcw, Plus, FileJson, Shield, CircleHelp, Upload, Globe, LayoutGrid, Eye } from '../ui/Icons';
 import Toggle from '../ui/Toggle';
-import { controlBaseClass, inputBaseClass, selectBaseClass } from '../inputs/styles';
+
+const inputBaseClass =
+  'w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground disabled:cursor-not-allowed disabled:opacity-50';
+const controlBaseClass =
+  'w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground disabled:cursor-not-allowed disabled:opacity-50';
+const selectBaseClass =
+  'w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background placeholder:text-muted-foreground shadow-sm text-foreground disabled:cursor-not-allowed disabled:opacity-50 appearance-none cursor-pointer';
 import { encryptPath } from '../../utils/encryption';
 
 // Imported Inputs for Default Value preview
@@ -692,7 +698,7 @@ export const FieldForm: React.FC<FieldFormProps> = ({
             <button 
                 onClick={handleSave}
                 disabled={!canSave}
-                className="mt-2 flex h-10 w-full items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground py-2 rounded-md text-sm font-bold uppercase tracking-wide disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm"
+                className="mt-2 flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
             >
                 {initialField ? (
                     <><RotateCcw className="w-4 h-4" /> Atualizar Campo</>

@@ -211,7 +211,7 @@ const AgentList: React.FC<AgentListProps> = ({
             {canCreate && onCreateAgent && (
                 <button 
                     onClick={() => setIsFormOpen(true)}
-                    className="flex h-10 items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-4 rounded-md text-xs font-bold uppercase tracking-wide transition-all border border-transparent whitespace-nowrap shadow-sm"
+                    className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground"
                 >
                 <Plus className="w-4 h-4" />
                 <span className="hidden sm:inline">Novo Agente</span>

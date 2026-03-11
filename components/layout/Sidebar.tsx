@@ -8,7 +8,7 @@ import {
   Building2,
   Headset,
   Lock,
-  MoreHorizontal,
+  MoreVertical,
   Server,
   Shield,
   User,
@@ -330,7 +330,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         <span className="truncate font-medium">{displayName}</span>
                         <span className="truncate text-[10px] text-sidebar-foreground/70">{currentUser?.email}</span>
                       </div>
-                      <MoreHorizontal className="ml-auto h-4 w-4 text-sidebar-foreground/70 rotate-90" />
+                      <MoreVertical className="ml-auto h-4 w-4 text-sidebar-foreground/70" />
                     </SidebarMenuButton>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent

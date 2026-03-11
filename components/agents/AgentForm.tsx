@@ -968,7 +968,7 @@ export const AgentForm: React.FC<AgentFormProps> = ({
           <button
             type="submit"
             disabled={!formData.workflowId || isSubmitting}
-            className="h-10 px-6 py-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold rounded-md transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
             {isEditMode ? (isSubmitting ? 'Salvando...' : 'Salvar Alteracoes') : 'Criar Agente'}

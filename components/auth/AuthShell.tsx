@@ -24,7 +24,7 @@ export const AuthShell: React.FC<AuthShellProps> = ({
   const darkStyles = { ...(darkTheme as React.CSSProperties), colorScheme: 'dark' as const };
   return (
     <div
-      className="flex min-h-svh flex-col items-center justify-center gap-6 p-6 text-foreground md:p-10"
+      className="auth-screen flex min-h-svh flex-col items-center justify-center gap-6 p-6 text-foreground md:p-10"
       style={darkStyles}
     >
       <div className="flex w-full max-w-sm flex-col gap-6">

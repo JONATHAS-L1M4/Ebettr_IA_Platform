@@ -57,9 +57,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
   // Password Strength Logic
   const validations = [
       { id: 'len', label: 'Pelo menos 8 caracteres', test: (p: string) => p.length >= 8 },
-      { id: 'upper', label: 'Letra maiÃºscula (A-Z)', test: (p: string) => /[A-Z]/.test(p) },
-      { id: 'lower', label: 'Letra minÃºscula (a-z)', test: (p: string) => /[a-z]/.test(p) },
-      { id: 'num', label: 'NÃºmero (0-9)', test: (p: string) => /[0-9]/.test(p) },
+      { id: 'upper', label: 'Letra maiúscula (A-Z)', test: (p: string) => /[A-Z]/.test(p) },
+      { id: 'lower', label: 'Letra minúscula (a-z)', test: (p: string) => /[a-z]/.test(p) },
+      { id: 'num', label: 'Número (0-9)', test: (p: string) => /[0-9]/.test(p) },
       { id: 'spec', label: 'Caractere especial (!@#$)', test: (p: string) => /[^A-Za-z0-9]/.test(p) },
   ];
 
@@ -76,7 +76,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
           strengthLabel = 'Fraca';
       } else if (passedCount <= 4) {
           strengthColor = 'bg-amber-500';
-          strengthLabel = 'MÃ©dia';
+          strengthLabel = 'Média';
       } else {
           strengthColor = 'bg-emerald-500';
           strengthLabel = 'Forte';
@@ -91,7 +91,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
   const getRoleLabel = (role: string) => {
     switch(role) {
       case 'admin': return 'Administrador';
-      case 'support': return 'Suporte TÃ©cnico';
+      case 'support': return 'Suporte Técnico';
       case 'client': return 'Cliente';
       default: return role;
     }
@@ -100,7 +100,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
   const handleSaveGeneral = (e: React.FormEvent) => {
     e.preventDefault();
     onSave({ name: formData.name });
-    addNotification('success', 'Perfil atualizado', 'Suas informaÃ§Ãµes bÃ¡sicas foram salvas.');
+    addNotification('success', 'Perfil atualizado', 'Suas informações básicas foram salvas.');
   };
 
   const handleSaveSecurity = async (e: React.MouseEvent) => {
@@ -108,12 +108,12 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
     if (!passwordForm.current || !passwordForm.new) return;
     
     if (passwordForm.new !== passwordForm.confirm) {
-      addNotification('error', 'Erro na senha', 'A nova senha e a confirmaÃ§Ã£o nÃ£o coincidem.');
+      addNotification('error', 'Erro na senha', 'A nova senha e a confirmação não coincidem.');
       return;
     }
 
     if (!allValid) {
-        addNotification('error', 'Senha Fraca', 'A nova senha nÃ£o atende aos requisitos de seguranÃ§a.');
+        addNotification('error', 'Senha Fraca', 'A nova senha não atende aos requisitos de segurança.');
         return;
     }
 
@@ -123,7 +123,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
         addNotification('success', 'Senha alterada', 'Sua credencial de acesso foi atualizada.');
         setPasswordForm({ current: '', new: '', confirm: '' });
     } catch (error: any) {
-        addNotification('error', 'Erro', error.message || 'NÃ£o foi possÃ­vel alterar a senha.');
+        addNotification('error', 'Erro', error.message || 'Não foi possível alterar a senha.');
     } finally {
         setIsSavingSecurity(false);
     }
@@ -136,7 +136,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
       setVerificationCode('');
 
       try {
-          // Usa o serviÃ§o para obter os dados de setup
+          // Usa o serviço para obter os dados de setup
           const data = await authService.setup2FA(user.email);
           
           setSetupData({
@@ -148,7 +148,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
 
       } catch (e: any) {
           console.error(e);
-          addNotification('error', 'Erro', e.message || 'NÃ£o foi possÃ­vel iniciar a configuraÃ§Ã£o 2FA.');
+          addNotification('error', 'Erro', e.message || 'Não foi possível iniciar a configuração 2FA.');
           setIsSettingUp2FA(false);
       } finally {
           setIsLoadingSetup(false);
@@ -161,7 +161,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
     setIsVerifying(true);
     
     try {
-        // Usa o endpoint de confirmaÃ§Ã£o correto (/authenticator/confirm)
+        // Usa o endpoint de confirmação correto (/authenticator/confirm)
         await authService.confirm2FASetup(user.email, verificationCode, setupData.csrf_token);
 
         // Success
@@ -169,11 +169,11 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
         setIsSettingUp2FA(false);
         setVerificationCode('');
         onSave({ twoFactorEnabled: true });
-        addNotification('success', '2FA Ativado', 'Sua conta agora estÃ¡ protegida com dois fatores.');
+        addNotification('success', '2FA Ativado', 'Sua conta agora está protegida com dois fatores.');
 
     } catch (err: any) {
         console.error(err);
-        addNotification('error', 'Erro de VerificaÃ§Ã£o', err.message || 'NÃ£o foi possÃ­vel verificar o cÃ³digo.');
+        addNotification('error', 'Erro de Verificação', err.message || 'Não foi possível verificar o código.');
     } finally {
         setIsVerifying(false);
     }
@@ -191,7 +191,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
           await authService.reset2FA(resetPassword);
           setIs2FAEnabled(false);
           onSave({ twoFactorEnabled: false });
-          addNotification('success', '2FA Desativado', 'A autenticaÃ§Ã£o de dois fatores foi removida.');
+          addNotification('success', '2FA Desativado', 'A autenticação de dois fatores foi removida.');
           setIsResetting2FA(false);
       } catch (err: any) {
           addNotification('error', 'Erro', err.message || 'Senha incorreta.');
@@ -262,7 +262,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
            <div>
              <h1 className="text-xl font-bold text-foreground">Meu Perfil</h1>
              <p className="text-sm text-muted-foreground font-light">
-                Gerencie suas informaÃ§Ãµes pessoais e seguranÃ§a.
+                Gerencie suas informações pessoais e segurança.
              </p>
            </div>
         </div>
@@ -287,7 +287,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                             />
                         </div>
                         <div className="flex flex-col gap-1">
-                            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">NÃ­vel de Acesso</label>
+                            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Nível de Acesso</label>
                             <div className="relative">
                                 <div className="absolute left-3 top-2.5 text-muted-foreground">
                                     <ShieldCheck className="w-4 h-4" />
@@ -321,7 +321,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                 {/* Section 2: Security (Password) */}
                 <div className="flex flex-col gap-4">
                     <h3 className="text-xs font-bold text-foreground uppercase tracking-widest border-b border-border pb-2 flex items-center gap-2">
-                        <Lock className="w-3 h-3" /> SeguranÃ§a da Conta
+                        <Lock className="w-3 h-3" /> Segurança da Conta
                     </h3>
 
                     <div className="flex flex-col gap-4">
@@ -333,7 +333,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                                     value={passwordForm.current}
                                     onChange={e => setPasswordForm({...passwordForm, current: e.target.value})}
                                     className={`${inputClass} pr-10`}
-                                    placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                                    placeholder="********"
                                 />
                                 <button 
                                     type="button"
@@ -353,7 +353,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                                         value={passwordForm.new}
                                         onChange={e => setPasswordForm({...passwordForm, new: e.target.value})}
                                         className={`${inputClass} pr-10`}
-                                        placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                                        placeholder="********"
                                     />
                                     <button 
                                         type="button"
@@ -363,10 +363,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                                         {showNewPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                     </button>
                                 </div>
-                                {/* Barra de ForÃ§a Simplificada */}
+                                {/* Barra de Força Simplificada */}
                                 <div className="px-1 mt-2">
                                     <div className="flex justify-between items-end mb-1.5">
-                                        <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">ForÃ§a da senha</span>
+                                        <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">Força da senha</span>
                                         <span className={`text-[10px] font-bold uppercase tracking-wider transition-colors ${
                                             passedCount <= 2 ? 'text-red-500' : passedCount <= 4 ? 'text-amber-500' : 'text-emerald-600'
                                         }`}>
@@ -381,7 +381,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                                     </div>
                                     {!allValid && passwordForm.new.length > 0 && (
                                         <p className="text-[10px] text-muted-foreground mt-2 leading-relaxed">
-                                            Use pelo menos 8 caracteres, incluindo letras maiÃºsculas, nÃºmeros e sÃ­mbolos especiais.
+                                            Use pelo menos 8 caracteres, incluindo letras maiúsculas, números e símbolos especiais.
                                         </p>
                                     )}
                                 </div>
@@ -394,7 +394,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                                         value={passwordForm.confirm}
                                         onChange={e => setPasswordForm({...passwordForm, confirm: e.target.value})}
                                         className={`${inputClass} pr-10`}
-                                        placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                                        placeholder="********"
                                     />
                                     <button 
                                         type="button"
@@ -423,7 +423,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                 {/* Section 3: 2FA */}
                 <div className="flex flex-col gap-4">
                     <h3 className="text-xs font-bold text-foreground uppercase tracking-widest border-b border-border pb-2 flex items-center gap-2">
-                        <Smartphone className="w-3 h-3" /> AutenticaÃ§Ã£o de Dois Fatores
+                        <Smartphone className="w-3 h-3" /> Autenticação de Dois Fatores
                     </h3>
 
                     <div className="flex items-start gap-4">
@@ -435,14 +435,14 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                                 Status do 2FA
                             </h3>
                             <p className="text-xs text-muted-foreground mt-1 leading-relaxed max-w-sm">
-                                Proteja sua conta exigindo um cÃ³digo do Google Authenticator ou Authy ao fazer login.
+                                Proteja sua conta exigindo um código do Google Authenticator ou Authy ao fazer login.
                             </p>
                             
                             <div className="mt-4">
                                 {!is2FAEnabled ? (
                                     <button 
                                         onClick={handleStartSetup}
-                                        className="px-4 py-2 bg-primary text-primary-foreground hover:bg-primary rounded-md text-xs font-bold transition-all shadow-sm flex items-center gap-2"
+                                        className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground"
                                     >
                                         <QrCode className="w-3 h-3" />
                                         Configurar 2FA
@@ -465,10 +465,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
             <div className="p-6 bg-muted border-t border-border flex items-center justify-end gap-3 rounded-b-lg">
                 <button 
                     onClick={handleSaveGeneral}
-                    className="h-10 px-6 py-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold rounded-md transition-all flex items-center gap-2"
+                    className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground"
                 >
                     <Save className="w-4 h-4" />
-                    Salvar AlteraÃ§Ãµes
+                    Salvar Alterações
                 </button>
             </div>
         </div>
@@ -486,7 +486,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                             </div>
                             <div>
                                 <h3 className="text-sm font-bold text-foreground uppercase tracking-wide">Configurar 2FA</h3>
-                                <p className="text-xs text-muted-foreground">Escaneie o cÃ³digo para vincular seu app.</p>
+                                <p className="text-xs text-muted-foreground">Escaneie o código para vincular seu app.</p>
                             </div>
                         </div>
                         <button 
@@ -501,7 +501,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                     {isLoadingSetup ? (
                         <div className="flex flex-col items-center justify-center h-64 w-full">
                             <Loader2 className="w-8 h-8 animate-spin text-muted-foreground mb-2" />
-                            <span className="text-xs text-muted-foreground font-medium">Gerando chave de seguranÃ§a...</span>
+                            <span className="text-xs text-muted-foreground font-medium">Gerando chave de segurança...</span>
                         </div>
                     ) : (
                         <div className="p-8 flex flex-col md:flex-row gap-8 items-center">
@@ -531,7 +531,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                                 <div className="space-y-2 flex flex-col items-center">
                                     <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
                                         <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[10px]">1</span>
-                                        Escaneie o cÃ³digo
+                                        Escaneie o código
                                     </h4>
                                     <p className="text-xs text-muted-foreground leading-relaxed max-w-[240px]">
                                         Use um app como <strong>Google Authenticator</strong> ou <strong>Authy</strong> para escanear o QR code ao lado.
@@ -541,7 +541,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                                 <div className="space-y-3 flex flex-col items-center">
                                     <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
                                         <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[10px]">2</span>
-                                        Digite o cÃ³digo
+                                        Digite o código
                                     </h4>
                                     <div className="flex gap-2 justify-center">
                                         {[0, 1, 2, 3, 4, 5].map((index) => (
@@ -569,14 +569,14 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                     <div className="px-6 py-4 bg-muted border-t border-border flex justify-end gap-3">
                         <button 
                             onClick={() => setIsSettingUp2FA(false)}
-                            className="px-4 py-2 text-xs font-bold text-muted-foreground hover:text-foreground uppercase tracking-wide transition-colors"
+                            className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground"
                         >
                             Cancelar
                         </button>
                         <button 
                             onClick={handleVerify2FA}
                             disabled={verificationCode.length !== 6 || isVerifying || isLoadingSetup}
-                            className="h-10 bg-primary text-primary-foreground px-6 py-2 rounded-md text-xs font-bold hover:bg-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 uppercase tracking-wide shadow-sm"
+                            className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
                         >
                             {isVerifying ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle2 className="w-3 h-3" />}
                             Verificar e Ativar
@@ -592,12 +592,12 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                 <div className="bg-card rounded-xl shadow-2xl border border-border w-full max-w-md overflow-hidden animate-scale-in ring-1 ring-border">
                     <div className="px-6 py-4 border-b border-border flex items-center justify-between bg-muted">
                         <h3 className="text-sm font-bold text-foreground uppercase tracking-wide">
-                            Confirmar DesativaÃ§Ã£o
+                            Confirmar Desativação
                         </h3>
                         <button onClick={() => setIsResetting2FA(false)} className="text-muted-foreground hover:text-foreground"><X className="w-5 h-5" /></button>
                     </div>
                     <div className="p-6">
-                        <p className="text-sm text-muted-foreground mb-4">Para sua seguranÃ§a, confirme sua senha atual para desativar a autenticaÃ§Ã£o de dois fatores.</p>
+                        <p className="text-sm text-muted-foreground mb-4">Para sua segurança, confirme sua senha atual para desativar a autenticação de dois fatores.</p>
                         <div className="space-y-1">
                             <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Senha Atual</label>
                             <div className="relative group">
@@ -606,7 +606,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                                     value={resetPassword}
                                     onChange={e => setResetPassword(e.target.value)}
                                     className={inputClass}
-                                    placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                                    placeholder="********"
                                     autoFocus
                                 />
                                 <button 

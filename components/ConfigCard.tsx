@@ -465,13 +465,13 @@ const ConfigCard: React.FC<ConfigCardProps> = ({ section, onEdit, onDelete, onMo
                                                 <div className="flex items-center gap-1">
                                                     <button 
                                                         onClick={() => handleResetField(field.id)}
-                                                        className="flex-1 bg-primary text-primary-foreground p-1 rounded hover:bg-primary/90 transition-colors text-[10px] font-bold"
+                                                        className="flex h-8 flex-1 items-center justify-center gap-2 rounded-lg border border-border bg-card px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground"
                                                     >
                                                         Sim
                                                     </button>
                                                     <button 
                                                         onClick={() => setConfirmResetFieldId(null)}
-                                                        className="flex-1 bg-secondary text-secondary-foreground p-1 rounded hover:bg-accent transition-colors text-[10px] font-bold"
+                                                        className="flex h-8 flex-1 items-center justify-center gap-2 rounded-lg border border-border bg-card px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground"
                                                     >
                                                         NÃ£o
                                                     </button>
@@ -527,13 +527,13 @@ const ConfigCard: React.FC<ConfigCardProps> = ({ section, onEdit, onDelete, onMo
                     <div className="flex gap-2 justify-center">
                         <button 
                             onClick={() => setShowSaveConfirmation(false)}
-                            className="px-3 py-1.5 bg-secondary text-secondary-foreground text-xs font-bold rounded-md hover:bg-accent transition-colors uppercase tracking-wide"
+                            className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground"
                         >
                             Cancelar
                         </button>
                         <button 
                             onClick={executeSave}
-                            className="px-3 py-1.5 bg-primary text-primary-foreground text-xs font-bold rounded-md hover:bg-primary/90 transition-colors uppercase tracking-wide"
+                            className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground"
                         >
                             Confirmar
                         </button>
@@ -574,7 +574,7 @@ const ConfigCard: React.FC<ConfigCardProps> = ({ section, onEdit, onDelete, onMo
              <div className="p-4 border-t border-border">
                 <button 
                   onClick={() => setActiveHelp(null)}
-                  className="w-full py-2 bg-primary text-primary-foreground text-xs font-bold rounded-md hover:bg-primary/90 transition-colors uppercase tracking-wide"
+                  className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground"
                 >
                   Entendi
                 </button>

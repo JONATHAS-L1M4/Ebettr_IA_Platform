@@ -23,6 +23,7 @@ const fileToBase64 = (file: File | Blob): Promise<string> => {
 };
 
 const SupportChat: React.FC = () => {
+  const unifiedBubbleClass = 'px-4 py-3 whitespace-pre-wrap bg-card border border-border text-foreground rounded-2xl rounded-bl-sm';
   const [messages, setMessages] = useState<SupportMessage[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [attachments, setAttachments] = useState<SupportAttachment[]>([]);
@@ -370,14 +371,10 @@ const SupportChat: React.FC = () => {
                       : 'items-start'
                   }`}
                 >
-                  <div className={`px-4 py-3 whitespace-pre-wrap ${
-                      msg.isUser 
-                          ? 'bg-primary text-primary-foreground rounded-2xl rounded-br-sm border border-primary' 
-                          : 'bg-card border border-border text-foreground rounded-2xl rounded-bl-sm'
-                  }`}>
+                  <div className={unifiedBubbleClass}>
                       {/* Author Name */}
                       {(msg.author || msg.isUser) && (
-                      <p className={`text-xs font-bold mb-1.5 ${msg.isUser ? 'text-white/70' : 'text-muted-foreground'}`}>
+                      <p className="text-xs font-bold mb-1.5 text-muted-foreground">
                           {msg.author || (msg.isUser ? (currentUser?.name || 'Cliente') : 'Suporte')}
                       </p>
                       )}
@@ -406,23 +403,21 @@ const SupportChat: React.FC = () => {
                                   <AudioPlayer 
                                       src={getAttachmentUrl(att.url, att.dataBase64, att.mimeType)} 
                                       className="w-full max-w-[280px]" 
-                                      variant={msg.isUser ? 'inverted' : 'default'}
+                                      variant="default"
                                   />
                               ) : (
                                   <a 
                                       href={getAttachmentUrl(att.url, att.dataBase64, att.mimeType)} 
                                       target="_blank" 
                                       rel="noopener noreferrer"
-                                      className={`flex items-center gap-3 p-2.5 rounded-xl border transition-all ${
-                                      msg.isUser ? 'border-white/20 hover:bg-white/10 text-white' : 'border-border hover:bg-muted text-foreground'
-                                      } ${!att.url && !att.dataBase64 ? 'cursor-default pointer-events-none' : ''}`}
+                                      className={`flex items-center gap-3 p-2.5 rounded-xl border border-border transition-all hover:bg-muted text-foreground ${!att.url && !att.dataBase64 ? 'cursor-default pointer-events-none' : ''}`}
                                   >
-                                      <div className={`p-2 rounded-lg shrink-0 ${msg.isUser ? 'bg-white/10' : 'bg-muted border border-border'}`}>
+                                      <div className="p-2 rounded-lg shrink-0 bg-muted border border-border">
                                           <FileText className="w-4 h-4" />
                                       </div>
                                       <div className="flex flex-col overflow-hidden">
                                           <span className="text-sm font-medium truncate">{att.filename}</span>
-                                          <span className={`text-[10px] uppercase tracking-wider font-bold mt-0.5 ${msg.isUser ? 'text-white/60' : 'text-muted-foreground'}`}>Documento</span>
+                                          <span className="text-[10px] uppercase tracking-wider font-bold mt-0.5 text-muted-foreground">Documento</span>
                                       </div>
                                   </a>
                               )}
@@ -433,7 +428,7 @@ const SupportChat: React.FC = () => {
 
                       {/* Timestamp */}
                       {msg.timestamp && (
-                      <p className={`text-[10px] mt-2 text-right font-medium ${msg.isUser ? 'text-white/50' : 'text-muted-foreground'}`}>
+                      <p className="text-[10px] mt-2 text-right font-medium text-muted-foreground">
                           {formatTime(msg.timestamp)}
                       </p>
                       )}

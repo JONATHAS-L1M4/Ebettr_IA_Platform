@@ -58,14 +58,14 @@ export const DeleteWithCodeModal: React.FC<DeleteWithCodeModalProps> = ({
                 <div className="flex gap-3 w-full pt-2">
                     <button 
                         onClick={onClose}
-                        className="flex h-10 flex-1 items-center justify-center py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors"
+                        className="flex h-10 flex-1 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground"
                     >
                         Cancelar
                     </button>
                     <button 
                         onClick={onConfirm}
                         disabled={userInput !== verificationCode}
-                        className="flex h-10 flex-1 items-center justify-center rounded-md bg-destructive px-4 py-2 text-sm font-bold text-destructive-foreground transition-all hover:bg-destructive/90 disabled:cursor-not-allowed disabled:opacity-50"
+                        className="flex h-10 flex-1 items-center justify-center gap-2 rounded-lg border border-red-900/50 bg-red-950/40 px-4 py-2 text-xs font-bold uppercase tracking-wide text-red-300 shadow-sm transition-all hover:border-red-600 hover:bg-red-700 hover:text-red-50 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                         Confirmar
                     </button>
