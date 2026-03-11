@@ -18,7 +18,7 @@ interface AdminSessionsProps {
 const AdminSessionsSkeleton = () => (
     <div className="flex flex-col gap-6 animate-pulse pb-12 max-w-7xl mx-auto">
         {/* Header Skeleton */}
-        <div className="flex flex-col gap-4 border-b border-border pb-4 md:flex-row md:items-start md:justify-between">
+        <div className="flex flex-col gap-4 pb-4 md:flex-row md:items-start md:justify-between">
             <div className="flex items-center gap-4">
                 <div className="w-10 h-10 bg-muted rounded-lg"></div>
                 <div className="space-y-2">
@@ -391,7 +391,7 @@ export const AdminSessions: React.FC<AdminSessionsProps> = ({ onLogout }) => {
     <DarkPage className="min-h-[calc(100vh-4rem)]">
     <div className="flex flex-col gap-6 animate-fade-in relative pb-12 max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col gap-4 border-b border-border pb-4 md:flex-row md:items-start md:justify-between">
+        <div className="flex flex-col gap-4 pb-4 md:flex-row md:items-start md:justify-between">
             <div className="flex items-center gap-4">
                 <div className="w-10 h-10 border border-border rounded-lg flex items-center justify-center text-foreground bg-muted">
                     <ShieldCheck className="w-5 h-5" />

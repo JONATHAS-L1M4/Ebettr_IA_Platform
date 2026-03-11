@@ -124,7 +124,7 @@ export const AgentDetailHeader: React.FC<AgentDetailHeaderProps> = ({
     ].join(' ');
 
   return (
-    <div className="flex flex-col justify-between gap-6 border-b border-border pb-4 lg:flex-row lg:items-center">
+    <div className="flex flex-col justify-between gap-6 pb-4 lg:flex-row lg:items-center">
       {/* Left: Back & Title */}
       <div className="flex min-w-0 flex-1 items-center gap-4">
         <button

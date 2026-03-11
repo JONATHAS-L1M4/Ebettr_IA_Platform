@@ -317,7 +317,7 @@ const SupportChat: React.FC = () => {
     <DarkPage className="min-h-[calc(100vh-4rem)]">
     <div className="flex flex-col h-[calc(100vh-4rem)] max-w-7xl mx-auto w-full font-sans text-foreground">
       {/* System Header */}
-      <div className="flex flex-col gap-4 border-b border-border pb-4 pt-8 px-6 shrink-0">
+      <div className="flex flex-col gap-4 pb-4 pt-8 px-6 shrink-0">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 border border-border rounded-lg flex items-center justify-center text-foreground bg-muted shadow-sm">

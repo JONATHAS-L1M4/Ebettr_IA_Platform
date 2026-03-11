@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { ServerCredential, SupabaseServer } from '../types';
-import { Server, Plus, Globe, Key, Edit2, Shield, Eye, EyeOff, Save, X, Terminal, CheckCircle2, Search, Loader2, Code, Copy, Database } from '../components/ui/Icons';
+import { Server, Globe, Key, Edit2, Shield, Eye, EyeOff, Save, X, Terminal, CheckCircle2, Search, Loader2, Code, Copy, Database } from '../components/ui/Icons';
 import { DashedAddCard } from '../components/ui/DashedAddCard';
 import SpotlightCard from '../components/ui/SpotlightCard';
 import Toggle from '../components/ui/Toggle';
@@ -16,6 +16,18 @@ import { DangerZoneSection } from '../components/shared/DangerZoneSection';
 import DarkPage from '../components/layout/DarkPage';
 
 const STORAGE_KEY = 'ebettr_servers';
+
+const getServerTabClass = (tab: 'n8n' | 'supabase', isActive: boolean) =>
+    [
+        'flex-1 sm:flex-none flex h-full items-center justify-center gap-2 rounded-md px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition-all duration-200 ease-out',
+        tab === 'n8n'
+            ? isActive
+                ? 'bg-[#ea4b71]/30 text-foreground ring-1 ring-[#ea4b71]/35 shadow-sm'
+                : 'bg-[#ea4b71]/10 text-muted-foreground hover:bg-[#ea4b71]/16 hover:text-foreground'
+            : isActive
+                ? 'bg-[#3ecf8e]/30 text-foreground ring-1 ring-[#3ecf8e]/35 shadow-sm'
+                : 'bg-[#3ecf8e]/10 text-muted-foreground hover:bg-[#3ecf8e]/16 hover:text-foreground'
+    ].join(' ');
 
 interface AdminServersProps {
     onLogout?: () => void;
@@ -668,7 +680,7 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
     <div className="animate-fade-in max-w-7xl mx-auto pb-12">
         
         {/* Header */}
-        <div className="flex flex-col gap-4 border-b border-border pb-4 mb-8">
+        <div className="flex flex-col gap-4 pb-4 mb-8">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div className="flex items-center gap-4">
                     <div className="w-10 h-10 border border-border rounded-lg flex items-center justify-center text-foreground bg-muted">
@@ -684,7 +696,26 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                     </div>
                 </div>
                 
-                <div className="flex items-center gap-3 w-full md:w-auto">
+                <div className="flex w-full flex-col gap-3 lg:w-auto lg:flex-row lg:items-center">
+                    <div className="flex h-[36px] w-full items-center gap-2 rounded-lg bg-muted/60 p-1 shadow-inner lg:w-fit">
+                        <button
+                            onClick={() => setActiveTab('n8n')}
+                            className={getServerTabClass('n8n', activeTab === 'n8n')}
+                            title="Servidores n8n"
+                        >
+                            <Server className="h-3.5 w-3.5" />
+                            N8N
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('supabase')}
+                            className={getServerTabClass('supabase', activeTab === 'supabase')}
+                            title="Servidores RAG (Supabase)"
+                        >
+                            <Database className="h-3.5 w-3.5" />
+                            Supabase
+                        </button>
+                    </div>
+
                     <div className="relative group flex-1 md:w-64">
                         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground group-focus-within:text-foreground">
                             <Search className="w-4 h-4" />
@@ -698,40 +729,7 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                         />
                     </div>
 
-                    {(activeTab === 'n8n' || activeTab === 'supabase') && (
-                        <button 
-                            onClick={() => setIsFormOpen(true)}
-                            className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground"
-                        >
-                            <Plus className="w-4 h-4" />
-                            <span className="hidden sm:inline">Novo Servidor</span>
-                        </button>
-                    )}
                 </div>
-            </div>
-
-            {/* Tabs */}
-            <div className="flex gap-6 mt-2">
-                <button
-                    onClick={() => setActiveTab('n8n')}
-                    className={`pb-2 text-sm font-medium transition-colors border-b-2 ${
-                        activeTab === 'n8n' 
-                        ? 'border-primary text-foreground' 
-                        : 'border-transparent text-muted-foreground hover:text-muted-foreground'
-                    }`}
-                >
-                    Servidores n8n
-                </button>
-                <button
-                    onClick={() => setActiveTab('supabase')}
-                    className={`pb-2 text-sm font-medium transition-colors border-b-2 ${
-                        activeTab === 'supabase' 
-                        ? 'border-primary text-foreground' 
-                        : 'border-transparent text-muted-foreground hover:text-muted-foreground'
-                    }`}
-                >
-                    Servidores RAG (Supabase)
-                </button>
             </div>
         </div>
 
@@ -892,7 +890,7 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                         ))}
 
                         <DashedAddCard 
-                            label="Novo Servidor RAG" 
+                            label="Adicionar Servidor" 
                             onClick={() => setIsFormOpen(true)} 
                             icon={Database}
                             className="min-h-[200px]"

@@ -173,7 +173,7 @@ const AgentList: React.FC<AgentListProps> = ({
     <div className="flex flex-col gap-8 max-w-7xl mx-auto pb-12">
       
       {/* Header */}
-      <div className="flex flex-col gap-4 border-b border-border pb-4">
+      <div className="flex flex-col gap-4 pb-4">
         
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="flex items-center gap-4">

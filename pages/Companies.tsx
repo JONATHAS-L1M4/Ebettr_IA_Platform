@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Company } from '../types';
-import { Building2, Plus, Globe, Mail, Phone, X, Save, Edit2, Search, Users, Loader2, User, Bot } from '../components/ui/Icons';
+import { Building2, Globe, Mail, Phone, X, Save, Edit2, Search, Users, Loader2, User, Bot } from '../components/ui/Icons';
 import { useNotification } from '../context/NotificationContext';
 
 const inputBaseClass =
@@ -336,7 +336,7 @@ export const Companies: React.FC = () => {
     <div className="animate-fade-in max-w-7xl mx-auto pb-12">
         
         {/* Header */}
-        <div className="flex flex-col gap-4 border-b border-border pb-4 mb-8">
+        <div className="flex flex-col gap-4 pb-4 mb-8">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div className="flex items-center gap-4">
                     <div className="w-10 h-10 border border-border rounded-lg flex items-center justify-center text-foreground bg-muted">
@@ -365,14 +365,6 @@ export const Companies: React.FC = () => {
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
-
-                    <button 
-                        onClick={() => setIsFormOpen(true)}
-                        className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground"
-                    >
-                        <Plus className="w-4 h-4" />
-                        <span className="hidden sm:inline">Nova Empresa</span>
-                    </button>
                 </div>
             </div>
         </div>
