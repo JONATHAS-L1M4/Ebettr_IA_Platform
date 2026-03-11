@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Agent, UserRole } from '../types';
-import { Plus, Bot, Search } from '../components/ui/Icons';
+import { Bot, Search } from '../components/ui/Icons';
 import { useNotification } from '../context/NotificationContext';
 import { toggleN8nWorkflow } from '../services/n8nService';
 import { AgentForm } from '../components/agents/AgentForm';
@@ -207,16 +207,6 @@ const AgentList: React.FC<AgentListProps> = ({
                     onChange={(e) => onSearchChange(e.target.value)}
                 />
             </div>
-
-            {canCreate && onCreateAgent && (
-                <button 
-                    onClick={() => setIsFormOpen(true)}
-                    className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground"
-                >
-                <Plus className="w-4 h-4" />
-                <span className="hidden sm:inline">Novo Agente</span>
-                </button>
-            )}
           </div>
         </div>
       </div>

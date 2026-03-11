@@ -5,15 +5,18 @@ import { Server, Globe, Key, Edit2, Shield, Eye, EyeOff, Save, X, Terminal, Chec
 import { DashedAddCard } from '../components/ui/DashedAddCard';
 import SpotlightCard from '../components/ui/SpotlightCard';
 import Toggle from '../components/ui/Toggle';
+import { Textarea } from '../components/ui/textarea';
 import { useNotification } from '../context/NotificationContext';
-
-const inputBaseClass =
-  'w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground disabled:cursor-not-allowed disabled:opacity-50';
 import { serverManagementService } from '../services/serverManagementService';
 import { supabaseServerService } from '../services/supabaseServerService';
 import { DeleteWithCodeModal } from '../components/shared/DeleteWithCodeModal';
 import { DangerZoneSection } from '../components/shared/DangerZoneSection';
 import DarkPage from '../components/layout/DarkPage';
+
+const inputBaseClass =
+  'w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground disabled:cursor-not-allowed disabled:opacity-50';
+const curlEditorClassName =
+  'min-h-32 resize-y border-[#ea4b71]/25 bg-[linear-gradient(180deg,rgba(234,75,113,0.14)_0%,rgba(33,18,26,0.96)_100%)] text-[#f9dee5] placeholder:text-[#c79aa7] caret-[#ff8da8] selection:bg-[#ea4b71]/35 selection:text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] focus-visible:border-[#ea4b71]/45 focus-visible:ring-0 focus-visible:ring-offset-0';
 
 const STORAGE_KEY = 'ebettr_servers';
 
@@ -428,10 +431,21 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                                Cole o comando cURL copiado do navegador (DevTools &gt; Network &gt; Copy as cURL).<br/>
                                O sistema extrairá automaticamente <strong>Cookie (-b)</strong> e <strong>browser-id</strong>.
                            </p>
-                           <textarea 
+                           <div className="mb-2 flex flex-wrap items-center gap-2">
+                               <span className="rounded-full border border-[#ea4b71]/25 bg-[#ea4b71]/14 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#ff8faa]">
+                                   curl
+                               </span>
+                               <span className="rounded-full border border-cyan-400/25 bg-cyan-400/12 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-cyan-200">
+                                   browser-id
+                               </span>
+                               <span className="rounded-full border border-amber-400/25 bg-amber-400/12 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-amber-200">
+                                   cookie
+                               </span>
+                           </div>
+                           <Textarea
                                value={curlInput}
                                onChange={(e) => setCurlInput(e.target.value)}
-                               className="w-full h-24 p-3 text-xs font-mono bg-background text-foreground rounded-md border border-input focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background resize-none shadow-inner placeholder:text-muted-foreground"
+                               className={`w-full text-xs font-mono ${curlEditorClassName}`}
                                placeholder={`curl 'https://n8n.exemplo.com/...' \n  -H 'browser-id: ...' \n  -b 'n8n-auth=...; ...'`}
                            />
                            <div className="flex justify-end mt-2">
