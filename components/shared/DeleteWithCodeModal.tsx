@@ -30,7 +30,7 @@ export const DeleteWithCodeModal: React.FC<DeleteWithCodeModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-fade-in">
+    <div className="fixed inset-0 bg-black/60  z-[100] flex items-center justify-center p-4 animate-fade-in">
         <div className="bg-card rounded-lg shadow-2xl border border-border max-w-sm w-full p-6 animate-scale-in">
             <div className="flex flex-col items-center text-center gap-4">
                 <div>
@@ -50,7 +50,7 @@ export const DeleteWithCodeModal: React.FC<DeleteWithCodeModalProps> = ({
                     type="text" 
                     value={userInput}
                     onChange={(e) => setUserInput(e.target.value)}
-                    placeholder="Digite o código aqui"
+                    placeholder="Digite o cÃ³digo aqui"
                     className="w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground text-center font-mono transition-all"
                     maxLength={6}
                 />

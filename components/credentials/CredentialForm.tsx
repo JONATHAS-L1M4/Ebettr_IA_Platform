@@ -167,7 +167,7 @@ export const CredentialForm: React.FC<CredentialFormProps> = ({
               nextDummies[key] = dummy;
               nextValues[key] = dummy;
           } else {
-              // Se tiver cache, usa. Senão, usa defaults ou valor do schema.
+              // Se tiver cache, usa. SenÃ£o, usa defaults ou valor do schema.
               if (cachedData[key] !== undefined) {
                   nextValues[key] = cachedData[key];
               } else if (nextValues[key] === undefined) {
@@ -180,7 +180,7 @@ export const CredentialForm: React.FC<CredentialFormProps> = ({
         setDummySecrets(nextDummies);
         setValues(nextValues);
       } catch (e: any) {
-        if (mounted) setError(e?.message || 'Falha ao carregar definição.');
+        if (mounted) setError(e?.message || 'Falha ao carregar definiÃ§Ã£o.');
       } finally {
         if (mounted) setLoading(false);
       }
@@ -192,7 +192,7 @@ export const CredentialForm: React.FC<CredentialFormProps> = ({
   const handleChange = (id: string, val: any) => {
     setValues((prev) => {
         const newValues = { ...prev, [id]: val };
-        // Salva no cache a cada mudança (debounce idealmente, mas direto aqui para simplicidade)
+        // Salva no cache a cada mudanÃ§a (debounce idealmente, mas direto aqui para simplicidade)
         saveCache(newValues);
         return newValues;
     });
@@ -202,7 +202,7 @@ export const CredentialForm: React.FC<CredentialFormProps> = ({
   const payload = useMemo(() => {
       const rawPayload = sanitizePayload(fields, values, getValue, getFieldKey);
       
-      // Remove campos que ainda são dummy secrets (não foram alterados)
+      // Remove campos que ainda sÃ£o dummy secrets (nÃ£o foram alterados)
       if (rawPayload) {
           Object.keys(rawPayload).forEach(key => {
               if (dummySecrets[key] && rawPayload[key] === dummySecrets[key]) {
@@ -226,11 +226,11 @@ export const CredentialForm: React.FC<CredentialFormProps> = ({
           });
           if (result.status === 'OK') {
               setTestStatus('success');
-              addNotification('success', 'Conexão Ativa', 'Credenciais validadas com sucesso.');
+              addNotification('success', 'ConexÃ£o Ativa', 'Credenciais validadas com sucesso.');
               setTimeout(() => setTestStatus('idle'), 4000);
           } else {
               setTestStatus('error');
-              addNotification('error', 'Erro de Conexão', result.message || 'Verifique os dados.');
+              addNotification('error', 'Erro de ConexÃ£o', result.message || 'Verifique os dados.');
               setTimeout(() => setTestStatus('idle'), 4000);
           }
       } catch (e: any) {
@@ -274,7 +274,7 @@ export const CredentialForm: React.FC<CredentialFormProps> = ({
             className={`${baseClass} bg-card border border-border text-muted-foreground hover:bg-muted hover:text-foreground`}
           >
               <Zap className="w-3.5 h-3.5 text-amber-500" />
-              <span>Testar Conexão</span>
+              <span>Testar ConexÃ£o</span>
           </button>
       );
   };
@@ -282,7 +282,7 @@ export const CredentialForm: React.FC<CredentialFormProps> = ({
   if (loading) return (
     <div className="flex flex-col items-center justify-center py-12 min-h-[300px]">
       <Loader2 className="w-8 h-8 animate-spin text-muted-foreground mb-2" />
-      <span className="text-xs text-muted-foreground">Preparando formulário...</span>
+      <span className="text-xs text-muted-foreground">Preparando formulÃ¡rio...</span>
     </div>
   );
 
@@ -344,10 +344,10 @@ export const CredentialForm: React.FC<CredentialFormProps> = ({
       </div>
 
       {activeHelp && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-fade-in" onClick={() => setActiveHelp(null)}>
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/70  p-4 animate-fade-in" onClick={() => setActiveHelp(null)}>
           <div className="bg-card rounded-xl shadow-2xl border border-border w-full max-w-sm overflow-hidden animate-scale-in" onClick={(e) => e.stopPropagation()}>
              <div className="p-4 border-b border-border flex justify-between items-center bg-muted">
-                <h3 className="font-bold text-xs text-foreground uppercase tracking-widest">Informação</h3>
+                <h3 className="font-bold text-xs text-foreground uppercase tracking-widest">InformaÃ§Ã£o</h3>
                 <button onClick={() => setActiveHelp(null)} className="text-muted-foreground hover:text-foreground"><X className="w-4 h-4" /></button>
              </div>
              <div className="p-6">

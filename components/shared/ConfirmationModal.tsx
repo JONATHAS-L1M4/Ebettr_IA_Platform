@@ -19,7 +19,7 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-fade-in">
+    <div className="fixed inset-0 bg-black/60  z-[100] flex items-center justify-center p-4 animate-fade-in">
         <div className="bg-card rounded-xl shadow-2xl border border-border w-full max-w-sm p-6 animate-scale-in ring-1 ring-border">
             <div className="flex flex-col items-center text-center gap-4">
                 <div>

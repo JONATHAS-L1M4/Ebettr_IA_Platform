@@ -104,9 +104,15 @@ export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const darkStyle = { ...(darkTheme as React.CSSProperties), colorScheme: 'dark' as const };
+  const isLoginRoute = location.pathname === '/login';
   const renderWithBackground = (content: React.ReactNode) => (
-    <div className="relative min-h-screen bg-background text-foreground" style={darkStyle}>
-      <AppBackground />
+    <div
+      className={`relative min-h-screen text-foreground ${
+        isLoginRoute ? 'bg-muted' : 'bg-background'
+      }`}
+      style={darkStyle}
+    >
+      {!isLoginRoute && <AppBackground />}
       <div className="relative z-10">{content}</div>
     </div>
   );

@@ -64,7 +64,7 @@ export const CredentialsManager: React.FC<CredentialsManagerProps> = ({ workflow
               }
           }
       } else {
-          // Migração do localStorage se existir
+          // MigraÃ§Ã£o do localStorage se existir
           const storageKey = `ebettr_cred_meta_${agent.id}`;
           const savedMeta = localStorage.getItem(storageKey);
           if (savedMeta) {
@@ -124,7 +124,7 @@ export const CredentialsManager: React.FC<CredentialsManagerProps> = ({ workflow
           if (force) addNotification('success', 'Atualizado', 'Lista de credenciais sincronizada.');
       } catch (error) {
           console.error("Failed to load credentials", error);
-          addNotification('error', 'Erro ao carregar', 'Não foi possível analisar as credenciais do workflow.');
+          addNotification('error', 'Erro ao carregar', 'NÃ£o foi possÃ­vel analisar as credenciais do workflow.');
       } finally {
           setTimeout(() => {
               setLoading(false);
@@ -148,7 +148,7 @@ export const CredentialsManager: React.FC<CredentialsManagerProps> = ({ workflow
       const newHidden = !current.hidden;
       const newMeta = { ...credentialMeta, [credId]: { ...current, hidden: newHidden } };
       saveMeta(newMeta);
-      addNotification('info', !newHidden ? 'Visível' : 'Oculta', !newHidden ? 'Liberado para o cliente.' : 'Ocultado do cliente.');
+      addNotification('info', !newHidden ? 'VisÃ­vel' : 'Oculta', !newHidden ? 'Liberado para o cliente.' : 'Ocultado do cliente.');
   };
 
   const handleSaveCredential = async (data: any) => {
@@ -159,10 +159,10 @@ export const CredentialsManager: React.FC<CredentialsManagerProps> = ({ workflow
               type: selectedCredential.type,
               data: data
           });
-          addNotification('success', 'Credencial Atualizada', 'As configurações foram salvas com sucesso.');
+          addNotification('success', 'Credencial Atualizada', 'As configuraÃ§Ãµes foram salvas com sucesso.');
           setSelectedCredential(null);
       } catch (error: any) {
-          addNotification('error', 'Erro ao Salvar', error.message || 'Falha na comunicação.');
+          addNotification('error', 'Erro ao Salvar', error.message || 'Falha na comunicaÃ§Ã£o.');
       }
   };
 
@@ -170,7 +170,7 @@ export const CredentialsManager: React.FC<CredentialsManagerProps> = ({ workflow
       return (
         <div className="flex flex-col items-center justify-center p-12 bg-muted/40 border border-dashed border-border rounded-xl text-muted-foreground">
             <AlertCircle className="w-8 h-8 mb-2 opacity-50" />
-            <span className="text-sm font-medium">Workflow não configurado</span>
+            <span className="text-sm font-medium">Workflow nÃ£o configurado</span>
             <p className="text-xs mt-1">Vincule um Workflow ID para gerenciar credenciais.</p>
         </div>
       );
@@ -190,7 +190,7 @@ export const CredentialsManager: React.FC<CredentialsManagerProps> = ({ workflow
                 <div className="w-1 h-6 bg-primary rounded-full"></div>
                 <h2 className="text-lg font-bold text-foreground tracking-tight">Credenciais & Segredos</h2>
               </div>
-              <p className="text-sm text-muted-foreground mt-1 pl-4">Gerencie as chaves de API e conexões seguras.</p>
+               <p className="text-sm text-muted-foreground mt-1 pl-4">Gerencie as chaves de API e conexões seguras.</p>
             </div>
             
             {!isClientMode && (
@@ -266,7 +266,7 @@ export const CredentialsManager: React.FC<CredentialsManagerProps> = ({ workflow
           </div>
 
           {selectedCredential && (
-            <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-fade-in">
+            <div className="fixed inset-0 bg-black/70  z-[100] flex items-center justify-center p-4 animate-fade-in">
                 <div className="bg-card w-full max-w-2xl h-[85vh] rounded-xl shadow-2xl border border-border overflow-hidden animate-scale-in ring-1 ring-border flex flex-col">
                     <CredentialForm 
                         workflowId={workflowId}

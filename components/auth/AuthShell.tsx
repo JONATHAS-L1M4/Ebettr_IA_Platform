@@ -1,45 +1,52 @@
 import React from 'react';
 import { darkTheme } from '../../design-tokens';
-import { cn } from '../../utils/cn';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '../ui/card';
 
 interface AuthShellProps {
   title: string;
   subtitle?: string;
   children: React.ReactNode;
+  footer?: React.ReactNode;
 }
 
 export const AuthShell: React.FC<AuthShellProps> = ({
   title,
   subtitle,
   children,
+  footer,
 }) => {
   const darkStyles = { ...(darkTheme as React.CSSProperties), colorScheme: 'dark' as const };
   return (
-    <div className={cn('relative min-h-screen bg-transparent text-foreground')} style={darkStyles}>
-      <div className="relative mx-auto flex min-h-screen max-w-md items-center px-4 py-8 sm:px-6">
-        <div className="w-full">
+    <div
+      className="flex min-h-svh flex-col items-center justify-center gap-6 p-6 text-foreground md:p-10"
+      style={darkStyles}
+    >
+      <div className="flex w-full max-w-sm flex-col gap-6">
+        <div className="flex items-center gap-2 self-center font-medium">
           <img
             src="http://img.ebettr.com/images/2026/03/06/logotipo.png"
             alt="Ebettr IA"
-            className="mx-auto mb-8 h-12 w-auto brightness-0 invert sm:h-18"
+            className="h-8 w-auto brightness-0 invert"
           />
+        </div>
 
-          <div className="w-full rounded-[28px] border border-white/10 bg-[#141414] p-6 shadow-[0_30px_100px_-55px_rgba(0,0,0,1)] sm:p-8">
-            {title && (
-              <div className="text-center">
-                <h1 className="text-2xl font-semibold leading-tight tracking-[-0.04em] text-foreground">
-                  {title}
-                </h1>
-                {subtitle && (
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    {subtitle}
-                  </p>
-                )}
-              </div>
+        <div className="flex flex-col gap-6">
+          <Card>
+            {(title || subtitle) && (
+              <CardHeader className="text-center">
+                {title && <CardTitle className="text-xl">{title}</CardTitle>}
+                {subtitle && <CardDescription>{subtitle}</CardDescription>}
+              </CardHeader>
             )}
-
-            <div className="mt-6">{children}</div>
-          </div>
+            <CardContent>{children}</CardContent>
+          </Card>
+          {footer}
         </div>
       </div>
     </div>

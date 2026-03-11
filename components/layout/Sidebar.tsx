@@ -369,7 +369,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </SidebarRoot>
 
       {showLogoutConfirm && (
-        <div className="fixed inset-0 z-[100] flex animate-fade-in items-center justify-center bg-background/70 p-4 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[100] flex animate-fade-in items-center justify-center bg-background/70 p-4 ">
           <div className="w-full max-w-sm animate-scale-in rounded-xl border border-border bg-card p-6 text-card-foreground shadow-2xl">
             <div className="flex flex-col items-center gap-4 text-center">
               <div>

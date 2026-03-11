@@ -53,7 +53,9 @@ const TextField: React.FC<TextFieldProps> = ({
       {label}
     </label>
     <div className="group relative">
-      <Icon className={authInputIconClass} />
+      <span className={authInputIconClass}>
+        <Icon className="h-4 w-4" />
+      </span>
       <input
         id={id}
         type={type}
@@ -165,7 +167,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
               <button
                 type="button"
                 onClick={() => setShowPassword((current) => !current)}
-                className="absolute right-3 top-1/2 -mt-0.5 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
+                className="absolute right-3 top-2.5 text-muted-foreground transition hover:text-foreground"
                 aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
               >
                 {showPassword ? (
@@ -191,7 +193,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword((current) => !current)}
-                className="absolute right-3 top-1/2 -mt-0.5 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
+                className="absolute right-3 top-2.5 text-muted-foreground transition hover:text-foreground"
                 aria-label={
                   showConfirmPassword ? 'Ocultar confirmacao' : 'Mostrar confirmacao'
                 }
@@ -532,7 +534,7 @@ export const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             <button
               type="button"
               onClick={() => setShowPassword((current) => !current)}
-              className="absolute right-3 top-1/2 -mt-0.5 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
+              className="absolute right-3 top-2.5 text-muted-foreground transition hover:text-foreground"
               aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
             >
               {showPassword ? (
@@ -556,7 +558,7 @@ export const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             <button
               type="button"
               onClick={() => setShowConfirmPassword((current) => !current)}
-              className="absolute right-3 top-1/2 -mt-0.5 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
+              className="absolute right-3 top-2.5 text-muted-foreground transition hover:text-foreground"
               aria-label={
                 showConfirmPassword ? 'Ocultar confirmacao' : 'Mostrar confirmacao'
               }

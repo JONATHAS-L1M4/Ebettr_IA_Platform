@@ -24,7 +24,7 @@ export const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({ isOpen
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70  p-4 animate-fade-in">
       <div className="bg-panel border border-border rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden">
         
         {/* Header */}
@@ -38,7 +38,7 @@ export const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({ isOpen
                 {document?.file_name || 'Documento'}
               </h3>
               <p className="text-xs text-muted-foreground font-mono">
-                ID: {document?.id} • {document?.blobType}
+                ID: {document?.id} â€¢ {document?.blobType}
               </p>
             </div>
           </div>
@@ -48,7 +48,7 @@ export const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({ isOpen
                 <button 
                     onClick={handleCopy}
                     className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors flex items-center gap-2 text-xs font-medium"
-                    title="Copiar conteúdo"
+                    title="Copiar conteÃºdo"
                 >
                     {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                     <span className="hidden sm:inline">{copied ? 'Copiado!' : 'Copiar Texto'}</span>
@@ -68,7 +68,7 @@ export const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({ isOpen
           {isLoading ? (
             <div className="flex flex-col items-center justify-center h-64 text-muted-foreground">
               <Loader2 className="w-8 h-8 animate-spin mb-3 text-foreground" />
-              <p className="text-sm">Carregando conteúdo do documento...</p>
+              <p className="text-sm">Carregando conteÃºdo do documento...</p>
             </div>
           ) : document?.content ? (
             <div className="prose prose-sm max-w-none text-foreground font-mono whitespace-pre-wrap leading-relaxed">
@@ -77,7 +77,7 @@ export const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({ isOpen
           ) : (
             <div className="flex flex-col items-center justify-center h-64 text-muted-foreground">
               <FileText className="w-12 h-12 mb-3 opacity-20" />
-              <p className="text-sm">Não foi possível carregar o conteúdo deste documento.</p>
+              <p className="text-sm">NÃ£o foi possÃ­vel carregar o conteÃºdo deste documento.</p>
             </div>
           )}
         </div>

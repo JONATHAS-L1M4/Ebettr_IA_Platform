@@ -3,7 +3,7 @@ import { SidebarTrigger } from '../ui/sidebar';
 
 export const Header: React.FC = () => {
   return (
-    <header className="mt-2 flex h-16 shrink-0 items-center justify-between border-b border-border bg-background/95 px-4 backdrop-blur md:hidden supports-[backdrop-filter]:bg-background/80">
+    <header className="mt-2 flex h-16 shrink-0 items-center justify-between border-b border-border bg-background/95 px-4  md:hidden supports-[backdrop-filter]:bg-background/80">
       <div className="flex items-center gap-4">
         <SidebarTrigger className="-ml-2 h-10 w-10 text-muted-foreground hover:bg-accent hover:text-foreground" />
         <div>

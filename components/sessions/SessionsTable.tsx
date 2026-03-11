@@ -57,8 +57,8 @@ export const SessionsTable: React.FC<SessionsTableProps> = ({
   };
 
   const getRiskBadge = (score: number) => {
-      if (score >= 80) return <span className="text-[10px] font-bold text-red-400 bg-red-950/40 border border-red-900/50 px-2 py-0.5 rounded-full uppercase tracking-wide">Crítico ({score}%)</span>;
-      if (score >= 50) return <span className="text-[10px] font-bold text-amber-300 bg-amber-950/40 border border-amber-900/50 px-2 py-0.5 rounded-full uppercase tracking-wide">Médio ({score}%)</span>;
+      if (score >= 80) return <span className="text-[10px] font-bold text-red-400 bg-red-950/40 border border-red-900/50 px-2 py-0.5 rounded-full uppercase tracking-wide">CrÃ­tico ({score}%)</span>;
+      if (score >= 50) return <span className="text-[10px] font-bold text-amber-300 bg-amber-950/40 border border-amber-900/50 px-2 py-0.5 rounded-full uppercase tracking-wide">MÃ©dio ({score}%)</span>;
       return <span className="text-[10px] font-bold text-emerald-300 bg-emerald-950/40 border border-emerald-900/50 px-2 py-0.5 rounded-full uppercase tracking-wide">Baixo ({score}%)</span>;
   };
 
@@ -73,11 +73,11 @@ export const SessionsTable: React.FC<SessionsTableProps> = ({
   };
 
   const formatTimeAgo = (seconds: number) => {
-      if (seconds < 60) return `${seconds}s atrás`;
+      if (seconds < 60) return `${seconds}s atrÃ¡s`;
       const minutes = Math.floor(seconds / 60);
-      if (minutes < 60) return `${minutes}m atrás`;
+      if (minutes < 60) return `${minutes}m atrÃ¡s`;
       const hours = Math.floor(minutes / 60);
-      return `${hours}h atrás`;
+      return `${hours}h atrÃ¡s`;
   };
 
   return (
@@ -142,7 +142,7 @@ export const SessionsTable: React.FC<SessionsTableProps> = ({
                                 )}
                             </td>
 
-                            {/* USUÁRIO & IP */}
+                            {/* USUÃRIO & IP */}
                             <td className="px-5 py-3 whitespace-nowrap">
                                 <div className="flex flex-col">
                                     <span className="text-xs font-semibold text-foreground">{session.email}</span>
@@ -160,7 +160,7 @@ export const SessionsTable: React.FC<SessionsTableProps> = ({
                                 </div>
                             </td>
 
-                            {/* LOCALIZAÇÃO */}
+                            {/* LOCALIZAÃ‡ÃƒO */}
                             <td className="px-5 py-3 whitespace-nowrap hidden md:table-cell">
                                 <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
                                     <Globe className="w-3 h-3 text-muted-foreground" /> 
@@ -193,12 +193,12 @@ export const SessionsTable: React.FC<SessionsTableProps> = ({
                             <td className="px-5 py-3 whitespace-nowrap hidden lg:table-cell">
                                 <div className="flex flex-col gap-0.5">
                                     <span className="text-[10px] text-muted-foreground font-mono">
-                                        <span className="font-bold text-muted-foreground mr-1.5">Início:</span>
+                                        <span className="font-bold text-muted-foreground mr-1.5">InÃ­cio:</span>
                                         {formatDate(session.loginTime)}
                                     </span>
                                     <span className="text-[10px] text-muted-foreground font-mono">
                                         <span className="font-bold text-muted-foreground mr-1.5">
-                                            {session.status === 'active' ? 'Último:' : 'Fim:'}
+                                            {session.status === 'active' ? 'Ãšltimo:' : 'Fim:'}
                                         </span>
                                         {formatDate(session.lastActive)}
                                     </span>
@@ -211,7 +211,7 @@ export const SessionsTable: React.FC<SessionsTableProps> = ({
                                 </div>
                             </td>
 
-                            {/* AÇÕES */}
+                            {/* AÃ‡Ã•ES */}
                             <td className="px-5 py-3 whitespace-nowrap text-center">
                                 <div className="flex items-center justify-center gap-1">
                                     {session.status === 'active' && (
@@ -224,7 +224,7 @@ export const SessionsTable: React.FC<SessionsTableProps> = ({
                                             }}
                                             disabled={revokingId === session.id}
                                             className="p-1.5 text-muted-foreground hover:text-destructive hover:bg-red-950/40 rounded-md transition-all inline-flex items-center justify-center group/btn disabled:opacity-50 disabled:cursor-not-allowed"
-                                            title="Derrubar Sessão"
+                                            title="Derrubar SessÃ£o"
                                         >
                                             {revokingId === session.id ? (
                                                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -244,7 +244,7 @@ export const SessionsTable: React.FC<SessionsTableProps> = ({
         {/* Footer com Load More */}
         {sessions.length === 0 ? (
             <div className="p-8 text-center text-muted-foreground text-sm italic border-t border-border">
-                Nenhuma sessão registrada no período.
+                Nenhuma sessÃ£o registrada no perÃ­odo.
             </div>
         ) : (
             <div className="flex justify-center border-t border-border bg-muted p-3">
@@ -269,7 +269,7 @@ export const SessionsTable: React.FC<SessionsTableProps> = ({
 
         {/* Map Modal */}
         {mapLocation && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fade-in">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50  p-4 animate-fade-in">
                 <div className="bg-panel border border-border rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col">
                     <div className="px-4 py-3 border-b border-border flex items-center justify-between bg-muted">
                         <div className="flex items-center gap-2 text-foreground">

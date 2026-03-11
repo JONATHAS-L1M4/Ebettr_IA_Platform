@@ -27,13 +27,13 @@ export const ExpandedTextModal: React.FC<ExpandedTextModalProps> = ({
 
   const handleCopy = () => {
     navigator.clipboard.writeText(localValue);
-    addNotification('success', 'Copiado', 'Texto copiado para a área de transferência.');
+    addNotification('success', 'Copiado', 'Texto copiado para a Ã¡rea de transferÃªncia.');
   };
 
   const currentLength = localValue.length;
 
   const content = (
-    <div className="fixed inset-0 z-[9999] flex animate-fade-in items-center justify-center bg-background/80 p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[9999] flex animate-fade-in items-center justify-center bg-background/80 p-4 ">
       <div className="flex h-[80vh] w-full max-w-3xl animate-scale-in flex-col overflow-hidden rounded-xl border border-border bg-card shadow-2xl">
         
         {/* Header */}

@@ -31,15 +31,15 @@ const inferFieldType = (value: any): FieldType => {
 const filterWorkflowDisplay = (data: any) => {
   if (!data || !data.nodes || !Array.isArray(data.nodes)) return { nodes: [] };
 
-  // Retorna array mantendo índices originais mas com valores null onde não interessa
+  // Retorna array mantendo Ã­ndices originais mas com valores null onde nÃ£o interessa
   const sparseNodes: any[] = [];
   
   data.nodes.forEach((node: any, index: number) => {
     if (node.notesInFlow === true) {
       sparseNodes[index] = {
-        name: node.name, // Mantém o nome do nó para exibição no título
+        name: node.name, // MantÃ©m o nome do nÃ³ para exibiÃ§Ã£o no tÃ­tulo
         type: node.type,
-        disabled: node.disabled !== undefined ? node.disabled : false, // Default false se não existir
+        disabled: node.disabled !== undefined ? node.disabled : false, // Default false se nÃ£o existir
         parameters: node.parameters || {},
         notes: node.notes || ''
       };
@@ -66,7 +66,7 @@ const ParameterRow: React.FC<ParameterRowProps> = ({ label, value, path, onSelec
     const isObject = typeof value === 'object' && value !== null && !isArray;
     const isExpandable = isObject || isArray;
     
-    // REGRA DE LIMPEZA: Se for objeto/array e estiver vazio, não renderiza nada (oculta do card)
+    // REGRA DE LIMPEZA: Se for objeto/array e estiver vazio, nÃ£o renderiza nada (oculta do card)
     if (isExpandable && (isArray ? value.length === 0 : Object.keys(value).length === 0)) {
         return null;
     }
@@ -80,10 +80,10 @@ const ParameterRow: React.FC<ParameterRowProps> = ({ label, value, path, onSelec
         }
     };
 
-    // Valor para exibição
+    // Valor para exibiÃ§Ã£o
     let displayValue = '';
     if (isObject) {
-        // Se for objeto, não mostra nada (apenas expande)
+        // Se for objeto, nÃ£o mostra nada (apenas expande)
         displayValue = ''; 
     }
     else if (isArray) {
@@ -135,7 +135,7 @@ const ParameterRow: React.FC<ParameterRowProps> = ({ label, value, path, onSelec
                 </div>
             </div>
 
-            {/* Recursão para objetos ou arrays aninhados */}
+            {/* RecursÃ£o para objetos ou arrays aninhados */}
             {isExpandable && isExpanded && (
                 <div className="border-l border-border ml-2 pl-1">
                     {Object.entries(value).map(([key, val]) => {
@@ -235,7 +235,7 @@ export const JsonMapper: React.FC<JsonMapperProps> = ({
                                                         </Tooltip.Provider>
 
                                                         <Dialog.Portal>
-                                                            <Dialog.Overlay className="fixed inset-0 bg-background/80 backdrop-blur-sm z-[10000]" />
+                                                            <Dialog.Overlay className="fixed inset-0 bg-background/80  z-[10000]" />
                                                             <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-card rounded-xl shadow-xl z-[10001] overflow-hidden border border-border">
                                                                 <div className="px-5 py-4 border-b border-border flex items-center justify-between">
                                                                     <div className="flex items-center gap-3">
@@ -315,7 +315,7 @@ export const JsonMapper: React.FC<JsonMapperProps> = ({
                                         </div>
                                     ) : (
                                         <div className="py-2 text-center">
-                                            <p className="text-[10px] text-muted-foreground italic">Sem parâmetros visíveis.</p>
+                                            <p className="text-[10px] text-muted-foreground italic">Sem parÃ¢metros visÃ­veis.</p>
                                         </div>
                                     )}
                                 </div>
@@ -326,8 +326,8 @@ export const JsonMapper: React.FC<JsonMapperProps> = ({
                     {parsedJson.nodes.length === 0 && (
                         <div className="text-center py-10">
                             <div className="bg-muted/40 border border-border p-4 rounded-lg inline-block text-left max-w-[250px]">
-                                <p className="text-xs font-bold text-muted-foreground mb-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> Atenção</p>
-                                <p className="text-[10px] text-muted-foreground">Nenhum nó marcado com <strong>"Notes In Flow"</strong> foi encontrado no workflow.</p>
+                                <p className="text-xs font-bold text-muted-foreground mb-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> AtenÃ§Ã£o</p>
+                                <p className="text-[10px] text-muted-foreground">Nenhum nÃ³ marcado com <strong>"Notes In Flow"</strong> foi encontrado no workflow.</p>
                             </div>
                         </div>
                     )}

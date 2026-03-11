@@ -169,7 +169,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   };
 
   return (
-    <AuthShell title={viewCopy.title} subtitle={viewCopy.subtitle}>
+    <AuthShell title={viewCopy.title} subtitle={viewCopy.subtitle} footer={null}>
       {view === 'login' && (
         <LoginForm
           onSuccess={handleLoginAttempt}

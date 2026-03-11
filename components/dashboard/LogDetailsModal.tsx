@@ -62,7 +62,7 @@ export const LogDetailsModal: React.FC<LogDetailsModalProps> = ({ selectedLog, o
   const displayData = fullDetails || selectedLog;
 
   return (
-    <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-fade-in">
+    <div className="fixed inset-0 bg-background/80  z-[100] flex items-center justify-center p-4 animate-fade-in">
       <div className="bg-card rounded-xl shadow-2xl border border-border w-full max-w-4xl h-[85vh] flex flex-col overflow-hidden animate-scale-in ring-1 ring-border/60">
         <div className="px-6 py-5 border-b border-border flex items-center justify-between bg-card shrink-0">
           <div className="flex items-center gap-4">

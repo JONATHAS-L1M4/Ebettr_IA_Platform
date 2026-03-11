@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { ConfigSection, ConfigField } from '../types';
-// Adicionando Loader2 ao import de ícones
+// Adicionando Loader2 ao import de Ã­cones
 import { Brain, Settings, MessageSquare, Shield, Database, Pencil, Trash2, CircleHelp, X, RotateCcw, Cpu, Cloud, Code, Zap, Globe, Activity, Terminal, Key, Lock, ChevronDown, ChevronUp, Layers, Box, User, Mail, ArrowUp, ArrowDown } from './ui/Icons';
 import { useNotification } from '../context/NotificationContext';
 import { N8nWorkflow } from '../services/n8nService';
@@ -36,7 +36,7 @@ interface ConfigCardProps {
   variant?: 'default' | 'credential';
 }
 
-// Configuração de exibição inicial
+// ConfiguraÃ§Ã£o de exibiÃ§Ã£o inicial
 const INITIAL_VISIBLE_COUNT = 6; // Aumentado devido ao grid mais fino
 
 const ConfigCard: React.FC<ConfigCardProps> = ({ section, onEdit, onDelete, onMoveUp, onMoveDown, onSaveSection, onWidthChange, isAdmin, isLocked = false, variant = 'default' }) => {
@@ -48,25 +48,25 @@ const ConfigCard: React.FC<ConfigCardProps> = ({ section, onEdit, onDelete, onMo
   // State para o Modal de Ajuda
   const [activeHelp, setActiveHelp] = useState<{ title: string; text: string } | null>(null);
   
-  // State para confirmação de reset
+  // State para confirmaÃ§Ã£o de reset
   const [confirmResetFieldId, setConfirmResetFieldId] = useState<string | null>(null);
 
-  // State para confirmação de salvamento (Credenciais)
+  // State para confirmaÃ§Ã£o de salvamento (Credenciais)
   const [showSaveConfirmation, setShowSaveConfirmation] = useState(false);
 
-  // State para Expansão (Show More / Show Less)
+  // State para ExpansÃ£o (Show More / Show Less)
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // State para rastrear quais campos secretos foram modificados pelo usuário
+  // State para rastrear quais campos secretos foram modificados pelo usuÃ¡rio
   const [dirtySecretFields, setDirtySecretFields] = useState<Set<string>>(new Set());
 
   // Sincroniza o estado local 'fields' se a prop 'section' mudar
   useEffect(() => {
     setFields(section.fields);
-    setDirtySecretFields(new Set()); // Reseta o rastreamento ao recarregar a seção
+    setDirtySecretFields(new Set()); // Reseta o rastreamento ao recarregar a seÃ§Ã£o
   }, [section]);
 
-  // --- LÓGICA DE VISIBILIDADE CONDICIONAL ---
+  // --- LÃ“GICA DE VISIBILIDADE CONDICIONAL ---
   const isFieldVisible = (field: ConfigField) => {
       if (!field.condition) return true;
 
@@ -127,7 +127,7 @@ const ConfigCard: React.FC<ConfigCardProps> = ({ section, onEdit, onDelete, onMo
 
   // Propagate changes up immediately
   const handleFieldChange = (id: string, value: any) => {
-    // Permitir alteração de UUID mesmo se bloqueado (para que clientes possam rotacionar chaves)
+    // Permitir alteraÃ§Ã£o de UUID mesmo se bloqueado (para que clientes possam rotacionar chaves)
     const targetField = fields.find(f => f.id === id);
     const isUuid = targetField?.type === 'uuid';
     
@@ -199,7 +199,7 @@ const ConfigCard: React.FC<ConfigCardProps> = ({ section, onEdit, onDelete, onMo
     }
   };
 
-  // --- VALIDAÇÃO ---
+  // --- VALIDAÃ‡ÃƒO ---
   const validateFields = () => {
       const visibleFields = fields.filter(isFieldVisible);
       const missingFields = visibleFields.filter(f => {
@@ -213,14 +213,14 @@ const ConfigCard: React.FC<ConfigCardProps> = ({ section, onEdit, onDelete, onMo
 
       if (missingFields.length > 0) {
           const missingNames = missingFields.map(f => f.label).join(', ');
-          addNotification('error', 'Campos Obrigatórios', `Por favor preencha: ${missingNames}`);
+          addNotification('error', 'Campos ObrigatÃ³rios', `Por favor preencha: ${missingNames}`);
           return false;
       }
       return true;
   };
 
   const handleSaveClick = () => {
-    // Permitir salvar se houver alterações em UUIDs, mesmo bloqueado
+    // Permitir salvar se houver alteraÃ§Ãµes em UUIDs, mesmo bloqueado
     const hasUuidChanges = fields.some(f => f.type === 'uuid' && f.value !== section.fields.find(sf => sf.id === f.id)?.value);
     if (isLocked && !hasUuidChanges) return;
 
@@ -242,10 +242,10 @@ const ConfigCard: React.FC<ConfigCardProps> = ({ section, onEdit, onDelete, onMo
             await onSaveSection({ ...section, fields: fieldsToSave });
         }
         setLastSaved(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
-        addNotification('success', 'Alterações salvas', `As configurações de "${section.title}" foram atualizadas.`);
+        addNotification('success', 'AlteraÃ§Ãµes salvas', `As configuraÃ§Ãµes de "${section.title}" foram atualizadas.`);
         setDirtySecretFields(new Set());
     } catch (e) {
-        // Notificação de erro já é tratada no pai (AgentDetail)
+        // NotificaÃ§Ã£o de erro jÃ¡ Ã© tratada no pai (AgentDetail)
     } finally {
         setIsSaving(false);
     }
@@ -304,7 +304,7 @@ const ConfigCard: React.FC<ConfigCardProps> = ({ section, onEdit, onDelete, onMo
             effectiveField = { 
                 ...effectiveField, 
                 value: '', 
-                placeholder: '•••••••••••••••• (Oculto para segurança)' 
+                placeholder: 'â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢ (Oculto para seguranÃ§a)' 
             };
         }
     }
@@ -387,7 +387,7 @@ const ConfigCard: React.FC<ConfigCardProps> = ({ section, onEdit, onDelete, onMo
                       <button 
                           onClick={() => onEdit(section)}
                           className="p-1.5 text-muted-foreground hover:text-foreground transition-colors"
-                          title="Editar Módulo"
+                          title="Editar MÃ³dulo"
                       >
                           <Pencil className="w-3.5 h-3.5" />
                       </button>
@@ -396,7 +396,7 @@ const ConfigCard: React.FC<ConfigCardProps> = ({ section, onEdit, onDelete, onMo
                       <button 
                           onClick={() => onDelete(section.id)}
                           className="p-1.5 text-muted-foreground hover:text-destructive transition-colors"
-                          title="Excluir Módulo"
+                          title="Excluir MÃ³dulo"
                       >
                           <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -441,7 +441,7 @@ const ConfigCard: React.FC<ConfigCardProps> = ({ section, onEdit, onDelete, onMo
                                         type="button"
                                         onClick={() => setActiveHelp({ title: field.label, text: field.helpText! })}
                                         className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer outline-none"
-                                        title="Ver instruções"
+                                        title="Ver instruÃ§Ãµes"
                                     >
                                         <CircleHelp className="w-3.5 h-3.5" />
                                     </button>
@@ -452,7 +452,7 @@ const ConfigCard: React.FC<ConfigCardProps> = ({ section, onEdit, onDelete, onMo
                                         <button 
                                             onClick={() => setConfirmResetFieldId(isConfirmingReset ? null : field.id)}
                                             className={`transition-all transform hover:text-foreground ${isConfirmingReset ? 'text-foreground rotate-180' : 'text-muted-foreground hover:rotate-[-45deg]'}`}
-                                            title="Restaurar padrão"
+                                            title="Restaurar padrÃ£o"
                                         >
                                             <RotateCcw className="w-3.5 h-3.5" />
                                         </button>
@@ -460,7 +460,7 @@ const ConfigCard: React.FC<ConfigCardProps> = ({ section, onEdit, onDelete, onMo
                                         {isConfirmingReset && (
                                             <div className="absolute right-0 top-6 z-50 bg-popover border border-border shadow-xl rounded-lg p-2 min-w-[140px] animate-fade-in flex flex-col gap-2">
                                                 <p className="text-[10px] text-muted-foreground text-center font-medium border-b border-border pb-1">
-                                                    Restaurar padrão?
+                                                    Restaurar padrÃ£o?
                                                 </p>
                                                 <div className="flex items-center gap-1">
                                                     <button 
@@ -473,7 +473,7 @@ const ConfigCard: React.FC<ConfigCardProps> = ({ section, onEdit, onDelete, onMo
                                                         onClick={() => setConfirmResetFieldId(null)}
                                                         className="flex-1 bg-secondary text-secondary-foreground p-1 rounded hover:bg-accent transition-colors text-[10px] font-bold"
                                                     >
-                                                        Não
+                                                        NÃ£o
                                                     </button>
                                                 </div>
                                             </div>
@@ -518,11 +518,11 @@ const ConfigCard: React.FC<ConfigCardProps> = ({ section, onEdit, onDelete, onMo
 
         {/* CONFIRMATION OVERLAY */}
         {showSaveConfirmation && (
-            <div className="absolute inset-0 z-50 bg-background/90 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in rounded-xl">
+            <div className="absolute inset-0 z-50 bg-background/90  flex items-center justify-center p-4 animate-fade-in rounded-xl">
                 <div className="text-center max-w-[280px] animate-scale-in">
                     <h4 className="text-sm font-bold text-foreground">Salvar Credenciais?</h4>
                     <p className="text-xs text-muted-foreground mt-1 mb-4 leading-relaxed">
-                        Isso pode interromper a conexão do agente com serviços externos.
+                        Isso pode interromper a conexÃ£o do agente com serviÃ§os externos.
                     </p>
                     <div className="flex gap-2 justify-center">
                         <button 
@@ -546,7 +546,7 @@ const ConfigCard: React.FC<ConfigCardProps> = ({ section, onEdit, onDelete, onMo
       {/* HELP MODAL */}
       {activeHelp && (
         <div 
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-background/90 backdrop-blur-sm p-4 animate-fade-in"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-background/90  p-4 animate-fade-in"
           onClick={() => setActiveHelp(null)}
         >
           <div 
@@ -556,7 +556,7 @@ const ConfigCard: React.FC<ConfigCardProps> = ({ section, onEdit, onDelete, onMo
              <div className="p-4 border-b border-border flex justify-between items-center">
                 <h3 className="font-bold text-sm text-foreground flex items-center gap-2 uppercase tracking-wide">
                   <CircleHelp className="w-4 h-4 text-foreground" />
-                  Instruções
+                  InstruÃ§Ãµes
                 </h3>
                 <button 
                   onClick={() => setActiveHelp(null)}

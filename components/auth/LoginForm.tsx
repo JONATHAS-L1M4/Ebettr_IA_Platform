@@ -1,18 +1,13 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff, Loader2, Lock, Mail } from '../ui/Icons';
+import { Eye, EyeOff, Loader2 } from '../ui/Icons';
 import { authService, AuthResponse } from '../../services/authService';
 import { useNotification } from '../../context/NotificationContext';
 import {
-  authFieldClass,
-  authFooterClass,
-  authInlineLinkClass,
-  authInputIconClass,
-  authInputWithBothIconsClass,
-  authInputWithLeadingIconClass,
-  authLabelClass,
-  authPrimaryButtonClass,
   authSectionCardClass,
 } from './authStyles';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
 
 interface LoginFormProps {
   onSuccess: (
@@ -64,93 +59,81 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
   return (
     <div className={authSectionCardClass}>
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div className={authFieldClass}>
-          <label htmlFor="login-email" className={authLabelClass}>
-            Email
-          </label>
-          <div className="group relative">
-            <Mail className={authInputIconClass} />
-            <input
+      <form onSubmit={handleSubmit} className="grid gap-6">
+        <div className="grid gap-6">
+          <div className="grid gap-2">
+            <Label htmlFor="login-email">Email</Label>
+            <Input
               id="login-email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="voce@empresa.com"
-              className={authInputWithLeadingIconClass}
               required
             />
           </div>
-        </div>
 
-        <div className={authFieldClass}>
-          <div className="flex items-center justify-between gap-4">
-            <label htmlFor="login-password" className={authLabelClass}>
-              Senha
-            </label>
-            <button
-              type="button"
-              onClick={onForgotPassword}
-              className={authInlineLinkClass}
-            >
-              Esqueci minha senha
-            </button>
+          <div className="grid gap-2">
+            <div className="flex items-center">
+              <Label htmlFor="login-password">Senha</Label>
+              <button
+                type="button"
+                onClick={onForgotPassword}
+                className="ml-auto text-sm underline-offset-4 transition hover:underline"
+              >
+                Esqueci minha senha
+              </button>
+            </div>
+            <div className="relative">
+              <Input
+                id="login-password"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Digite sua senha"
+                className="pr-10"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((current) => !current)}
+                className="absolute right-3 top-2.5 text-muted-foreground transition hover:text-foreground"
+                aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+              >
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </button>
+            </div>
           </div>
 
-          <div className="group relative">
-            <Lock className={authInputIconClass} />
-            <input
-              id="login-password"
-              type={showPassword ? 'text' : 'password'}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Digite sua senha"
-              className={authInputWithBothIconsClass}
-              required
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword((current) => !current)}
-              className="absolute right-3 top-1/2 -mt-0.5 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
-              aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
-            >
-              {showPassword ? (
-                <EyeOff className="h-4 w-4" />
-              ) : (
-                <Eye className="h-4 w-4" />
-              )}
-            </button>
-          </div>
+          <Button type="submit" disabled={isLoading} className="w-full">
+            {isLoading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Entrando...
+              </>
+            ) : (
+              'Entrar'
+            )}
+          </Button>
         </div>
 
-        <button
-          type="submit"
-          disabled={isLoading}
-          className={authPrimaryButtonClass}
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Entrando...
-            </>
-          ) : (
-            'Entrar'
-          )}
-        </button>
+        {showSignUp && (
+          <div className="text-center text-sm">
+            Nao tem uma conta?{' '}
+            <button
+              type="button"
+              onClick={onSignUp}
+              className="font-medium underline underline-offset-4"
+            >
+              Criar cadastro
+            </button>
+          </div>
+        )}
       </form>
-
-      {showSignUp && (
-        <div className={authFooterClass}>
-          Nao tem uma conta?{' '}
-          <button
-            type="button"
-            onClick={onSignUp}
-            className="font-medium text-foreground underline-offset-4 transition hover:underline"
-          >
-            Criar cadastro
-          </button>
-        </div>
-      )}
     </div>
   );
 };

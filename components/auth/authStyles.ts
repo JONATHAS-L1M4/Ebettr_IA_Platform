@@ -11,16 +11,16 @@ export const authLabelClass =
   'block text-sm font-medium tracking-tight text-foreground';
 
 export const authInputIconClass =
-  'pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-foreground';
+  'pointer-events-none absolute left-3 top-2.5 text-muted-foreground transition-colors group-focus-within:text-foreground';
 
 export const authInputBaseClass =
-  'h-11 w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground outline-none transition disabled:cursor-not-allowed disabled:opacity-60';
+  'w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground transition disabled:cursor-not-allowed disabled:opacity-50';
 
-export const authInputWithLeadingIconClass = cn(authInputBaseClass, 'pl-11');
+export const authInputWithLeadingIconClass = cn(authInputBaseClass, 'pl-9');
 
 export const authInputWithBothIconsClass = cn(
   authInputBaseClass,
-  'pl-11 pr-11'
+  'pl-9 pr-10'
 );
 
 export const authPrimaryButtonClass =

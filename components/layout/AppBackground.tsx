@@ -14,9 +14,9 @@ export const AppBackground: React.FC<AppBackgroundProps> = ({ className }) => {
     >
       <div className="absolute -inset-20 transform-gpu opacity-90 saturate-[0.82]">
         <Grainient
-          color1="#181818"
-          color2="#1f1f1f"
-          color3="#161616"
+          color1="#202020"
+          color2="#303030"
+          color3="#151515"
           timeSpeed={0.25}
           colorBalance={0.02}
           warpStrength={2.1}

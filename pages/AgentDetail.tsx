@@ -37,7 +37,7 @@ interface AgentDetailProps {
 
 type DetailViewMode = 'config' | 'credentials' | 'executions' | 'rag' | 'editor';
 
-// Componente de Skeleton Premium para os Cards de Configuração
+// Componente de Skeleton Premium para os Cards de ConfiguraÃ§Ã£o
 const ConfigCardSkeleton = ({ span = 'md:col-span-1' }: { span?: string }) => (
     <div className={`${span} border border-border rounded-xl bg-card p-6 h-full min-h-[320px] animate-pulse flex flex-col`}>
         {/* Header: Icon + Title */}
@@ -120,9 +120,9 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
 
     try {
         const result = await ragService.deleteBulk(agent.id, selectedRagIds);
-        addNotification('success', 'Exclusão concluída', `${result.deleted_count} documentos foram removidos com sucesso.`);
+        addNotification('success', 'ExclusÃ£o concluÃ­da', `${result.deleted_count} documentos foram removidos com sucesso.`);
         if (result.not_found_count > 0) {
-            addNotification('warning', 'Aviso', `${result.not_found_count} documentos não foram encontrados.`);
+            addNotification('warning', 'Aviso', `${result.not_found_count} documentos nÃ£o foram encontrados.`);
         }
         setSelectedRagIds([]);
         await fetchRagDocuments();
@@ -142,13 +142,13 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
     setIsUploadingRagFile(true);
     try {
       await ragService.upload(agent.id, file);
-      addNotification('success', 'Upload concluído', 'Arquivo enviado com sucesso para a base de conhecimento.');
+      addNotification('success', 'Upload concluÃ­do', 'Arquivo enviado com sucesso para a base de conhecimento.');
       
-      // Sincroniza automaticamente após o upload bem-sucedido (isManual = false para ignorar cooldown)
+      // Sincroniza automaticamente apÃ³s o upload bem-sucedido (isManual = false para ignorar cooldown)
       await fetchRagDocuments(false);
     } catch (error: any) {
       console.error('Error uploading RAG file:', error);
-      addNotification('error', 'Erro no Upload', error.message || 'Não foi possível enviar o arquivo.');
+      addNotification('error', 'Erro no Upload', error.message || 'NÃ£o foi possÃ­vel enviar o arquivo.');
     } finally {
       setIsUploadingRagFile(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -180,7 +180,7 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
           if (viewMode === 'config' && !hasSynced) {
               await syncWorkflowData();
           } else {
-              // Pequeno delay para suavidade se não precisar sincronizar
+              // Pequeno delay para suavidade se nÃ£o precisar sincronizar
               await new Promise(resolve => setTimeout(resolve, 600));
           }
           setInitialLoading(false);
@@ -189,7 +189,7 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
       loadInitialData();
   }, []);
 
-  // Sincroniza se mudar para a aba de config e ainda não tiver sincronizado
+  // Sincroniza se mudar para a aba de config e ainda nÃ£o tiver sincronizado
   useEffect(() => {
       if (viewMode === 'rag' && agent.ragEnabled === false) {
           handleTabChange('config');
@@ -285,7 +285,7 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
           setSelectedRagDoc(fullDoc);
       } catch (error) {
           console.error(error);
-          addNotification('error', 'Erro', 'Falha ao carregar conteúdo do documento.');
+          addNotification('error', 'Erro', 'Falha ao carregar conteÃºdo do documento.');
       } finally {
           setIsLoadingRagContent(false);
       }
@@ -307,7 +307,7 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
 
       try {
           await ragService.delete(agent.id, ragDocToDelete.id);
-          addNotification('success', 'Documento excluído', `O arquivo ${ragDocToDelete.file_name} foi removido.`);
+          addNotification('success', 'Documento excluÃ­do', `O arquivo ${ragDocToDelete.file_name} foi removido.`);
           await fetchRagDocuments(); // Refresh list
       } catch (error) {
           console.error(error);
@@ -325,19 +325,19 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
   const [isDeleteAgentModalOpen, setIsDeleteAgentModalOpen] = useState(false);
 
   // --- POLLING & AUTO-REFRESH ---
-  // Garante que o cliente veja atualizações (como visibilidade de credenciais) quase em tempo real
+  // Garante que o cliente veja atualizaÃ§Ãµes (como visibilidade de credenciais) quase em tempo real
   useEffect(() => {
-      // ATUALIZAÇÃO INTELIGENTE: Apenas na aba de Credenciais
+      // ATUALIZAÃ‡ÃƒO INTELIGENTE: Apenas na aba de Credenciais
       const shouldPoll = viewMode === 'credentials' && !isEditing && !isToggling && !deletingSectionId;
       
       if (!onRefresh || !shouldPoll) return;
 
-      // Polling periódico (10s)
+      // Polling periÃ³dico (10s)
       const intervalId = setInterval(() => {
           onRefresh();
       }, 10000);
 
-      // Atualização ao focar na janela
+      // AtualizaÃ§Ã£o ao focar na janela
       const handleFocus = () => {
           onRefresh();
       };
@@ -356,14 +356,14 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
     const wfId = getWorkflowId();
     if (!wfId) {
         setHasSynced(true);
-        if (isManual) addNotification('warning', 'Sem Workflow', 'Não há ID de workflow configurado.');
+        if (isManual) addNotification('warning', 'Sem Workflow', 'NÃ£o hÃ¡ ID de workflow configurado.');
         return;
     }
 
     setIsSyncing(true);
     try {
       const workflowJson = await fetchN8nWorkflowFullJson(wfId, isManual);
-      if (!workflowJson) throw new Error("Workflow JSON não encontrado");
+      if (!workflowJson) throw new Error("Workflow JSON nÃ£o encontrado");
       
       let hasChanges = false;
       const updatedSections = agent.configSections.map(section => {
@@ -372,10 +372,10 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
             const realPath = decryptPath(field.jsonPath);
             const remoteValue = getValueFromPath(workflowJson, realPath);
             
-            // Comparação para detectar mudanças (incluindo arrays/objetos)
+            // ComparaÃ§Ã£o para detectar mudanÃ§as (incluindo arrays/objetos)
             const isDifferent = JSON.stringify(remoteValue) !== JSON.stringify(field.value);
 
-            // Só atualiza se o valor for encontrado no workflow e for diferente do atual
+            // SÃ³ atualiza se o valor for encontrado no workflow e for diferente do atual
             if (remoteValue !== undefined && isDifferent) {
               hasChanges = true;
               return { ...field, value: remoteValue };
@@ -395,13 +395,13 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
 
       if (hasChanges) {
         await onUpdateAgent({ ...agent, configSections: updatedSections, active: newActiveStatus });
-        addNotification('success', 'Sincronizado', 'Configurações e status atualizados com dados do n8n.');
+        addNotification('success', 'Sincronizado', 'ConfiguraÃ§Ãµes e status atualizados com dados do n8n.');
       } else if (isManual) {
-        addNotification('info', 'Sincronizado', 'As configurações já estão atualizadas.');
+        addNotification('info', 'Sincronizado', 'As configuraÃ§Ãµes jÃ¡ estÃ£o atualizadas.');
       }
     } catch (error: any) {
       console.error("Sync error:", error);
-      addNotification('error', 'Erro de Sincronização', 'Não foi possível obter os dados atuais do workflow n8n.');
+      addNotification('error', 'Erro de SincronizaÃ§Ã£o', 'NÃ£o foi possÃ­vel obter os dados atuais do workflow n8n.');
     } finally {
       setHasSynced(true);
       setIsSyncing(false);
@@ -500,7 +500,7 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
 
     const workflowId = getWorkflowId();
     if (!workflowId) {
-        addNotification('error', 'Configuração Incompleta', 'Este agente não possui um Workflow ID vinculado.');
+        addNotification('error', 'ConfiguraÃ§Ã£o Incompleta', 'Este agente nÃ£o possui um Workflow ID vinculado.');
         return;
     }
 
@@ -517,10 +517,10 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
             setIsToggling(false);
         }, 1200);
 
-        const msg = active ? 'O agente está operante.' : 'O agente está em modo de espera.';
+        const msg = active ? 'O agente estÃ¡ operante.' : 'O agente estÃ¡ em modo de espera.';
         addNotification(active ? 'success' : 'info', 'Status atualizado', msg);
     } catch (error: any) {
-        addNotification('error', 'Erro na Sincronização', error.message || 'Não foi possível alterar o status no n8n.');
+        addNotification('error', 'Erro na SincronizaÃ§Ã£o', error.message || 'NÃ£o foi possÃ­vel alterar o status no n8n.');
         onUpdateAgent({ ...agent, active: !active });
         setIsToggling(false);
     }
@@ -534,7 +534,7 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
   const confirmDeleteAgent = () => {
     if (onDeleteAgent && canDeleteAgent) {
         onDeleteAgent(agent.id);
-        addNotification('info', 'Agente removido', 'O agente e suas configurações foram excluídos.');
+        addNotification('info', 'Agente removido', 'O agente e suas configuraÃ§Ãµes foram excluÃ­dos.');
     }
   };
 
@@ -550,7 +550,7 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
     updatedAgent.configSections = updatedSections;
 
     await onUpdateAgent(updatedAgent);
-    addNotification('success', 'Módulo salvo', 'A configuração foi atualizada.');
+    addNotification('success', 'MÃ³dulo salvo', 'A configuraÃ§Ã£o foi atualizada.');
     
     if (onRefresh) {
         setIsDataRefreshing(true);
@@ -693,10 +693,10 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
             await onRefresh();
         }
 
-        addNotification('success', 'Configurações salvas', 'Todas as alterações foram aplicadas com sucesso.');
+        addNotification('success', 'ConfiguraÃ§Ãµes salvas', 'Todas as alteraÃ§Ãµes foram aplicadas com sucesso.');
         setPendingChanges([]);
     } catch (error: any) {
-        addNotification('error', 'Erro ao salvar', error.message || 'Falha ao atualizar configurações.');
+        addNotification('error', 'Erro ao salvar', error.message || 'Falha ao atualizar configuraÃ§Ãµes.');
     } finally {
         setIsSavingAll(false);
     }
@@ -723,7 +723,7 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
         setTimeout(() => setIsDataRefreshing(false), 500);
     }
 
-    addNotification('info', 'Módulo removido', 'A configuração foi excluída.');
+    addNotification('info', 'MÃ³dulo removido', 'A configuraÃ§Ã£o foi excluÃ­da.');
     setDeletingSectionId(null);
   };
 
@@ -747,7 +747,7 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
       } else if (direction === 'down' && index < newSections.length - 1) {
           [newSections[index], newSections[index + 1]] = [newSections[index + 1], newSections[index]];
       } else {
-          return; // Não moveu
+          return; // NÃ£o moveu
       }
 
       await onUpdateAgent({ ...agent, configSections: newSections });
@@ -775,7 +775,7 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
             <DeleteWithCodeModal 
                 isOpen={isDeleteAgentModalOpen}
                 title="Excluir Agente?"
-                description={<>Para confirmar a exclusão de <strong>{agent.name}</strong>, digite o código abaixo:</>}
+                description={<>Para confirmar a exclusÃ£o de <strong>{agent.name}</strong>, digite o cÃ³digo abaixo:</>}
                 onClose={() => setIsDeleteAgentModalOpen(false)}
                 onConfirm={confirmDeleteAgent}
             />
@@ -828,9 +828,9 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
             Base de Conhecimento (RAG)
           </h2>
         </div>
-        <p className="text-sm text-muted-foreground mt-1 pl-4 flex items-center gap-2">
-          Gerencie os documentos e informações que o agente utiliza para responder.
-        </p>
+          <p className="text-sm text-muted-foreground mt-1 pl-4 flex items-center gap-2">
+           Gerencie os documentos e informações que o agente utiliza para responder.
+          </p>
       </div>
 
       <div className="flex flex-col items-end gap-2">
@@ -954,7 +954,7 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
       <DeleteWithCodeModal 
         isOpen={isDeleteRagModalOpen}
         title="Excluir Documento?"
-        description={<>Tem certeza que deseja excluir o arquivo <strong>{ragDocToDelete?.file_name}</strong>? Esta ação é irreversível.</>}
+        description={<>Tem certeza que deseja excluir o arquivo <strong>{ragDocToDelete?.file_name}</strong>? Esta aÃ§Ã£o Ã© irreversÃ­vel.</>}
         onClose={() => setIsDeleteRagModalOpen(false)}
         onConfirm={confirmDeleteRagDoc}
       />
@@ -962,8 +962,8 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
       {/* Delete Bulk RAG Modal */}
       <DeleteWithCodeModal 
         isOpen={isDeleteBulkRagModalOpen}
-        title="Excluir Múltiplos Documentos?"
-        description={<>Tem certeza que deseja excluir <strong>{selectedRagIds.length}</strong> documentos selecionados? Esta ação é irreversível.</>}
+        title="Excluir MÃºltiplos Documentos?"
+        description={<>Tem certeza que deseja excluir <strong>{selectedRagIds.length}</strong> documentos selecionados? Esta aÃ§Ã£o Ã© irreversÃ­vel.</>}
         onClose={() => setIsDeleteBulkRagModalOpen(false)}
         onConfirm={confirmDeleteBulkRagDocs}
       />
@@ -974,9 +974,9 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
              <div>
                  <div className="flex items-center gap-3">
                     <div className="w-1 h-6 bg-primary rounded-full"></div>
-                    <h2 className="text-lg font-bold text-foreground tracking-tight">Módulos de Configuração</h2>
+                      <h2 className="text-lg font-bold text-foreground tracking-tight">Módulos de Configuração</h2>
                  </div>
-                 <p className="text-sm text-muted-foreground mt-1 pl-4">Gerencie os parâmetros de comportamento do agente.</p>
+                  <p className="text-sm text-muted-foreground mt-1 pl-4">Gerencie os parâmetros de comportamento do agente.</p>
              </div>
              
              {pendingChanges.length > 0 && (
@@ -986,7 +986,7 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
                     className="flex h-10 items-center gap-2 px-6 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg shadow-md transition-all transform active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed font-bold uppercase tracking-wide text-xs"
                  >
                     {isSavingAll ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                    {isSavingAll ? 'Salvando...' : `Salvar Alterações (${pendingChanges.length})`}
+                    {isSavingAll ? 'Salvando...' : `Salvar AlteraÃ§Ãµes (${pendingChanges.length})`}
                  </button>
              )}
              
@@ -1084,13 +1084,13 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
       )}
 
       {deletingSectionId && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/70  z-[100] flex items-center justify-center p-4">
             <div className="bg-card rounded-lg shadow-2xl border border-border max-w-sm w-full p-6 animate-scale-in">
                 <div className="flex flex-col items-center text-center gap-4">
                     <div>
-                        <h3 className="text-lg font-bold text-foreground">Excluir Módulo?</h3>
+                        <h3 className="text-lg font-bold text-foreground">Excluir MÃ³dulo?</h3>
                         <p className="text-sm text-muted-foreground mt-2">
-                            Esta ação removerá permanentemente este módulo de configuração do agente.
+                            Esta aÃ§Ã£o removerÃ¡ permanentemente este mÃ³dulo de configuraÃ§Ã£o do agente.
                         </p>
                     </div>
                     <div className="flex gap-3 w-full pt-2">
@@ -1115,7 +1115,7 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
       <DeleteWithCodeModal 
         isOpen={isDeleteAgentModalOpen}
         title="Excluir Agente?"
-        description={<>Para confirmar a exclusão de <strong>{agent.name}</strong>, digite o código abaixo:</>}
+        description={<>Para confirmar a exclusÃ£o de <strong>{agent.name}</strong>, digite o cÃ³digo abaixo:</>}
         onClose={() => setIsDeleteAgentModalOpen(false)}
         onConfirm={confirmDeleteAgent}
       />

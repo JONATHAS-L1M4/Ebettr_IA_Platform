@@ -397,7 +397,7 @@ const SupportChat: React.FC = () => {
                                           className="max-w-full object-cover max-h-[280px] transition-transform duration-500 group-hover:scale-105" 
                                       />
                                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
-                                          <div className="bg-card p-2 rounded-full shadow-sm backdrop-blur-sm text-foreground">
+                                          <div className="bg-card p-2 rounded-full shadow-sm  text-foreground">
                                               <Search className="w-4 h-4" />
                                           </div>
                                       </div>
@@ -541,7 +541,7 @@ const SupportChat: React.FC = () => {
                               type="button" 
                               onClick={startRecording} 
                               className={secondaryBtnStyle} 
-                              title="Gravar Áudio"
+                              title="Gravar Ãudio"
                           >
                               <Mic className="w-4 h-4" />
                           </button>
