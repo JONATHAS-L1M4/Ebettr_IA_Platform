@@ -1,7 +1,7 @@
 ﻿
 import React, { useState, useEffect } from 'react';
 import { ServerCredential, SupabaseServer } from '../types';
-import { Server, Globe, Key, Edit2, Shield, Eye, EyeOff, Save, X, Terminal, CheckCircle2, Search, Loader2, Code, Copy, Database } from '../components/ui/Icons';
+import { Server, Globe, Key, Edit2, Shield, Eye, EyeOff, Save, X, Terminal, CheckCircle2, Search, Loader2, Code, Copy, Database, Zap, Check, AlertTriangle } from '../components/ui/Icons';
 import { DashedAddCard } from '../components/ui/DashedAddCard';
 import SpotlightCard from '../components/ui/SpotlightCard';
 import Toggle from '../components/ui/Toggle';
@@ -19,6 +19,14 @@ const cookieImportClassName =
   'min-h-32 resize-y text-xs font-mono';
 const importMetaBadgeClassName =
   'inline-flex min-h-8 items-center rounded-md border border-input bg-background px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground shadow-sm';
+const browserIdHeaderNames = new Set([
+  'browser-id',
+  'x-browser-id',
+  'browser_id',
+  'x-browser_id',
+  'browserid',
+  'x-browserid',
+]);
 
 const STORAGE_KEY = 'ebettr_servers';
 
@@ -73,6 +81,8 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [serverTestStatus, setServerTestStatus] = useState<'idle' | 'testing' | 'success' | 'error'>('idle');
+  const [serverTestMessage, setServerTestMessage] = useState('');
   
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -107,6 +117,129 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
   const [revealBrowserId, setRevealBrowserId] = useState(false);
 
   const isFetchingRef = React.useRef(false);
+
+  const getServerTestLabel = (testKey: string) => {
+      if (testKey === 'api') return 'API';
+      if (testKey === 'browser') return 'Browser';
+      return testKey;
+  };
+
+  const buildServerTestMessage = (payload: any) => {
+      const tests = payload?.tests;
+      if (!tests || typeof tests !== 'object') {
+          return typeof payload?.message === 'string' && payload.message
+              ? payload.message
+              : 'Servidor n8n validado com sucesso.';
+      }
+
+      const parts = Object.entries(tests)
+          .map(([key, value]: [string, any]) => {
+              const label = getServerTestLabel(key);
+              const statusCode = value?.status_code ? ` (${value.status_code})` : '';
+              const message = value?.message || (value?.ok ? 'OK' : 'Falhou');
+              return `${label}${statusCode}: ${message}`;
+          })
+          .filter(Boolean);
+
+      return parts.join(' | ') || payload?.message || 'Servidor n8n validado com sucesso.';
+  };
+
+  const buildServerTestErrorMessage = (error: any) => {
+      const detail = error?.detail;
+      const errors = Array.isArray(detail?.errors) ? detail.errors : [];
+
+      if (errors.length > 0) {
+          return errors
+              .map((item: any) => {
+                  const label = getServerTestLabel(item?.test || 'erro');
+                  const statusCode = item?.status_code ? ` (${item.status_code})` : '';
+                  const message = item?.message || item?.detail || detail?.message || error?.message || 'Falha ao validar.';
+                  return `${label}${statusCode}: ${message}`;
+              })
+              .join(' | ');
+      }
+
+      if (detail?.tests) {
+          return buildServerTestMessage(detail);
+      }
+
+      return detail?.message || error?.message || 'Falha ao testar servidor.';
+  };
+
+  const clearServerTestFeedback = () => {
+      if (serverTestStatus !== 'idle' || serverTestMessage) {
+          setServerTestStatus('idle');
+          setServerTestMessage('');
+      }
+  };
+
+  const scheduleServerTestReset = () => {
+      window.setTimeout(() => {
+          setServerTestStatus('idle');
+          setServerTestMessage('');
+      }, 4000);
+  };
+
+  const handleTestServer = async () => {
+      if (!formUrl.trim()) {
+          setServerTestStatus('error');
+          setServerTestMessage('Preencha a URL_N8N.');
+          addNotification('warning', 'URL obrigatoria', 'Preencha a URL_N8N antes de testar.');
+          scheduleServerTestReset();
+          return;
+      }
+
+      if (!formCookie.trim()) {
+          setServerTestStatus('error');
+          setServerTestMessage('Preencha o Cookie para o teste 1.');
+          addNotification('warning', 'Cookie obrigatorio', 'Preencha o Cookie antes de testar.');
+          scheduleServerTestReset();
+          return;
+      }
+
+      if (!formBrowserId.trim()) {
+          setServerTestStatus('error');
+          setServerTestMessage('Preencha o Browser ID para o teste 1.');
+          addNotification('warning', 'Browser ID obrigatorio', 'Preencha o Browser ID antes de testar.');
+          scheduleServerTestReset();
+          return;
+      }
+
+      if (!formApiKey.trim()) {
+          setServerTestStatus('error');
+          setServerTestMessage('Preencha a X_N8N_API_KEY para o teste 2.');
+          addNotification('warning', 'API Key obrigatoria', 'Preencha a X_N8N_API_KEY antes de testar.');
+          scheduleServerTestReset();
+          return;
+      }
+
+      setServerTestStatus('testing');
+      setServerTestMessage('');
+
+      try {
+          const result = await serverManagementService.test({
+              url: formUrl,
+              apiKey: formApiKey,
+              cookie: formCookie,
+              browserId: formBrowserId,
+          });
+
+          const successMessage =
+              (typeof result === 'string' && result.trim()) ||
+              buildServerTestMessage(result);
+
+          setServerTestStatus('success');
+          setServerTestMessage(successMessage);
+          addNotification('success', 'Teste concluido', successMessage);
+          scheduleServerTestReset();
+      } catch (error: any) {
+          const failureMessage = buildServerTestErrorMessage(error);
+          setServerTestStatus('error');
+          setServerTestMessage(failureMessage);
+          addNotification('error', 'Teste falhou', failureMessage);
+          scheduleServerTestReset();
+      }
+  };
   
   const fetchServers = async () => {
       if (isFetchingRef.current) return;
@@ -170,6 +303,8 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
     
     setRevealCookie(false);
     setRevealBrowserId(false);
+    setServerTestStatus('idle');
+    setServerTestMessage('');
 
     setIsFormOpen(false);
     setIsDeleteModalOpen(false);
@@ -202,6 +337,8 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
     setRevealCookie(false);
     setRevealBrowserId(false);
     setShowKey(false);
+    setServerTestStatus('idle');
+    setServerTestMessage('');
 
     setIsFormOpen(true);
   };
@@ -345,64 +482,139 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
       const rawInput = cookieImportInput.trim();
       if (!rawInput) return;
 
-      const lines = rawInput
-          .split(/\r?\n/)
-          .map((line) => line.trim())
-          .filter(Boolean);
+      const looksLikeCurl = /(^|\s)curl(?:\.exe)?(\s|$)/i.test(rawInput);
+
+      const appendCookieStringToMap = (cookieString: string, target: Map<string, string>) => {
+          cookieString
+              .split(';')
+              .map((part) => part.trim())
+              .filter(Boolean)
+              .forEach((part) => {
+                  const separatorIndex = part.indexOf('=');
+                  if (separatorIndex <= 0) return;
+                  const name = part.slice(0, separatorIndex).trim();
+                  const value = part.slice(separatorIndex + 1).trim();
+                  if (!name) return;
+                  target.set(name, value);
+              });
+      };
+
+      const extractCurlValue = (source: string, pattern: RegExp) => {
+          const values: string[] = [];
+          let match: RegExpExecArray | null;
+
+          while ((match = pattern.exec(source)) !== null) {
+              const rawValue = match[1] ?? match[2] ?? match[3] ?? '';
+              if (rawValue) values.push(rawValue.trim());
+          }
+
+          return values;
+      };
+
+      if (looksLikeCurl) {
+          const normalizedCurl = rawInput
+              .replace(/\\\r?\n/g, ' ')
+              .replace(/`\r?\n/g, ' ')
+              .replace(/\^\r?\n/g, ' ')
+              .replace(/\r?\n/g, ' ');
+
+          const headerValues = extractCurlValue(
+              normalizedCurl,
+              /(?:^|\s)(?:--header|-H)\s*(?:=)?\s*(?:"([^"]*)"|'([^']*)'|([^\s]+))/gi
+          );
+          const cookieValues = extractCurlValue(
+              normalizedCurl,
+              /(?:^|\s)(?:--cookie|-b)\s*(?:=)?\s*(?:"([^"]*)"|'([^']*)'|([^\s]+))/gi
+          );
+          let browserIdFound = '';
+
+          for (const headerLine of headerValues) {
+              const separatorIndex = headerLine.indexOf(':');
+              if (separatorIndex <= 0) continue;
+
+              const headerName = headerLine.slice(0, separatorIndex).trim().toLowerCase();
+              const headerValue = headerLine.slice(separatorIndex + 1).trim();
+              if (!headerValue) continue;
+
+              if (!browserIdFound && browserIdHeaderNames.has(headerName)) {
+                  browserIdFound = headerValue;
+              }
+          }
+
+          const cookieFound = cookieValues
+              .map((value) => value.trim())
+              .filter((value) => value.includes('='))
+              .join('; ');
+
+          if (!cookieFound && !browserIdFound) {
+              addNotification('warning', 'Nada encontrado', 'No cURL colado nao foi encontrado Cookie nem Browser ID.');
+              return;
+          }
+
+          if (cookieFound) {
+              setFormCookie(cookieFound);
+              setShowCookie(true);
+          }
+          if (browserIdFound) {
+              setFormBrowserId(browserIdFound);
+              setShowBrowserId(true);
+          }
+
+          const imported: string[] = [];
+          if (cookieFound) imported.push('Cookie');
+          if (browserIdFound) imported.push('Browser ID');
+          addNotification('success', 'Processado', `${imported.join(' e ')} importado(s) via cURL.`);
+          setShowCookieImport(false);
+          setCookieImportInput('');
+          return;
+      }
 
       const cookieMap = new Map<string, string>();
-
-      for (const line of lines) {
-          if (line.startsWith('#') && !line.startsWith('#HttpOnly_')) continue;
-
-          const normalizedLine = line.startsWith('#HttpOnly_')
-              ? line.replace('#HttpOnly_', '')
-              : line;
-
-          const columns = normalizedLine.split('\t');
-
-          if (columns.length >= 7) {
-              const name = columns[5]?.trim();
-              const value = columns.slice(6).join('\t').trim();
-
-              if (name) {
-                  cookieMap.set(name, value);
+      let browserIdFound = '';
+      rawInput
+          .split(/\r?\n/)
+          .map((line) => line.trim())
+          .filter(Boolean)
+          .forEach((line) => {
+              const separatorIndex = line.indexOf(':');
+              if (separatorIndex > 0) {
+                  const key = line.slice(0, separatorIndex).trim().toLowerCase();
+                  const value = line.slice(separatorIndex + 1).trim();
+                  if (!browserIdFound && browserIdHeaderNames.has(key) && value) {
+                      browserIdFound = value;
+                      return;
+                  }
               }
 
-              continue;
-          }
+              const content = line.toLowerCase().startsWith('cookie:')
+                  ? line.slice(line.indexOf(':') + 1).trim()
+                  : line;
 
-          if (normalizedLine.includes('=')) {
-              normalizedLine
-                  .split(';')
-                  .map((part) => part.trim())
-                  .filter(Boolean)
-                  .forEach((part) => {
-                      const separatorIndex = part.indexOf('=');
-                      if (separatorIndex <= 0) return;
-
-                      const name = part.slice(0, separatorIndex).trim();
-                      const value = part.slice(separatorIndex + 1).trim();
-
-                      if (name) {
-                          cookieMap.set(name, value);
-                      }
-                  });
-          }
-      }
+              appendCookieStringToMap(content, cookieMap);
+          });
 
       const cookieFound = Array.from(cookieMap.entries())
           .map(([name, value]) => `${name}=${value}`)
           .join('; ');
 
-      if (!cookieFound) {
-          addNotification('warning', 'Nada encontrado', 'Cole um cookie no formato Netscape ou no formato name=value.');
+      if (!cookieFound && !browserIdFound) {
+          addNotification('warning', 'Nada encontrado', 'Cole Cookie em name=value ou Browser ID em browser-id: valor.');
           return;
       }
 
-      setFormCookie(cookieFound);
-      setShowCookie(true);
-      addNotification('success', 'Processado', 'Cookie importado com sucesso.');
+      if (cookieFound) {
+          setFormCookie(cookieFound);
+          setShowCookie(true);
+      }
+      if (browserIdFound) {
+          setFormBrowserId(browserIdFound);
+          setShowBrowserId(true);
+      }
+
+      const imported: string[] = [];
+      if (cookieFound) imported.push('Cookie');
+      if (browserIdFound) imported.push('Browser ID');
+      addNotification('success', 'Processado', `${imported.join(' e ')} importado(s) com sucesso.`);
       setShowCookieImport(false);
       setCookieImportInput('');
   };
@@ -417,6 +629,9 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
   if (isFormOpen) {
     return (
       <DarkPage className="min-h-[calc(100vh-4rem)]">
+      <style>{`
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-3px); } 40% { transform: translateX(3px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
+      `}</style>
       <div className="max-w-3xl mx-auto animate-fade-in pb-12">
         <div className="flex items-center gap-4 mb-8">
            <button 
@@ -448,15 +663,16 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                        className="flex items-center gap-2 text-xs font-bold text-muted-foreground hover:text-foreground uppercase tracking-wide transition-colors"
                    >
                        <Shield className="w-4 h-4" />
-                       {showCookieImport ? 'Ocultar Importacao' : 'Importar Cookies'}
+                       {showCookieImport ? 'Ocultar Importacao' : 'Importar Cookie / Browser ID'}
                    </button>
                    
                    {showCookieImport && (
                        <div className="mt-3 animate-fade-in">
                            <div className="mb-3 rounded-md border border-input bg-background p-3 shadow-sm">
                                <p className="text-[10px] text-muted-foreground leading-relaxed">
-                                   Cole abaixo o conteudo do arquivo no formato Netscape HTTP Cookie File.<br/>
-                                   O sistema vai montar automaticamente o valor do campo <strong>Cookie</strong>.
+                                   Cole um <strong>cURL</strong> para extrair <strong>Cookie</strong> e/ou <strong>Browser ID</strong>,<br/>
+                                   para cookies via cURL o sistema considera apenas <strong>-b/--cookie</strong>.<br/>
+                                   Voce tambem pode colar manualmente <strong>Cookie</strong> em <strong>name=value</strong> e <strong>Browser ID</strong> em <strong>browser-id: valor</strong>.
                                </p>
                            </div>
                            <div className="mb-3 flex flex-wrap items-center gap-2">
@@ -464,18 +680,21 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                                    input
                                </span>
                                <span className={importMetaBadgeClassName}>
-                                   netscape
+                                   curl
                                </span>
                                <span className={importMetaBadgeClassName}>
                                    cookie
+                               </span>
+                               <span className={importMetaBadgeClassName}>
+                                   browser-id
                                </span>
                            </div>
                            <Textarea
                                value={cookieImportInput}
                                onChange={(e) => setCookieImportInput(e.target.value)}
                                className={`w-full ${cookieImportClassName}`}
-                               placeholder={`# Netscape HTTP Cookie File\n.ebettr.com\tTRUE\t/\tFALSE\t1792976823\trl_page_init_referrer\tRudderEncrypt...\n.ebettr.com\tTRUE\t/\tFALSE\t1807969873\t_ga\tGA1.1.1920573363.1769705284`}
-                           />
+                               placeholder={`curl 'https://n8n.seu-dominio.com/api/v1/workflows' -b 'n8n-auth=abc123; _ga=xyz' -H 'browser-id: 3f8d42c2-xxxx'\n\nn8n-auth=abc123; _ga=xyz\nbrowser-id: 3f8d42c2-xxxx`}
+                            />
                            <div className="flex justify-end mt-2">
                                <button 
                                    type="button"
@@ -483,7 +702,7 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                                    disabled={!cookieImportInput}
                                    className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
                                >
-                                   <Code className="w-3 h-3" /> Processar Cookie
+                                   <Code className="w-3 h-3" /> Processar Importacao
                                </button>
                            </div>
                        </div>
@@ -518,11 +737,17 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                         <input 
                             type="url" 
                             value={formUrl} 
-                            onChange={e => setFormUrl(e.target.value)} 
+                            onChange={e => {
+                                setFormUrl(e.target.value);
+                                clearServerTestFeedback();
+                            }} 
                             className={inputBaseClass}
-                            placeholder="https://n8n.seu-dominio.com/api/v1/"
-                            disabled={isSubmitting}
+                            placeholder="https://n8n.seu-dominio.com"
+                            disabled={isSubmitting || serverTestStatus === 'testing'}
                         />
+                        <p className="text-[10px] text-muted-foreground">
+                            Use o botao <code>Testar</code> para validar healthz e credenciais antes de salvar.
+                        </p>
                     </div>
 
                     {/* API Key */}
@@ -534,10 +759,13 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                             <input 
                                 type={showKey ? "text" : "password"} 
                                 value={formApiKey} 
-                                onChange={e => setFormApiKey(e.target.value)} 
+                                onChange={e => {
+                                    setFormApiKey(e.target.value);
+                                    clearServerTestFeedback();
+                                }} 
                                 className={`${inputBaseClass} pr-10 font-mono`}
                                 placeholder="n8n_api_..."
-                                disabled={isSubmitting}
+                                disabled={isSubmitting || serverTestStatus === 'testing'}
                             />
                             <button 
                                 type="button"
@@ -561,10 +789,13 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                             <input 
                                 type={revealCookie ? "text" : "password"}
                                 value={formCookie} 
-                                onChange={e => setFormCookie(e.target.value)} 
+                                onChange={e => {
+                                    setFormCookie(e.target.value);
+                                    clearServerTestFeedback();
+                                }} 
                                 className={`${inputBaseClass} pr-10 font-mono text-xs`}
                                 placeholder="n8n-auth=..."
-                                disabled={isSubmitting}
+                                disabled={isSubmitting || serverTestStatus === 'testing'}
                             />
                             <button 
                                 type="button"
@@ -574,7 +805,7 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                                 {revealCookie ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </button>
                         </div>
-                        <p className="text-[10px] text-muted-foreground">Aceita importacao no formato Netscape ou valor direto em <code>name=value</code>.</p>
+                        <p className="text-[10px] text-muted-foreground">Aceita importacao por cURL usando <code>-b/--cookie</code> ou valor direto em <code>name=value</code>.</p>
                     </div>
 
                     {/* Browser ID */}
@@ -589,10 +820,13 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                             <input 
                                 type={revealBrowserId ? "text" : "password"}
                                 value={formBrowserId} 
-                                onChange={e => setFormBrowserId(e.target.value)} 
+                                onChange={e => {
+                                    setFormBrowserId(e.target.value);
+                                    clearServerTestFeedback();
+                                }} 
                                 className={`${inputBaseClass} pr-10 font-mono text-xs`}
                                 placeholder="Mozilla/5.0... ou UUID"
-                                disabled={isSubmitting}
+                                disabled={isSubmitting || serverTestStatus === 'testing'}
                             />
                             <button 
                                 type="button"
@@ -667,23 +901,61 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
 
            </div>
 
-           <div className="p-6 bg-muted border-t border-border flex items-center justify-end gap-3">
-               <button 
-                 type="button"
-                 onClick={resetForm}
-                 disabled={isSubmitting}
-                 className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
-               >
-                 Cancelar
-               </button>
-               <button 
-                 type="submit"
-                 disabled={isSubmitting}
-                 className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
-               >
-                 {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                 {isSubmitting ? 'Salvando...' : 'Salvar Servidor'}
-               </button>
+           <div className="p-6 bg-muted border-t border-border flex items-center justify-between gap-3">
+               {activeTab === 'n8n' && (
+                 <button
+                   type="button"
+                   onClick={handleTestServer}
+                   disabled={isSubmitting || serverTestStatus === 'testing'}
+                   title={serverTestMessage || 'Executa os testes de healthz e credenciais.'}
+                   className={`h-10 px-4 rounded-md text-[11px] font-bold uppercase tracking-wider transition-all duration-200 flex items-center gap-2 shadow-sm active:scale-95 ${
+                     serverTestStatus === 'testing'
+                       ? 'bg-muted text-foreground border border-border cursor-wait'
+                       : serverTestStatus === 'success'
+                         ? 'bg-foreground text-background border border-foreground/40 animate-scale-in'
+                         : serverTestStatus === 'error'
+                           ? 'bg-red-700 text-red-50 border border-red-600 animate-[shake_0.4s_ease-in-out]'
+                           : 'bg-card border border-border text-muted-foreground hover:bg-muted hover:text-foreground'
+                   }`}
+                 >
+                   {serverTestStatus === 'testing' ? (
+                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                   ) : serverTestStatus === 'success' ? (
+                     <Check className="w-3.5 h-3.5" />
+                   ) : serverTestStatus === 'error' ? (
+                     <AlertTriangle className="w-3.5 h-3.5" />
+                   ) : (
+                     <Zap className="w-3.5 h-3.5 text-amber-500" />
+                   )}
+                   <span>
+                     {serverTestStatus === 'testing'
+                       ? 'Testando'
+                       : serverTestStatus === 'success'
+                         ? 'Conectado'
+                         : serverTestStatus === 'error'
+                           ? 'Falhou'
+                           : 'Testar'}
+                   </span>
+                 </button>
+               )}
+               <div className="ml-auto flex items-center gap-3">
+                 <button 
+                   type="button"
+                   onClick={resetForm}
+                   disabled={isSubmitting}
+                   className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                 >
+                   Cancelar
+                 </button>
+                 <button 
+                   type="submit"
+                   disabled={isSubmitting}
+                   className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                 >
+                   {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                   {isSubmitting ? 'Salvando...' : 'Salvar Servidor'}
+                 </button>
+               </div>
            </div>
         </form>
 

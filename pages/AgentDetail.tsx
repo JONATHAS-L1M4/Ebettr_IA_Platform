@@ -455,7 +455,7 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
           }
           
           try {
-              const json = await fetchN8nWorkflowFullJson(wfId);
+              const json = await fetchN8nWorkflowFullJson(wfId, true);
               const creds = extractCredentialsFromWorkflow(json);
               
               const metaSection = agent.configSections.find(s => s.id === 'credential_meta');

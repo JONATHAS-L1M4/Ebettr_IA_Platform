@@ -16,6 +16,17 @@ const getAuthHeaders = (extraHeaders: Record<string, string> = {}) => {
     return headers;
 };
 
+const parseJsonOrText = async (response: Response) => {
+    const text = await response.text();
+    if (!text) return null;
+
+    try {
+        return JSON.parse(text);
+    } catch {
+        return text;
+    }
+};
+
 export const serverManagementService = {
   async list(): Promise<ServerCredential[]> {
     const res = await fetch(`${API_BASE}/admin/servers`, {
@@ -56,6 +67,38 @@ export const serverManagementService = {
     if (!res.ok) {
         throw new Error(await parseError(res, 'Falha ao criar servidor'));
     }
+  },
+
+  async test(server: Pick<ServerCredential, 'url' | 'apiKey' | 'cookie' | 'browserId'>): Promise<any> {
+    const payload = {
+        url: server.url,
+        api_key: server.apiKey,
+        cookie: server.cookie,
+        browser_id: server.browserId,
+    };
+
+    const res = await fetch(`${API_BASE}/admin/servers/test`, {
+        method: 'POST',
+        headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify(payload),
+        credentials: 'include'
+    });
+
+    if (!res.ok) {
+        const parsed = await parseJsonOrText(res);
+        const detail = parsed && typeof parsed === 'object' ? (parsed as any).detail ?? parsed : null;
+        const message =
+            (detail && typeof detail.message === 'string' && detail.message) ||
+            (parsed && typeof parsed === 'object' && typeof (parsed as any).message === 'string' && (parsed as any).message) ||
+            'Falha ao testar servidor';
+
+        const error = new Error(message) as Error & { detail?: any; response?: any };
+        error.detail = detail;
+        error.response = parsed;
+        throw error;
+    }
+
+    return await parseJsonOrText(res);
   },
 
   async update(idOrUrl: string, server: Partial<ServerCredential>): Promise<void> {

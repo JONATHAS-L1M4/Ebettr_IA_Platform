@@ -18,20 +18,6 @@ interface CredentialMeta {
     hidden?: boolean;
 }
 
-// Componente de Skeleton para efeito de carregamento premium
-const CredentialSkeleton = () => (
-    <div className="border border-border rounded-xl bg-card p-6 h-full animate-pulse">
-        <div className="flex justify-between items-start mb-4">
-            <div className="w-10 h-10 bg-muted rounded-lg"></div>
-            <div className="w-6 h-6 bg-muted rounded"></div>
-        </div>
-        <div className="space-y-3">
-            <div className="h-4 bg-muted rounded w-3/4"></div>
-            <div className="h-3 bg-muted rounded w-1/2"></div>
-        </div>
-    </div>
-);
-
 export const CredentialsManager: React.FC<CredentialsManagerProps> = ({ workflowId, agent, onUpdateAgent, isClientMode = false }) => {
   const { addNotification } = useNotification();
   const [loading, setLoading] = useState(false);
@@ -39,28 +25,19 @@ export const CredentialsManager: React.FC<CredentialsManagerProps> = ({ workflow
   const [detectedCredentials, setDetectedCredentials] = useState<WorkflowCredential[]>([]);
   const [selectedCredential, setSelectedCredential] = useState<WorkflowCredential | null>(null);
   const [credentialMeta, setCredentialMeta] = useState<Record<string, CredentialMeta>>({});
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [syncCooldown, setSyncCooldown] = useState(0);
-
-  useEffect(() => {
-    if (syncCooldown > 0) {
-        const timer = setInterval(() => {
-            setSyncCooldown(prev => prev - 1);
-        }, 1000);
-        return () => clearInterval(timer);
-    }
-  }, [syncCooldown]);
 
   useEffect(() => {
       if (!agent) return;
+      let nextMeta: Record<string, CredentialMeta> = {};
       const metaSection = agent.configSections.find(s => s.id === 'credential_meta');
       if (metaSection) {
           const metaField = metaSection.fields.find(f => f.id === 'meta_json');
           if (metaField && metaField.value) {
               try {
-                  setCredentialMeta(JSON.parse(String(metaField.value)));
+                  nextMeta = JSON.parse(String(metaField.value));
               } catch (e) {
                   console.error("Erro ao ler metadados", e);
+                  nextMeta = {};
               }
           }
       } else {
@@ -70,11 +47,13 @@ export const CredentialsManager: React.FC<CredentialsManagerProps> = ({ workflow
           if (savedMeta) {
               try {
                   const parsed = JSON.parse(savedMeta);
-                  setCredentialMeta(parsed);
+                  nextMeta = parsed;
                   saveMeta(parsed); // Salva no backend
+                  localStorage.removeItem(storageKey);
               } catch (e) {}
           }
       }
+      setCredentialMeta(nextMeta);
   }, [agent]);
 
   const saveMeta = (newMeta: Record<string, CredentialMeta>) => {
@@ -109,33 +88,47 @@ export const CredentialsManager: React.FC<CredentialsManagerProps> = ({ workflow
   };
 
   const loadCredentials = async (force = false) => {
-      if (!workflowId) return;
-      if (force && syncCooldown > 0) return;
-
-      setLoading(true);
-      if (force) {
-          setIsRefreshing(true);
-          setSyncCooldown(60);
+      if (!workflowId) {
+          setDetectedCredentials([]);
+          setSelectedCredential(null);
+          return;
       }
+      setLoading(true);
       try {
           const json = await fetchN8nWorkflowFullJson(workflowId, force);
-          let creds = extractCredentialsFromWorkflow(json);
+          const creds = extractCredentialsFromWorkflow(json);
           setDetectedCredentials(creds);
-          if (force) addNotification('success', 'Atualizado', 'Lista de credenciais sincronizada.');
+          setSelectedCredential((current) => {
+              if (!current) return null;
+              return creds.find((cred) => cred.id === current.id) || null;
+          });
       } catch (error) {
           console.error("Failed to load credentials", error);
           addNotification('error', 'Erro ao carregar', 'NÃ£o foi possÃ­vel analisar as credenciais do workflow.');
       } finally {
           setTimeout(() => {
               setLoading(false);
-              setIsRefreshing(false);
           }, 600);
       }
   };
 
   useEffect(() => {
-      loadCredentials();
-  }, [workflowId]);
+      loadCredentials(true);
+  }, [workflowId, agent.configSections]);
+
+  useEffect(() => {
+      if (!workflowId) return;
+      const refresh = () => loadCredentials(true);
+      const intervalId = setInterval(() => {
+          if (document.visibilityState === 'visible') refresh();
+      }, 20000);
+      const handleFocus = () => refresh();
+      window.addEventListener('focus', handleFocus);
+      return () => {
+          clearInterval(intervalId);
+          window.removeEventListener('focus', handleFocus);
+      };
+  }, [workflowId, agent.id]);
 
   const handleEditCredential = (cred: WorkflowCredential) => {
       setSelectedCredential(cred);
@@ -159,6 +152,7 @@ export const CredentialsManager: React.FC<CredentialsManagerProps> = ({ workflow
               type: selectedCredential.type,
               data: data
           });
+          await loadCredentials(true);
           addNotification('success', 'Credencial Atualizada', 'As configuraÃ§Ãµes foram salvas com sucesso.');
           setSelectedCredential(null);
       } catch (error: any) {
@@ -192,20 +186,14 @@ export const CredentialsManager: React.FC<CredentialsManagerProps> = ({ workflow
               </div>
                <p className="text-sm text-muted-foreground mt-1 pl-4">Gerencie as chaves de API e conexões seguras.</p>
             </div>
-            
-            {!isClientMode && (
-               <div />
-            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {loading ? (
-                  // Exibe skeletons enquanto carrega
-                  <>
-                    <CredentialSkeleton />
-                    <CredentialSkeleton />
-                    <CredentialSkeleton />
-                  </>
+              {loading && detectedCredentials.length === 0 ? (
+                  <div className="col-span-full py-12 text-center bg-muted/40 border border-dashed border-border rounded-xl animate-fade-in">
+                      <Key className="w-8 h-8 mx-auto mb-3 text-muted-foreground" />
+                      <p className="text-sm text-muted-foreground font-medium">Carregando credenciais...</p>
+                  </div>
               ) : visibleCredentials.length === 0 ? (
                   <div className="col-span-full py-12 text-center bg-muted/40 border border-dashed border-border rounded-xl animate-fade-in">
                       <Key className="w-8 h-8 mx-auto mb-3 text-muted-foreground" />
