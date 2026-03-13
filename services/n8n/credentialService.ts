@@ -18,14 +18,31 @@ const getAuthHeaders = () => {
     return headers;
 };
 
+const formatErrorDetail = (detail: any): string | null => {
+    if (!detail) return null;
+    if (typeof detail === 'string') return detail;
+    if (typeof detail.message === 'string') return detail.message;
+    if (Array.isArray(detail.errors) && detail.errors.length > 0) {
+        const firstError = detail.errors[0];
+        if (firstError && typeof firstError.message === 'string') return firstError.message;
+    }
+    try {
+        return JSON.stringify(detail);
+    } catch {
+        return String(detail);
+    }
+};
+
 const handleResponse = async (response: Response, errorMsg: string) => {
     if (!response.ok) {
         const text = await response.text().catch(() => response.statusText);
         let errMsg = `${errorMsg} (${response.status})`;
         try {
             const errJson = JSON.parse(text);
-            if (errJson.detail) errMsg = errJson.detail;
-            else if (errJson.message) errMsg = errJson.message;
+            const detailMsg = formatErrorDetail(errJson.detail);
+            if (detailMsg) errMsg = detailMsg;
+            else if (typeof errJson.message === 'string') errMsg = errJson.message;
+            else if (typeof errJson.error === 'string') errMsg = errJson.error;
         } catch {}
         throw new Error(errMsg);
     }
@@ -35,9 +52,11 @@ const handleResponse = async (response: Response, errorMsg: string) => {
 
 export const updateN8nCredential = async (
   credentialId: string,
-  payload: { name: string; type: string; data: any }
+  payload: { name: string; type: string; data: any },
+  workflowId?: string
 ): Promise<any> => {
-  const url = `${API_BASE}/credentials/${credentialId}`;
+  const workflowParam = workflowId ? `?workflowId=${encodeURIComponent(workflowId)}` : '';
+  const url = `${API_BASE}/credentials/${credentialId}${workflowParam}`;
 
   const response = await fetch(url, {
     method: 'PATCH',

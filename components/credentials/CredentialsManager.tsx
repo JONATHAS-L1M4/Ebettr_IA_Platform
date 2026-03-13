@@ -151,7 +151,7 @@ export const CredentialsManager: React.FC<CredentialsManagerProps> = ({ workflow
               name: selectedCredential.name,
               type: selectedCredential.type,
               data: data
-          });
+          }, workflowId || undefined);
           await loadCredentials(true);
           addNotification('success', 'Credencial Atualizada', 'As configuraÃ§Ãµes foram salvas com sucesso.');
           setSelectedCredential(null);
