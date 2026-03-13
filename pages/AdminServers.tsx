@@ -1,4 +1,4 @@
-
+﻿
 import React, { useState, useEffect } from 'react';
 import { ServerCredential, SupabaseServer } from '../types';
 import { Server, Globe, Key, Edit2, Shield, Eye, EyeOff, Save, X, Terminal, CheckCircle2, Search, Loader2, Code, Copy, Database } from '../components/ui/Icons';
@@ -15,8 +15,10 @@ import DarkPage from '../components/layout/DarkPage';
 
 const inputBaseClass =
   'w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground disabled:cursor-not-allowed disabled:opacity-50';
-const curlEditorClassName =
-  'min-h-32 resize-y border-[#ea4b71]/25 bg-[linear-gradient(180deg,rgba(234,75,113,0.14)_0%,rgba(33,18,26,0.96)_100%)] text-[#f9dee5] placeholder:text-[#c79aa7] caret-[#ff8da8] selection:bg-[#ea4b71]/35 selection:text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] focus-visible:border-[#ea4b71]/45 focus-visible:ring-0 focus-visible:ring-offset-0';
+const cookieImportClassName =
+  'min-h-32 resize-y text-xs font-mono';
+const importMetaBadgeClassName =
+  'inline-flex min-h-8 items-center rounded-md border border-input bg-background px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground shadow-sm';
 
 const STORAGE_KEY = 'ebettr_servers';
 
@@ -91,9 +93,9 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
   const [supaFormUrl, setSupaFormUrl] = useState('');
   const [supaFormApiKey, setSupaFormApiKey] = useState('');
 
-  // cURL Import State
-  const [showCurlImport, setShowCurlImport] = useState(false);
-  const [curlInput, setCurlInput] = useState('');
+  // Cookie import state
+  const [showCookieImport, setShowCookieImport] = useState(false);
+  const [cookieImportInput, setCookieImportInput] = useState('');
 
   // Visibility States (Presence)
   const [showKey, setShowKey] = useState(false);
@@ -171,8 +173,8 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
 
     setIsFormOpen(false);
     setIsDeleteModalOpen(false);
-    setShowCurlImport(false);
-    setCurlInput('');
+    setShowCookieImport(false);
+    setCookieImportInput('');
   };
 
   const handleEdit = (server: ServerCredential | SupabaseServer) => {
@@ -339,46 +341,70 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
     }
   };
 
-  const handleProcessCurl = () => {
-      if (!curlInput) return;
+  const handleProcessCookieImport = () => {
+      const rawInput = cookieImportInput.trim();
+      if (!rawInput) return;
 
-      let cookieFound = '';
-      let browserIdFound = '';
+      const lines = rawInput
+          .split(/\r?\n/)
+          .map((line) => line.trim())
+          .filter(Boolean);
 
-      // Tenta capturar browser-id
-      // Procura por: -H 'browser-id: valor' ou -H "browser-id: valor"
-      const browserIdRegex = /-H\s+['"]browser-id:\s*([^'"]+)['"]/i;
-      const bMatch = curlInput.match(browserIdRegex);
-      if (bMatch) browserIdFound = bMatch[1];
+      const cookieMap = new Map<string, string>();
 
-      // Tenta capturar cookie via -b
-      // Procura por: -b 'valor' ou --cookie "valor"
-      const cookieFlagRegex = /(?:-b|--cookie)\s+['"]([^'"]+)['"]/i;
-      const cFlagMatch = curlInput.match(cookieFlagRegex);
-      if (cFlagMatch) {
-          cookieFound = cFlagMatch[1];
-      } else {
-          // Fallback: Cookie no header
-          const cookieHeaderRegex = /-H\s+['"]Cookie:\s*([^'"]+)['"]/i;
-          const cHeaderMatch = curlInput.match(cookieHeaderRegex);
-          if (cHeaderMatch) cookieFound = cHeaderMatch[1];
+      for (const line of lines) {
+          if (line.startsWith('#') && !line.startsWith('#HttpOnly_')) continue;
+
+          const normalizedLine = line.startsWith('#HttpOnly_')
+              ? line.replace('#HttpOnly_', '')
+              : line;
+
+          const columns = normalizedLine.split('\t');
+
+          if (columns.length >= 7) {
+              const name = columns[5]?.trim();
+              const value = columns.slice(6).join('\t').trim();
+
+              if (name) {
+                  cookieMap.set(name, value);
+              }
+
+              continue;
+          }
+
+          if (normalizedLine.includes('=')) {
+              normalizedLine
+                  .split(';')
+                  .map((part) => part.trim())
+                  .filter(Boolean)
+                  .forEach((part) => {
+                      const separatorIndex = part.indexOf('=');
+                      if (separatorIndex <= 0) return;
+
+                      const name = part.slice(0, separatorIndex).trim();
+                      const value = part.slice(separatorIndex + 1).trim();
+
+                      if (name) {
+                          cookieMap.set(name, value);
+                      }
+                  });
+          }
       }
 
-      if (cookieFound || browserIdFound) {
-          if (cookieFound) {
-              setFormCookie(cookieFound);
-              setShowCookie(true);
-          }
-          if (browserIdFound) {
-              setFormBrowserId(browserIdFound);
-              setShowBrowserId(true);
-          }
-          addNotification('success', 'Processado', 'Credenciais importadas do cURL.');
-          setShowCurlImport(false);
-          setCurlInput('');
-      } else {
-          addNotification('warning', 'Nada encontrado', 'Verifique se copiou o comando cURL completo.');
+      const cookieFound = Array.from(cookieMap.entries())
+          .map(([name, value]) => `${name}=${value}`)
+          .join('; ');
+
+      if (!cookieFound) {
+          addNotification('warning', 'Nada encontrado', 'Cole um cookie no formato Netscape ou no formato name=value.');
+          return;
       }
+
+      setFormCookie(cookieFound);
+      setShowCookie(true);
+      addNotification('success', 'Processado', 'Cookie importado com sucesso.');
+      setShowCookieImport(false);
+      setCookieImportInput('');
   };
 
   // Filter Logic
@@ -413,49 +439,51 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
 
         <form onSubmit={handleSubmit} className="bg-panel rounded-lg border border-border shadow-sm overflow-hidden">
            
-           {/* cURL Import Section - ONLY FOR N8N */}
+           {/* Cookie import section - only for N8N */}
            {activeTab === 'n8n' && (
                <div className="border-b border-border bg-muted p-4">
                    <button 
                        type="button"
-                       onClick={() => setShowCurlImport(!showCurlImport)}
+                       onClick={() => setShowCookieImport(!showCookieImport)}
                        className="flex items-center gap-2 text-xs font-bold text-muted-foreground hover:text-foreground uppercase tracking-wide transition-colors"
                    >
-                       <Terminal className="w-4 h-4" />
-                       {showCurlImport ? 'Ocultar Importação' : 'Importar Rápida via cURL'}
+                       <Shield className="w-4 h-4" />
+                       {showCookieImport ? 'Ocultar Importacao' : 'Importar Cookies'}
                    </button>
                    
-                   {showCurlImport && (
+                   {showCookieImport && (
                        <div className="mt-3 animate-fade-in">
-                           <p className="text-[10px] text-muted-foreground mb-2 leading-relaxed">
-                               Cole o comando cURL copiado do navegador (DevTools &gt; Network &gt; Copy as cURL).<br/>
-                               O sistema extrairá automaticamente <strong>Cookie (-b)</strong> e <strong>browser-id</strong>.
-                           </p>
-                           <div className="mb-2 flex flex-wrap items-center gap-2">
-                               <span className="rounded-full border border-[#ea4b71]/25 bg-[#ea4b71]/14 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#ff8faa]">
-                                   curl
+                           <div className="mb-3 rounded-md border border-input bg-background p-3 shadow-sm">
+                               <p className="text-[10px] text-muted-foreground leading-relaxed">
+                                   Cole abaixo o conteudo do arquivo no formato Netscape HTTP Cookie File.<br/>
+                                   O sistema vai montar automaticamente o valor do campo <strong>Cookie</strong>.
+                               </p>
+                           </div>
+                           <div className="mb-3 flex flex-wrap items-center gap-2">
+                               <span className={importMetaBadgeClassName}>
+                                   input
                                </span>
-                               <span className="rounded-full border border-cyan-400/25 bg-cyan-400/12 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-cyan-200">
-                                   browser-id
+                               <span className={importMetaBadgeClassName}>
+                                   netscape
                                </span>
-                               <span className="rounded-full border border-amber-400/25 bg-amber-400/12 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-amber-200">
+                               <span className={importMetaBadgeClassName}>
                                    cookie
                                </span>
                            </div>
                            <Textarea
-                               value={curlInput}
-                               onChange={(e) => setCurlInput(e.target.value)}
-                               className={`w-full text-xs font-mono ${curlEditorClassName}`}
-                               placeholder={`curl 'https://n8n.exemplo.com/...' \n  -H 'browser-id: ...' \n  -b 'n8n-auth=...; ...'`}
+                               value={cookieImportInput}
+                               onChange={(e) => setCookieImportInput(e.target.value)}
+                               className={`w-full ${cookieImportClassName}`}
+                               placeholder={`# Netscape HTTP Cookie File\n.ebettr.com\tTRUE\t/\tFALSE\t1792976823\trl_page_init_referrer\tRudderEncrypt...\n.ebettr.com\tTRUE\t/\tFALSE\t1807969873\t_ga\tGA1.1.1920573363.1769705284`}
                            />
                            <div className="flex justify-end mt-2">
                                <button 
                                    type="button"
-                                   onClick={handleProcessCurl}
-                                   disabled={!curlInput}
+                                   onClick={handleProcessCookieImport}
+                                   disabled={!cookieImportInput}
                                    className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
                                >
-                                   <Code className="w-3 h-3" /> Processar Dados
+                                   <Code className="w-3 h-3" /> Processar Cookie
                                </button>
                            </div>
                        </div>
@@ -546,7 +574,7 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                                 {revealCookie ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </button>
                         </div>
-                        <p className="text-[10px] text-muted-foreground">Extraído do parâmetro <code>-b</code> ou header <code>Cookie</code>.</p>
+                        <p className="text-[10px] text-muted-foreground">Aceita importacao no formato Netscape ou valor direto em <code>name=value</code>.</p>
                     </div>
 
                     {/* Browser ID */}
@@ -574,7 +602,7 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                                 {revealBrowserId ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </button>
                         </div>
-                        <p className="text-[10px] text-muted-foreground">Prioriza o header <code>browser-id</code> se disponível.</p>
+                        <p className="text-[10px] text-muted-foreground">Preencha manualmente se a sua instancia exigir <code>browser-id</code>.</p>
                     </div>
                   </>
               )}
@@ -917,3 +945,4 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
     </DarkPage>
   );
 };
+

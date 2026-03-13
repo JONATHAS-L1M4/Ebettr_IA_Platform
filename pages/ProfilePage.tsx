@@ -510,9 +510,13 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                             <div className="flex flex-col items-center gap-4 w-full md:w-auto md:shrink-0 md:border-r md:border-border md:pr-8">
                                 <div className="bg-card p-2 rounded-xl border border-border shadow-sm flex items-center justify-center w-40 h-40 aspect-square bg-card">
                                     {setupData?.qr_base64 ? (
-                                        <img src={setupData.qr_base64} alt="2FA QR Code" className="w-full h-full object-contain rounded-lg" />
+                                        <img
+                                            src={setupData.qr_base64}
+                                            alt="QR Code do 2FA"
+                                            className="h-full w-full rounded-lg bg-black object-contain p-1 [image-rendering:pixelated] invert"
+                                        />
                                     ) : (
-                                        <div className="text-xs text-muted-foreground">Carregando QR...</div>
+                                        <div className="text-xs text-muted-foreground">Carregando QR Code...</div>
                                     )}
                                 </div>
                                 {setupData?.secret && (
